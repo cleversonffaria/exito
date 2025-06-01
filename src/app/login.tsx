@@ -34,6 +34,9 @@ export default function LoginScreen() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setAuth(true);
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       router.push("/(tabs)/home");
     } catch (error) {
       console.log("Erro", "Falha na autenticação");
@@ -50,7 +53,7 @@ export default function LoginScreen() {
     <View className="flex-1">
       <View className="absolute inset-0 overflow-hidden">
         <ImageBackground
-          source={require("../../assets/images/gym-background.webp")}
+          source={require("../assets/images/gym-background.webp")}
           className="w-full h-full scale-105"
           resizeMode="cover"
         />

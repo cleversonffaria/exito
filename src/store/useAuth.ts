@@ -45,6 +45,10 @@ export const useAuth = create<AuthState>()(
       name: "auth-storage",
       storage: createJSONStorage(() => secureStorage),
       partialize: (state) => ({ isAuth: state.isAuth }),
+      version: 1,
+      migrate: (persistedState: any, version: number) => {
+        return persistedState;
+      },
     }
   )
 );

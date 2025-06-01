@@ -18,7 +18,7 @@ export default function ProfileScreen() {
         text: "Sair",
         onPress: () => {
           logout();
-          router.replace("/(login)");
+          router.replace("/login");
         },
       },
     ]);
