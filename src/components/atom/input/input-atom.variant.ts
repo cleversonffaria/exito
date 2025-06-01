@@ -39,7 +39,7 @@ export const inputVariants = tv({
       },
       md: {
         label: "text-base",
-        input: "h-14 text-base",
+        input: "h-14 pb-1 text-base",
         errorText: "text-sm min-h-5",
       },
       lg: {

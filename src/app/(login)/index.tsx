@@ -10,13 +10,13 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
-import Button from "../../components/atom/Button";
+import { Button } from "../../components/atom/button";
 import { Input } from "../../components/atom/input";
 import { useAuth } from "../../store/useAuth";
 import { LoginFormData, loginSchema } from "./login.schema";
 
 export default function LoginScreen() {
-  const [loading, setLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
   const { setAuth } = useAuth();
 
   const { control, handleSubmit } = useForm<LoginFormData>({
@@ -28,7 +28,7 @@ export default function LoginScreen() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
+    setIsSubmit(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -38,7 +38,7 @@ export default function LoginScreen() {
     } catch (error) {
       console.log("Erro", "Falha na autenticação");
     } finally {
-      setLoading(false);
+      setIsSubmit(false);
     }
   };
 
@@ -73,7 +73,6 @@ export default function LoginScreen() {
                 label="E-mail"
                 placeholder="Digite seu e-mail"
                 variant="glass"
-                size="md"
                 className="mb-4"
                 fieldProps={{
                   keyboardType: "email-address",
@@ -88,7 +87,6 @@ export default function LoginScreen() {
                 label="Senha"
                 placeholder="Digite sua senha"
                 variant="glass"
-                size="md"
                 className="mb-6"
                 fieldProps={{
                   secureTextEntry: true,
@@ -98,19 +96,22 @@ export default function LoginScreen() {
             </View>
 
             <View>
-              <Button
-                title="Entrar"
+              <Button.Root
                 onPress={handleSubmit(onSubmit)}
-                isLoading={loading}
+                isLoading={isSubmit}
+                variant="primary"
                 className="mb-4 shadow-lg"
-              />
+              >
+                <Button.Text>Entrar</Button.Text>
+              </Button.Root>
 
-              <Button
-                title="Esqueci minha senha"
-                variant="transparent"
+              <Button.Root
                 onPress={handleRecoverPassword}
-                disabled={loading}
-              />
+                disabled={isSubmit}
+                variant="none"
+              >
+                <Button.Text>Esqueci minha senha</Button.Text>
+              </Button.Root>
             </View>
           </View>
         </KeyboardAvoidingView>
