@@ -1,5 +1,9 @@
 import Logo from "@/assets/svg/logo.svg";
+import { ButtonAtom } from "@atom/button";
+import { InputAtom } from "@atom/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginFormData, loginSchema } from "@schemas/login.schema";
+import { useAuth } from "@store/useAuth";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,10 +14,6 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
-import { Button } from "../../components/atom/button";
-import { Input } from "../../components/atom/input";
-import { useAuth } from "../../store/useAuth";
-import { LoginFormData, loginSchema } from "./login.schema";
 
 export default function LoginScreen() {
   const [isSubmit, setIsSubmit] = useState(false);
@@ -67,7 +67,7 @@ export default function LoginScreen() {
                 <Logo width={160} height={140} className="mb-4" />
               </View>
 
-              <Input.Controlled
+              <InputAtom.Controller
                 control={control}
                 name="email"
                 label="E-mail"
@@ -81,7 +81,7 @@ export default function LoginScreen() {
                 }}
               />
 
-              <Input.Controlled
+              <InputAtom.Controller
                 control={control}
                 name="password"
                 label="Senha"
@@ -96,22 +96,22 @@ export default function LoginScreen() {
             </View>
 
             <View>
-              <Button.Root
+              <ButtonAtom.Root
                 onPress={handleSubmit(onSubmit)}
                 isLoading={isSubmit}
                 variant="primary"
                 className="mb-4 shadow-lg"
               >
-                <Button.Text>Entrar</Button.Text>
-              </Button.Root>
+                <ButtonAtom.Text>Entrar</ButtonAtom.Text>
+              </ButtonAtom.Root>
 
-              <Button.Root
+              <ButtonAtom.Root
                 onPress={handleRecoverPassword}
                 disabled={isSubmit}
                 variant="none"
               >
-                <Button.Text>Esqueci minha senha</Button.Text>
-              </Button.Root>
+                <ButtonAtom.Text>Esqueci minha senha</ButtonAtom.Text>
+              </ButtonAtom.Root>
             </View>
           </View>
         </KeyboardAvoidingView>

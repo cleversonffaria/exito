@@ -14,7 +14,16 @@ config.resolver = {
   ...resolver,
   assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
   sourceExts: [...resolver.sourceExts, "svg"],
-  alias: { "@": "./src", "@root": "./" },
+  alias: {
+    "@": "./src",
+    "@root": "./",
+    "@atom": "./src/components/atom",
+    "@molecules": "./src/components/molecules",
+    "@organisms": "./src/components/organisms",
+    "@store": "./src/store",
+    "@hooks": "./src/hooks",
+    "@schemas": "./src/schemas",
+  },
 };
 
 module.exports = withNativeWind(config, { input: "./global.css" });

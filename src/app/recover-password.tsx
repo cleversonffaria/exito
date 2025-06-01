@@ -1,5 +1,6 @@
+import { TextAtom } from "@atom/text";
 import { router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 export default function RecoverPassword() {
   const handleGoBack = () => {
@@ -14,10 +15,10 @@ export default function RecoverPassword() {
         alignItems: "center",
       }}
     >
-      <Text>Recuperar senha</Text>
+      <TextAtom>Recuperar senha</TextAtom>
 
       <TouchableOpacity onPress={handleGoBack} style={{ marginTop: 20 }}>
-        <Text>Voltar</Text>
+        <TextAtom>Voltar</TextAtom>
       </TouchableOpacity>
     </View>
   );

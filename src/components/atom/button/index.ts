@@ -1,10 +1,10 @@
 import { ButtonRoot } from "./button-atom.root";
 import { ButtonText } from "./button-atom.text";
 
-export { NButtonAtom } from "./button-atom.types";
-export { buttonVariants } from "./button-atom.variant";
+export { ButtonText } from "./button-atom.text";
+export type { NButtonAtom } from "./button-atom.types";
 
-export const Button = {
+export const ButtonAtom = {
   Root: ButtonRoot,
   Text: ButtonText,
 };

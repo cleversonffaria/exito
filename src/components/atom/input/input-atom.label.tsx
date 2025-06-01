@@ -1,5 +1,5 @@
+import { TextAtom } from "@atom/text";
 import React from "react";
-import { Text } from "react-native";
 import { useInputContext } from "./input-atom.context";
 import { NInputAtom } from "./input-atom.types";
 import { inputVariants } from "./input-atom.variant";
@@ -14,8 +14,8 @@ export function InputLabel({
   const { label } = inputVariants({ variant, size, disabled, focused });
 
   return (
-    <Text className={label({ className })} {...props}>
+    <TextAtom className={label({ className })} {...props}>
       {children}
-    </Text>
+    </TextAtom>
   );
 }

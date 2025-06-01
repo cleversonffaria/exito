@@ -8,7 +8,8 @@ module.exports = {
     extend: {
       colors,
       fontFamily: {
-        Epilogue: ["Epilogue", "sans-serif"],
+        Epilogue: ["Epilogue"],
+        WorkSans: ["WorkSans"],
       },
       minHeight: {
         screen: "100vh",

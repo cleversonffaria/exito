@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { TextAtom } from "@atom/text";
+import { View } from "react-native";
 
 export default function TabTwoScreen() {
   return (
     <View>
-      <Text>HOME SCREEN</Text>
+      <TextAtom>HOME SCREEN</TextAtom>
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 import { TextInputProps, TextProps, ViewProps } from "react-native";
 import { VariantProps } from "tailwind-variants";
 import { inputVariants } from "./input-atom.variant";
@@ -24,5 +25,14 @@ export namespace NInputAtom {
 
   export interface ErrorProps extends TextProps {
     children?: React.ReactNode;
+  }
+
+  export interface ControllerProps<T extends FieldValues>
+    extends Omit<NInputAtom.RootProps, "error" | "children"> {
+    control: Control<T>;
+    name: FieldPath<T>;
+    label: string;
+    placeholder?: string;
+    fieldProps?: Omit<NInputAtom.FieldProps, "value" | "onChangeText">;
   }
 }

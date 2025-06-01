@@ -1,5 +1,5 @@
+import { TextAtom } from "@atom/text";
 import React from "react";
-import { Text } from "react-native";
 import { NButtonAtom } from "./button-atom.types";
 import { buttonVariants } from "./button-atom.variant";
 
@@ -24,8 +24,8 @@ export function ButtonText({
   const displayText = loading ? "Carregando..." : children;
 
   return (
-    <Text className={text({ className })} {...props}>
+    <TextAtom className={text({ className })} {...props}>
       {displayText}
-    </Text>
+    </TextAtom>
   );
 }

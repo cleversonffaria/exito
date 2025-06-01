@@ -1,5 +1,5 @@
+import { TextAtom } from "@atom/text";
 import React, { useEffect } from "react";
-import { Text } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -46,9 +46,9 @@ export function InputError({
   return (
     <Animated.View style={animatedStyle} className="overflow-hidden min-h-5">
       {hasError && (
-        <Text className={errorText({ className })} {...props}>
+        <TextAtom className={errorText({ className })} {...props}>
           {children || error}
-        </Text>
+        </TextAtom>
       )}
     </Animated.View>
   );

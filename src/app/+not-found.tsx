@@ -1,14 +1,15 @@
+import { TextAtom } from "@atom/text";
 import { Link, Stack } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
       <View style={styles.container}>
-        <Text>Esta tela não existe.</Text>
+        <TextAtom>Esta tela não existe.</TextAtom>
         <Link href="/" style={styles.link}>
-          <Text>Voltar para a tela inicial</Text>
+          <TextAtom>Voltar para a tela inicial</TextAtom>
         </Link>
       </View>
     </>

@@ -1,7 +1,8 @@
 import "react-native-reanimated";
 import "../../global.css";
 
-import { useAuth } from "@/store/useAuth";
+import { useStorePersist } from "@hooks/useStorePersist";
+import { useAuth } from "@store/useAuth";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -12,6 +13,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { isAuth } = useAuth();
+  const { isHydrated } = useStorePersist();
 
   const [loaded] = useFonts({
     WorkSans: require("../assets/fonts/WorkSans.ttf"),
@@ -19,12 +21,12 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || !isHydrated) return;
 
     SplashScreen.hideAsync();
-  }, [loaded]);
+  }, [loaded, isHydrated]);
 
-  if (!loaded) return null;
+  if (!loaded || !isHydrated) return null;
 
   return (
     <>

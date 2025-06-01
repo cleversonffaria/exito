@@ -4,7 +4,13 @@
     "strict": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@root/*": ["./*"]
+      "@root/*": ["./*"],
+      "@atom/*": ["./src/components/atom/*"],
+      "@molecules/*": ["./src/components/molecules/*"],
+      "@organisms/*": ["./src/components/organisms/*"],
+      "@store/*": ["./src/store/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@schemas/*": ["./src/schemas/*"]
     }
   },
   "include": [
