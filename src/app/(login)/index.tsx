@@ -4,26 +4,44 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
+import Button from "../../components/atom/Button";
+import Input from "../../components/atom/Input";
 import { useAuth } from "../../store/useAuth";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
+
   const { setAuth } = useAuth();
 
-  const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      console.log("Erro", "Por favor, preencha todos os campos");
-      return;
+  const validateForm = () => {
+    const newErrors: { email?: string; password?: string } = {};
+
+    if (!email.trim()) {
+      newErrors.email = "E-mail é obrigatório";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "E-mail inválido";
     }
+
+    if (!password.trim()) {
+      newErrors.password = "Senha é obrigatória";
+    } else if (password.length < 6) {
+      newErrors.password = "Senha deve ter pelo menos 6 caracteres";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleLogin = async () => {
+    if (!validateForm()) return;
 
     setLoading(true);
 
@@ -44,128 +62,68 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardContainer}
+        className="flex-1"
       >
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Bem-vindo!</Text>
-            <Text style={styles.subtitle}>Faça login para continuar</Text>
+        <View className="flex-1 px-6 justify-center">
+          <View className="items-center mb-12">
+            <Text className="text-4xl font-bold text-gray-800 mb-2">
+              Bem-vindo!
+            </Text>
+            <Text className="text-base text-gray-600">
+              Faça login para continuar
+            </Text>
           </View>
 
-          <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>E-mail</Text>
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Digite seu e-mail"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoComplete="email"
-              />
-            </View>
+          <View className="w-full">
+            <Input
+              label="E-mail"
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                if (errors.email)
+                  setErrors((prev) => ({ ...prev, email: undefined }));
+              }}
+              placeholder="Digite seu e-mail"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+              error={errors.email}
+            />
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Senha</Text>
-              <TextInput
-                style={styles.input}
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Digite sua senha"
-                secureTextEntry
-                autoComplete="password"
-              />
-            </View>
+            <Input
+              label="Senha"
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                if (errors.password)
+                  setErrors((prev) => ({ ...prev, password: undefined }));
+              }}
+              placeholder="Digite sua senha"
+              secureTextEntry
+              autoComplete="password"
+              error={errors.password}
+            />
 
-            <TouchableOpacity
-              style={[styles.button, loading && styles.buttonDisabled]}
+            <Button
+              title="Entrar"
               onPress={handleLogin}
-              disabled={loading}
-            >
-              <Text style={styles.buttonText}>
-                {loading ? "Entrando..." : "Entrar"}
-              </Text>
-            </TouchableOpacity>
+              isLoading={loading}
+              className="mt-5"
+            />
 
-            <TouchableOpacity
-              style={[styles.button, loading && styles.buttonDisabled]}
+            <Button
+              title="Recuperar senha"
+              variant="secondary"
               onPress={handleRecoverPassword}
               disabled={loading}
-            >
-              <Text style={styles.buttonText}>Recuperar senha</Text>
-            </TouchableOpacity>
+              className="mt-3"
+            />
           </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  keyboardContainer: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: "center",
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 48,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-  },
-  form: {
-    width: "100%",
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    backgroundColor: "#f8f9fa",
-  },
-  button: {
-    backgroundColor: "#007AFF",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonDisabled: {
-    backgroundColor: "#ccc",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-});

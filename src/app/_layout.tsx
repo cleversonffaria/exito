@@ -1,4 +1,5 @@
 import "react-native-reanimated";
+import "../../global.css";
 
 import { useAuth } from "@/store/useAuth";
 import { useFonts } from "expo-font";
