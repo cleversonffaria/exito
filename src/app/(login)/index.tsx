@@ -1,6 +1,8 @@
 import Logo from "@/assets/svg/logo.svg";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   ImageBackground,
   KeyboardAvoidingView,
@@ -11,39 +13,21 @@ import {
 import Button from "../../components/atom/Button";
 import { Input } from "../../components/atom/input";
 import { useAuth } from "../../store/useAuth";
+import { LoginFormData, loginSchema } from "./login.schema";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {}
-  );
-
   const { setAuth } = useAuth();
 
-  const validateForm = () => {
-    const newErrors: { email?: string; password?: string } = {};
+  const { control, handleSubmit } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-    if (!email.trim()) {
-      newErrors.email = "E-mail é obrigatório";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "E-mail inválido";
-    }
-
-    if (!password.trim()) {
-      newErrors.password = "Senha é obrigatória";
-    } else if (password.length < 6) {
-      newErrors.password = "Senha deve ter pelo menos 6 caracteres";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleLogin = async () => {
-    if (!validateForm()) return;
-
+  const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
 
     try {
@@ -64,7 +48,6 @@ export default function LoginScreen() {
 
   return (
     <View className="flex-1">
-      {/* Background Image com múltiplas estratégias para cobertura total */}
       <View className="absolute inset-0 overflow-hidden">
         <ImageBackground
           source={require("../../assets/images/gym-background.webp")}
@@ -78,58 +61,46 @@ export default function LoginScreen() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1"
         >
-          <View className="flex-1 justify-center">
-            <View className="items-center">
-              <Logo width={160} height={140} className="mb-4" />
+          <View className="flex-1 justify-around mt-14">
+            <View>
+              <View className="items-center">
+                <Logo width={160} height={140} className="mb-4" />
+              </View>
+
+              <Input.Controlled
+                control={control}
+                name="email"
+                label="E-mail"
+                placeholder="Digite seu e-mail"
+                variant="glass"
+                size="md"
+                className="mb-4"
+                fieldProps={{
+                  keyboardType: "email-address",
+                  autoCapitalize: "none",
+                  autoComplete: "email",
+                }}
+              />
+
+              <Input.Controlled
+                control={control}
+                name="password"
+                label="Senha"
+                placeholder="Digite sua senha"
+                variant="glass"
+                size="md"
+                className="mb-6"
+                fieldProps={{
+                  secureTextEntry: true,
+                  autoComplete: "password",
+                }}
+              />
             </View>
 
             <View>
-              <Input.Root
-                variant="glass"
-                size="md"
-                error={errors.email}
-                className="mb-4"
-              >
-                <Input.Label>E-mail</Input.Label>
-                <Input.Field
-                  value={email}
-                  onChangeText={(text: string) => {
-                    setEmail(text);
-                    if (errors.email)
-                      setErrors((prev) => ({ ...prev, email: undefined }));
-                  }}
-                  placeholder="Digite seu e-mail"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoComplete="email"
-                />
-                <Input.Error />
-              </Input.Root>
-
-              <Input.Root
-                variant="glass"
-                size="md"
-                error={errors.password}
-                className="mb-6"
-              >
-                <Input.Label>Senha</Input.Label>
-                <Input.Field
-                  value={password}
-                  onChangeText={(text: string) => {
-                    setPassword(text);
-                    if (errors.password)
-                      setErrors((prev) => ({ ...prev, password: undefined }));
-                  }}
-                  placeholder="Digite sua senha"
-                  secureTextEntry
-                  autoComplete="password"
-                />
-                <Input.Error />
-              </Input.Root>
-
               <Button
                 title="Entrar"
-                onPress={handleLogin}
+                onPress={handleSubmit(onSubmit)}
                 isLoading={loading}
                 className="mb-4 shadow-lg"
               />
@@ -141,9 +112,6 @@ export default function LoginScreen() {
                 disabled={loading}
               />
             </View>
-
-            {/* Espaço inferior flexível */}
-            <View className="pb-8 pt-4" />
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>

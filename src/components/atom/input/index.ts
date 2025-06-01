@@ -1,3 +1,4 @@
+import { InputController } from "./input-atom.controlled";
 import { InputError } from "./input-atom.error";
 import { InputField } from "./input-atom.field";
 import { InputLabel } from "./input-atom.label";
@@ -12,4 +13,5 @@ export const Input = {
   Label: InputLabel,
   Field: InputField,
   Error: InputError,
+  Controlled: InputController,
 };

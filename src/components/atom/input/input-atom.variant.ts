@@ -2,10 +2,11 @@ import { tv } from "tailwind-variants";
 
 export const inputVariants = tv({
   slots: {
-    container: "mb-5",
+    container: "",
     label: "font-semibold",
-    input: "w-full rounded-xl px-4 text-base border my-2",
-    errorText: "",
+    input:
+      "w-full rounded-xl px-4 text-base border my-2 ring-0 ring-transparent",
+    errorText: "min-h-5",
   },
   variants: {
     variant: {
@@ -29,22 +30,22 @@ export const inputVariants = tv({
       xs: {
         label: "text-xs",
         input: "h-10 text-xs",
-        errorText: "text-xs",
+        errorText: "text-xs min-h-4",
       },
       sm: {
         label: "text-sm",
         input: "h-12 text-sm",
-        errorText: "text-xs",
+        errorText: "text-xs min-h-4",
       },
       md: {
         label: "text-base",
         input: "h-14 text-base",
-        errorText: "text-sm",
+        errorText: "text-sm min-h-5",
       },
       lg: {
         label: "text-lg",
         input: "h-16 text-lg",
-        errorText: "text-sm",
+        errorText: "text-sm min-h-5",
       },
     },
     disabled: {

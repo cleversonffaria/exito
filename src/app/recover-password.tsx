@@ -12,7 +12,6 @@ export default function RecoverPassword() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "red",
       }}
     >
       <Text>Recuperar senha</Text>

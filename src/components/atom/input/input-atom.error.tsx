@@ -26,8 +26,10 @@ export function InputError({
     opacity: opacity.value,
   }));
 
+  const hasError = !!(error || children);
+
   useEffect(() => {
-    if (error || children) {
+    if (hasError) {
       opacity.value = withTiming(1, { duration: 200 });
       shakeX.value = withSequence(
         withTiming(3, { duration: 50 }),
@@ -39,15 +41,15 @@ export function InputError({
     } else {
       opacity.value = withTiming(0, { duration: 150 });
     }
-  }, [error, children]);
-
-  if (!children && !error) return null;
+  }, [hasError]);
 
   return (
-    <Animated.View style={animatedStyle} className="overflow-hidden">
-      <Text className={errorText({ className })} {...props}>
-        {children || error}
-      </Text>
+    <Animated.View style={animatedStyle} className="overflow-hidden min-h-5">
+      {hasError && (
+        <Text className={errorText({ className })} {...props}>
+          {children || error}
+        </Text>
+      )}
     </Animated.View>
   );
 }
