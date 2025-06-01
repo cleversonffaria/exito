@@ -8,7 +8,15 @@ module.exports = {
     extend: {
       colors,
       fontFamily: {
-        sans: ["Epilogue", "sans-serif"],
+        Epilogue: ["Epilogue", "sans-serif"],
+      },
+      minHeight: {
+        screen: "100vh",
+        full: "100%",
+      },
+      spacing: {
+        safe: "env(safe-area-inset-top)",
+        "safe-bottom": "env(safe-area-inset-bottom)",
       },
     },
   },

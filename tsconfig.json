@@ -3,12 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@root/*": [
-        "./*"
-      ]
+      "@/*": ["./src/*"],
+      "@root/*": ["./*"]
     }
   },
   "include": [

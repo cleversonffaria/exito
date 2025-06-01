@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -10,6 +11,8 @@ import {
 import Button from "../../components/atom/Button";
 import Input from "../../components/atom/Input";
 import { useAuth } from "../../store/useAuth";
+
+import Logo from "@/assets/svg/logo.svg";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -62,68 +65,85 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
-      >
-        <View className="flex-1 px-6 justify-center">
-          <View className="items-center mb-12">
-            <Text className="text-4xl font-bold text-gray-800 mb-2">
-              Bem-vindo!
-            </Text>
-            <Text className="text-base text-gray-600">
-              Faça login para continuar
-            </Text>
+    <View className="flex-1">
+      {/* Background Image com múltiplas estratégias para cobertura total */}
+      <View className="absolute inset-0 overflow-hidden">
+        <ImageBackground
+          source={require("../../assets/images/gym-background.webp")}
+          className="w-full h-full scale-105"
+          resizeMode="cover"
+        />
+      </View>
+
+      <SafeAreaView className="flex-1 relative z-20 mx-6">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1"
+        >
+          <View className="flex-1 justify-center">
+            <View className="items-center">
+              <Logo width={160} height={140} className="mb-4" />
+            </View>
+
+            {/* Form container com glass morphism melhorado */}
+            <View>
+              <Text className="text-xl font-bold text-white mb-6 text-center">
+                Faça seu login
+              </Text>
+
+              <Input
+                label="E-mail"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  if (errors.email)
+                    setErrors((prev) => ({ ...prev, email: undefined }));
+                }}
+                placeholder="Digite seu e-mail"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                error={errors.email}
+                variant="error"
+                containerClassName="mb-4"
+              />
+
+              <Input
+                label="Senha"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  if (errors.password)
+                    setErrors((prev) => ({ ...prev, password: undefined }));
+                }}
+                placeholder="Digite sua senha"
+                secureTextEntry
+                autoComplete="password"
+                error={errors.password}
+                variant="glass"
+                containerClassName="mb-6"
+              />
+
+              <Button
+                title="Entrar"
+                onPress={handleLogin}
+                isLoading={loading}
+                className="mb-4 shadow-lg"
+              />
+
+              <Button
+                title="Esqueci minha senha"
+                variant="transparent"
+                onPress={handleRecoverPassword}
+                disabled={loading}
+              />
+            </View>
+
+            {/* Espaço inferior flexível */}
+            <View className="pb-8 pt-4" />
           </View>
-
-          <View className="w-full">
-            <Input
-              label="E-mail"
-              value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-                if (errors.email)
-                  setErrors((prev) => ({ ...prev, email: undefined }));
-              }}
-              placeholder="Digite seu e-mail"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-              error={errors.email}
-            />
-
-            <Input
-              label="Senha"
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                if (errors.password)
-                  setErrors((prev) => ({ ...prev, password: undefined }));
-              }}
-              placeholder="Digite sua senha"
-              secureTextEntry
-              autoComplete="password"
-              error={errors.password}
-            />
-
-            <Button
-              title="Entrar"
-              onPress={handleLogin}
-              isLoading={loading}
-              className="mt-5"
-            />
-
-            <Button
-              title="Recuperar senha"
-              variant="secondary"
-              onPress={handleRecoverPassword}
-              disabled={loading}
-              className="mt-3"
-            />
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }

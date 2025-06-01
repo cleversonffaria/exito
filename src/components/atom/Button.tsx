@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
-import { tv } from "tailwind-variants";
+import { tv, VariantProps } from "tailwind-variants";
 
 const buttonVariants = tv({
   slots: {
@@ -11,6 +11,7 @@ const buttonVariants = tv({
     variant: {
       primary: {
         base: "bg-primary-500",
+        text: "text-black-500",
       },
       secondary: {
         base: "bg-secondary-500",
@@ -26,8 +27,16 @@ const buttonVariants = tv({
         base: "bg-transparent",
         text: "text-primary-500",
       },
+      transparent: {
+        base: "bg-transparent",
+        text: "text-gray-300",
+      },
     },
     size: {
+      xs: {
+        base: "py-1 px-2",
+        text: "text-xs",
+      },
       sm: {
         base: "py-2 px-4",
         text: "text-sm",
@@ -59,10 +68,10 @@ const buttonVariants = tv({
   },
 });
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps
+  extends TouchableOpacityProps,
+    VariantProps<typeof buttonVariants> {
   title: string;
-  variant?: "primary" | "secondary" | "error" | "outline" | "ghost";
-  size?: "sm" | "md" | "lg";
   isLoading?: boolean;
 }
 

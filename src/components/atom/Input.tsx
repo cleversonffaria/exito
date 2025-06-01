@@ -15,9 +15,10 @@ const inputVariants = tv({
         label: "text-gray-800",
         input: "border border-gray-300 bg-gray-50 text-gray-900",
       },
-      dark: {
-        label: "text-foreground",
-        input: "border border-gray-600 bg-gray-700 text-foreground",
+      glass: {
+        label: "text-gray-300",
+        input:
+          "border border-white/30 bg-white/20 backdrop-blur-sm text-white placeholder:text-gray-300",
       },
       error: {
         label: "text-error-400",
@@ -45,7 +46,7 @@ const inputVariants = tv({
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
-  variant?: "default" | "dark" | "error";
+  variant?: "default" | "error" | "glass";
   containerClassName?: string;
   disabled?: boolean;
 }
@@ -68,11 +69,7 @@ export default function Input({
     label: labelClass,
     input,
     errorText,
-  } = inputVariants({
-    variant: inputVariant,
-    disabled,
-    focused,
-  });
+  } = inputVariants({ variant: inputVariant, disabled, focused });
 
   return (
     <View className={container({ className: containerClassName })}>
@@ -80,7 +77,7 @@ export default function Input({
 
       <TextInput
         className={input({ className })}
-        placeholderTextColor={variant === "dark" ? "#9CA3AF" : "#6B7280"}
+        placeholderTextColor="#6B7280"
         editable={!disabled}
         onFocus={(e) => {
           setFocused(true);
