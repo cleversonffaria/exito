@@ -1,3 +1,4 @@
+import Logo from "@/assets/svg/logo.svg";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -5,14 +6,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  Text,
   View,
 } from "react-native";
 import Button from "../../components/atom/Button";
-import Input from "../../components/atom/Input";
+import { Input } from "../../components/atom/input";
 import { useAuth } from "../../store/useAuth";
-
-import Logo from "@/assets/svg/logo.svg";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -85,44 +83,49 @@ export default function LoginScreen() {
               <Logo width={160} height={140} className="mb-4" />
             </View>
 
-            {/* Form container com glass morphism melhorado */}
             <View>
-              <Text className="text-xl font-bold text-white mb-6 text-center">
-                Faça seu login
-              </Text>
-
-              <Input
-                label="E-mail"
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                  if (errors.email)
-                    setErrors((prev) => ({ ...prev, email: undefined }));
-                }}
-                placeholder="Digite seu e-mail"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoComplete="email"
-                error={errors.email}
-                variant="error"
-                containerClassName="mb-4"
-              />
-
-              <Input
-                label="Senha"
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  if (errors.password)
-                    setErrors((prev) => ({ ...prev, password: undefined }));
-                }}
-                placeholder="Digite sua senha"
-                secureTextEntry
-                autoComplete="password"
-                error={errors.password}
+              <Input.Root
                 variant="glass"
-                containerClassName="mb-6"
-              />
+                size="md"
+                error={errors.email}
+                className="mb-4"
+              >
+                <Input.Label>E-mail</Input.Label>
+                <Input.Field
+                  value={email}
+                  onChangeText={(text: string) => {
+                    setEmail(text);
+                    if (errors.email)
+                      setErrors((prev) => ({ ...prev, email: undefined }));
+                  }}
+                  placeholder="Digite seu e-mail"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                />
+                <Input.Error />
+              </Input.Root>
+
+              <Input.Root
+                variant="glass"
+                size="md"
+                error={errors.password}
+                className="mb-6"
+              >
+                <Input.Label>Senha</Input.Label>
+                <Input.Field
+                  value={password}
+                  onChangeText={(text: string) => {
+                    setPassword(text);
+                    if (errors.password)
+                      setErrors((prev) => ({ ...prev, password: undefined }));
+                  }}
+                  placeholder="Digite sua senha"
+                  secureTextEntry
+                  autoComplete="password"
+                />
+                <Input.Error />
+              </Input.Root>
 
               <Button
                 title="Entrar"

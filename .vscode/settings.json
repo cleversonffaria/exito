@@ -12,5 +12,22 @@
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["tv\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["tv\\(([^)]*)\\)", ":\\s*[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["(?:twMerge|twJoin)\\(([^;]*)[;)]", "[`'\"]([^'\"`;]*)[`'\"]"],
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["(?:const|let|var)\\s+[\\w$_][\\w\\d$_]*\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]"],
+    ["slots:\\s*{[^}]*}", "[\"'`]([^\"'`]*)[\"'`]"],
+    ["variants:\\s*{[^}]*}", "[\"'`]([^\"'`]*)[\"'`]"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "typescript",
+    "typescriptreact": "typescriptreact"
+  },
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "ui"],
+  "tailwindCSS.validate": true,
+  "tailwindCSS.emmetCompletions": true
 }
