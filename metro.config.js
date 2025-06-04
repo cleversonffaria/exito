@@ -23,6 +23,7 @@ config.resolver = {
     "@store": "./src/store",
     "@hooks": "./src/hooks",
     "@schemas": "./src/schemas",
+    "@constants": "./src/constants",
   },
 };
 

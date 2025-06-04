@@ -1,6 +1,7 @@
 import "react-native-reanimated";
 import "../../global.css";
 
+import { colors } from "@constants/colors";
 import { useStorePersist } from "@hooks/useStorePersist";
 import { useAuth } from "@store/useAuth";
 import { useFonts } from "expo-font";
@@ -22,7 +23,6 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!loaded || !isHydrated) return;
-
     SplashScreen.hideAsync();
   }, [loaded, isHydrated]);
 
@@ -30,7 +30,15 @@ export default function RootLayout() {
 
   return (
     <>
-      <Stack>
+      <Stack
+        screenOptions={{
+          contentStyle: { backgroundColor: colors.black[500] },
+          animation: "fade",
+          animationDuration: 300,
+          gestureEnabled: false,
+        }}
+      >
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
 
         <Stack.Protected guard={!isAuth}>
@@ -47,7 +55,7 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" options={{ headerShown: false }} />
       </Stack>
 
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
     </>
   );
 }

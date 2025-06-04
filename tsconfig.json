@@ -10,7 +10,8 @@
       "@organisms/*": ["./src/components/organisms/*"],
       "@store/*": ["./src/store/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@schemas/*": ["./src/schemas/*"]
+      "@schemas/*": ["./src/schemas/*"],
+      "@constants/*": ["./src/constants/*"]
     }
   },
   "include": [

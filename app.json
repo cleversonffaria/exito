@@ -15,7 +15,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1A1A1A"
       },
       "package": "com.gym.app"
     },
@@ -34,10 +34,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./src/assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "image": "./src/assets/images/splash.png",
+          "imageWidth": 350,
+          "resizeMode": "cover",
+          "backgroundColor": "#1A1A1A"
         }
       ],
       "expo-font",
