@@ -3,6 +3,7 @@ import {
   FirstAccessFormData,
   firstAccessSchema,
 } from "@schemas/first-access.schema";
+import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -45,6 +46,8 @@ export const useFirstAccess = () => {
         };
 
         setFirstAccessState({ isLoading: false, error: undefined });
+
+        router.push("/validate-code");
         return response;
       } catch (error) {
         const errorResponse: FirstAccessResponse = {

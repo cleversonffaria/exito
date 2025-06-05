@@ -70,7 +70,7 @@ export const useLogin = () => {
   }, []);
 
   const handleRecoverPassword = () => {
-    router.push("/first-access");
+    router.push("/validate-code");
   };
 
   return {

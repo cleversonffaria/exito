@@ -17,6 +17,10 @@ export default function PublicLayout() {
         name="first-access"
         options={createCustomHeader({ title: "Primeiro Acesso" })}
       />
+      <Stack.Screen
+        name="validate-code"
+        options={createCustomHeader({ title: "Primeiro acesso" })}
+      />
     </Stack>
   );
 }
