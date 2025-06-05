@@ -1,10 +1,16 @@
 import { TextAtom } from "@atom/text";
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 
 export default function TrainingPage() {
   return (
-    <View className="flex-1 p-6">
-      <TextAtom className="text-white">TRAINING SCREEN</TextAtom>
-    </View>
+    <ScrollView
+      className="px-6"
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingBottom: 50,
+      }}
+    >
+      <TextAtom className="text-2xl font-bold text-white mb-6">Treino</TextAtom>
+    </ScrollView>
   );
 }

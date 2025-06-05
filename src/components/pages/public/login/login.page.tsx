@@ -46,6 +46,7 @@ export default function LoginPage() {
                   keyboardType: "email-address",
                   autoCapitalize: "none",
                   autoComplete: "email",
+                  returnKeyType: "next",
                 }}
               />
 
@@ -56,9 +57,11 @@ export default function LoginPage() {
                 placeholder="Digite sua senha"
                 variant="glass"
                 className="mb-6"
+                onSubmitEditing={handleSubmit}
                 fieldProps={{
                   secureTextEntry: true,
                   autoComplete: "password",
+                  returnKeyType: "send",
                 }}
               />
             </View>

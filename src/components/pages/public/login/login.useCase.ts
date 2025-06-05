@@ -1,3 +1,4 @@
+import { useAuth } from "@/store/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "@schemas/login.schema";
 import { router } from "expo-router";
@@ -10,6 +11,8 @@ export const useLogin = () => {
     isLoading: false,
     error: undefined,
   });
+
+  const { setAuth } = useAuth();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -39,6 +42,8 @@ export const useLogin = () => {
           },
           token: "mock-jwt-token",
         };
+
+        setAuth(true);
 
         setLoginState({ isLoading: false, error: undefined });
         return response;
@@ -70,7 +75,7 @@ export const useLogin = () => {
   }, []);
 
   const handleRecoverPassword = () => {
-    router.push("/validate-code");
+    router.push("/first-access");
   };
 
   return {

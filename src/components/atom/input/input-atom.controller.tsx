@@ -12,6 +12,7 @@ export function InputController<T extends FieldValues>({
   label,
   placeholder,
   fieldProps,
+  onSubmitEditing,
   ...rootProps
 }: NInputAtom.ControllerProps<T>) {
   return (
@@ -25,6 +26,7 @@ export function InputController<T extends FieldValues>({
             value={value}
             onChangeText={onChange}
             placeholder={placeholder}
+            onSubmitEditing={onSubmitEditing}
             {...fieldProps}
           />
           <InputError />

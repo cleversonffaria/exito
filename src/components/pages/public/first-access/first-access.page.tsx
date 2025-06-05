@@ -41,10 +41,12 @@ export default function FirstAccessPage() {
               label="E-mail"
               placeholder="Digite seu e-mail"
               variant="default"
+              onSubmitEditing={handleSubmit}
               fieldProps={{
                 keyboardType: "email-address",
                 autoCapitalize: "none",
                 autoComplete: "email",
+                returnKeyType: "send",
               }}
             />
           </View>

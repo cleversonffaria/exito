@@ -35,5 +35,6 @@ export namespace NInputAtom {
     label: string;
     placeholder?: string;
     fieldProps?: Omit<NInputAtom.FieldProps, "value" | "onChangeText">;
+    onSubmitEditing?: () => void;
   }
 }
