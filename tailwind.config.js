@@ -6,7 +6,11 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
-      colors,
+      colors: {
+        gym: {
+          ...colors,
+        },
+      },
       fontFamily: {
         Epilogue: ["Epilogue"],
         WorkSans: ["WorkSans"],

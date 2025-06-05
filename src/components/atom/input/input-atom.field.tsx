@@ -6,10 +6,17 @@ import { NInputAtom } from "./input-atom.types";
 import { inputVariants } from "./input-atom.variant";
 
 export function InputField({ className, ...props }: NInputAtom.FieldProps) {
-  const { variant, size, disabled, focused, setFocused } = useInputContext();
+  const { variant, size, disabled, focused, setFocused, hasError } =
+    useInputContext();
   const inputRef = useRef<TextInput>(null);
 
-  const { input } = inputVariants({ variant, size, disabled, focused });
+  const { input } = inputVariants({
+    variant,
+    size,
+    disabled,
+    focused,
+    hasError,
+  });
 
   return (
     <TextInput

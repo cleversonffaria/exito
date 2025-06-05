@@ -1,12 +1,7 @@
-import Logo from "@/assets/svg/logo.svg";
+import Logo from "@assets/svg/logo.svg";
 import { ButtonAtom } from "@atom/button";
 import { InputAtom } from "@atom/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginFormData, loginSchema } from "@schemas/login.schema";
-import { useAuth } from "@store/useAuth";
-import { router } from "expo-router";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React from "react";
 import {
   ImageBackground,
   KeyboardAvoidingView,
@@ -14,46 +9,16 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
+import { useLogin } from "./login.useCase";
 
-export default function LoginScreen() {
-  const [isSubmit, setIsSubmit] = useState(false);
-  const { setAuth } = useAuth();
-
-  const { control, handleSubmit } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = async (data: LoginFormData) => {
-    setIsSubmit(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setAuth(true);
-
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      router.push("/(tabs)/home");
-    } catch (error) {
-      console.log("Erro", "Falha na autenticação");
-    } finally {
-      setIsSubmit(false);
-    }
-  };
-
-  const handleRecoverPassword = () => {
-    router.push("/recover-password");
-  };
+export default function LoginPage() {
+  const { isLoading, form, handleSubmit, handleRecoverPassword } = useLogin();
 
   return (
     <View className="flex-1">
       <View className="absolute inset-0 overflow-hidden">
         <ImageBackground
-          source={require("../assets/images/gym-background.webp")}
+          source={require("@assets/images/gym-background.webp")}
           className="w-full h-full scale-105"
           resizeMode="cover"
         />
@@ -71,7 +36,7 @@ export default function LoginScreen() {
               </View>
 
               <InputAtom.Controller
-                control={control}
+                control={form.control}
                 name="email"
                 label="E-mail"
                 placeholder="Digite seu e-mail"
@@ -85,7 +50,7 @@ export default function LoginScreen() {
               />
 
               <InputAtom.Controller
-                control={control}
+                control={form.control}
                 name="password"
                 label="Senha"
                 placeholder="Digite sua senha"
@@ -100,8 +65,8 @@ export default function LoginScreen() {
 
             <View>
               <ButtonAtom.Root
-                onPress={handleSubmit(onSubmit)}
-                isLoading={isSubmit}
+                onPress={handleSubmit}
+                isLoading={isLoading}
                 variant="primary"
                 className="mb-4 shadow-lg"
               >
@@ -110,10 +75,10 @@ export default function LoginScreen() {
 
               <ButtonAtom.Root
                 onPress={handleRecoverPassword}
-                disabled={isSubmit}
+                disabled={isLoading}
                 variant="none"
               >
-                <ButtonAtom.Text>Esqueci minha senha</ButtonAtom.Text>
+                <ButtonAtom.Text>Primeiro Acesso</ButtonAtom.Text>
               </ButtonAtom.Root>
             </View>
           </View>

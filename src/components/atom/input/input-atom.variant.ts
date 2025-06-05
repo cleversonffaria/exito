@@ -5,26 +5,28 @@ export const inputVariants = tv({
     container: "",
     label: "font-semibold",
     input:
-      "w-full rounded-xl px-4 text-base border my-2 ring-0 ring-transparent",
+      "w-full rounded-xl px-4 text-base border my-2 ring-0 ring-transparent bg-gym-black-400",
     errorText: "min-h-5",
   },
   variants: {
     variant: {
       default: {
-        label: "text-gray-800",
-        input: "border-gray-400 bg-gray-50 text-gray-900",
+        label: "text-gym-gray-300",
+        input: "border-gym-gray-700 text-white placeholder:text-gym-gray-400",
       },
       glass: {
-        label: "text-gray-400",
+        label: "text-gym-gray-400",
         input:
-          "border-white/30 bg-white/15 backdrop-blur-sm text-white placeholder:text-gray-400",
+          "border-white/30 bg-white/15 backdrop-blur-sm text-white placeholder:text-gym-gray-400",
       },
-      error: {
-        label: "text-error-400",
-        input:
-          "border-error-400 bg-white/15 backdrop-blur-sm text-white placeholder:text-gray-400",
-        errorText: "text-error-400",
+    },
+    hasError: {
+      true: {
+        label: "text-gym-error-400",
+        input: "border-gym-error-400",
+        errorText: "text-gym-error-400",
       },
+      false: {},
     },
     size: {
       xs: {
@@ -50,18 +52,35 @@ export const inputVariants = tv({
     },
     disabled: {
       true: {
-        input: "bg-gray-200 text-gray-500",
-        label: "text-gray-500",
+        input: "bg-gym-gray-200 text-gym-gray-500",
+        label: "text-gym-gray-500",
       },
     },
     focused: {
       true: {
-        input: "border-primary-500 ring-2 ring-primary-500/20",
+        input: "border-gym-primary-500 ring-2 ring-gym-primary-500/20",
       },
     },
   },
+  compoundVariants: [
+    {
+      variant: "default",
+      hasError: true,
+      class: {
+        input: "bg-gym-black-400",
+      },
+    },
+    {
+      variant: "glass",
+      hasError: true,
+      class: {
+        input: "bg-white/15 backdrop-blur-sm",
+      },
+    },
+  ],
   defaultVariants: {
     variant: "default",
     size: "md",
+    hasError: false,
   },
 });

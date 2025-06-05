@@ -24,6 +24,8 @@ config.resolver = {
     "@hooks": "./src/hooks",
     "@schemas": "./src/schemas",
     "@constants": "./src/constants",
+    "@utils": "./src/utils",
+    "@assets": "./src/assets",
   },
 };
 

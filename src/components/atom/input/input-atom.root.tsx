@@ -15,24 +15,26 @@ export function InputRoot({
 }: NInputAtom.RootProps) {
   const [focused, setFocused] = useState(false);
 
-  const finalVariant = error ? "error" : variant;
+  const hasError = !!error;
 
   const { container } = inputVariants({
-    variant: finalVariant,
+    variant,
     size,
     disabled,
     focused,
+    hasError,
   });
 
   return (
     <InputContext.Provider
       value={{
-        variant: finalVariant,
+        variant,
         size,
         disabled,
         focused,
         setFocused,
         error,
+        hasError,
       }}
     >
       <View className={container({ className })} {...props}>

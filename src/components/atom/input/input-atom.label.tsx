@@ -9,9 +9,15 @@ export function InputLabel({
   className,
   ...props
 }: NInputAtom.LabelProps) {
-  const { variant, size, disabled, focused } = useInputContext();
+  const { variant, size, disabled, focused, hasError } = useInputContext();
 
-  const { label } = inputVariants({ variant, size, disabled, focused });
+  const { label } = inputVariants({
+    variant,
+    size,
+    disabled,
+    focused,
+    hasError,
+  });
 
   return (
     <TextAtom className={label({ className })} {...props}>

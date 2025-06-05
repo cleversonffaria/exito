@@ -8,16 +8,16 @@ export const buttonVariants = tv({
   variants: {
     variant: {
       primary: {
-        root: "bg-primary-500",
-        text: "text-black-500",
+        root: "bg-gym-primary-500",
+        text: "text-gym-black-500",
       },
       error: {
-        root: "bg-error-400",
+        root: "bg-gym-error-400",
         text: "text-white",
       },
       none: {
         root: "bg-transparent",
-        text: "text-gray-300",
+        text: "text-gym-gray-300",
       },
     },
     size: {
@@ -45,14 +45,14 @@ export const buttonVariants = tv({
     },
     disabled: {
       true: {
-        root: "bg-black-400",
-        text: "text-gray-500",
+        root: "bg-gym-black-400",
+        text: "text-gym-gray-500",
       },
     },
     loading: {
       true: {
-        root: "bg-black-400",
-        text: "text-gray-500",
+        root: "bg-gym-black-400",
+        text: "text-gym-gray-500",
       },
     },
   },
@@ -61,16 +61,16 @@ export const buttonVariants = tv({
       variant: "primary",
       outline: true,
       class: {
-        root: "border-primary-500",
-        text: "text-primary-500",
+        root: "border-gym-primary-500",
+        text: "text-gym-primary-500",
       },
     },
     {
       variant: "error",
       outline: true,
       class: {
-        root: "border-error-400",
-        text: "text-error-400",
+        root: "border-gym-error-400",
+        text: "text-gym-error-400",
       },
     },
     {
@@ -78,7 +78,7 @@ export const buttonVariants = tv({
       disabled: true,
       class: {
         root: "bg-transparent",
-        text: "text-gray-300",
+        text: "text-gym-gray-300",
       },
     },
     {
@@ -86,7 +86,7 @@ export const buttonVariants = tv({
       loading: true,
       class: {
         root: "bg-transparent",
-        text: "text-gray-300",
+        text: "text-gym-gray-300",
       },
     },
   ],

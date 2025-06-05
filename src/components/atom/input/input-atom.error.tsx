@@ -15,8 +15,15 @@ export function InputError({
   className,
   ...props
 }: NInputAtom.ErrorProps) {
-  const { variant, size, disabled, focused, error } = useInputContext();
-  const { errorText } = inputVariants({ variant, size, disabled, focused });
+  const { variant, size, disabled, focused, error, hasError } =
+    useInputContext();
+  const { errorText } = inputVariants({
+    variant,
+    size,
+    disabled,
+    focused,
+    hasError,
+  });
 
   const shakeX = useSharedValue(0);
   const opacity = useSharedValue(0);
@@ -26,10 +33,10 @@ export function InputError({
     opacity: opacity.value,
   }));
 
-  const hasError = !!(error || children);
+  const hasErrorContent = !!(error || children);
 
   useEffect(() => {
-    if (hasError) {
+    if (hasErrorContent) {
       opacity.value = withTiming(1, { duration: 200 });
       shakeX.value = withSequence(
         withTiming(3, { duration: 50 }),
@@ -41,11 +48,11 @@ export function InputError({
     } else {
       opacity.value = withTiming(0, { duration: 150 });
     }
-  }, [hasError]);
+  }, [hasErrorContent]);
 
   return (
     <Animated.View style={animatedStyle} className="overflow-hidden min-h-5">
-      {hasError && (
+      {hasErrorContent && (
         <TextAtom className={errorText({ className })} {...props}>
           {children || error}
         </TextAtom>

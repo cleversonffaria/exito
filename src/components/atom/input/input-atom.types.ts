@@ -8,6 +8,7 @@ export namespace NInputAtom {
     focused: boolean;
     setFocused: (focused: boolean) => void;
     error?: string;
+    hasError?: boolean;
   }
 
   export interface RootProps
