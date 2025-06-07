@@ -16,6 +16,7 @@ export namespace NInputAtom {
       VariantProps<typeof inputVariants> {
     children: React.ReactNode;
     error?: string;
+    label?: string;
   }
 
   export interface LabelProps extends TextProps {
@@ -26,6 +27,10 @@ export namespace NInputAtom {
 
   export interface ErrorProps extends TextProps {
     children?: React.ReactNode;
+  }
+
+  export interface InputIconProps {
+    icon: React.ComponentType | React.ReactElement;
   }
 
   export interface ControllerProps<T extends FieldValues>

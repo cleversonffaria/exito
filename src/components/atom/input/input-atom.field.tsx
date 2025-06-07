@@ -24,6 +24,7 @@ export function InputField({ className, ...props }: NInputAtom.FieldProps) {
       className={input({ className })}
       editable={!disabled}
       selectionColor={colors.primary[500]}
+      keyboardAppearance="dark"
       onFocus={(e) => {
         setFocused(true);
         props.onFocus?.(e);

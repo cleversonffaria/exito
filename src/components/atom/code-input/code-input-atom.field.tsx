@@ -50,6 +50,7 @@ export function CodeInputField({
         onChangeText={handleChangeText}
         cellCount={cellCount}
         keyboardType="number-pad"
+        keyboardAppearance="dark"
         textContentType="oneTimeCode"
         autoComplete={Platform.select({
           android: "sms-otp" as const,
