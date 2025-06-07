@@ -4,8 +4,7 @@ export const inputVariants = tv({
   slots: {
     container: "",
     label: "font-semibold",
-    input:
-      "w-full rounded-xl px-4 text-base border my-2 ring-0 ring-transparent bg-gym-black-400",
+    input: "w-full rounded-xl px-4 text-base border my-2 bg-gym-black-400",
     errorText: "min-h-5",
   },
   variants: {
@@ -41,7 +40,7 @@ export const inputVariants = tv({
       },
       md: {
         label: "text-base",
-        input: "h-14 pb-1 text-base",
+        input: "h-14 text-base",
         errorText: "text-sm min-h-5",
       },
       lg: {
@@ -58,7 +57,7 @@ export const inputVariants = tv({
     },
     focused: {
       true: {
-        input: "border-gym-primary-500 ring-2 ring-gym-primary-500/20",
+        input: "border-gym-primary-500",
       },
     },
   },
