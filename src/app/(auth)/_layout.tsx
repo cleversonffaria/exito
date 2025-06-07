@@ -1,42 +1,29 @@
 import { colors } from "@/constants/colors";
-import { TabBarOrganism } from "@organisms/tab-bar";
 import { createCustomHeader } from "@utils/header-config";
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TabLayout() {
+export default function AuthLayout() {
   return (
-    <SafeAreaView className="flex-1 bg-gym-black-500">
-      <Tabs
-        tabBar={(props) => <TabBarOrganism {...props} />}
+    <SafeAreaView className="flex-1">
+      <Stack
         screenOptions={{
+          contentStyle: { backgroundColor: colors.black[500] },
           headerShown: false,
-          tabBarStyle: { display: "none" },
-          sceneStyle: {
-            backgroundColor: colors.black[500],
-          },
+          animation: "none",
+          animationDuration: 0,
+          gestureEnabled: false,
         }}
       >
-        <Tabs.Screen
-          name="home"
-          options={{
-            title: "Início",
-          }}
-        />
-        <Tabs.Screen
-          name="training"
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="exercise-details"
           options={createCustomHeader({
-            title: "Treino",
+            title: "Detalhes do Exercício",
           })}
         />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: "Perfil",
-          }}
-        />
-      </Tabs>
+      </Stack>
     </SafeAreaView>
   );
 }

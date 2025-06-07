@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "gym",
-    "slug": "gym",
+    "name": "Exito",
+    "slug": "exito",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "exito",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -42,7 +42,8 @@
       ],
       "expo-font",
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      "react-native-video"
     ],
     "experiments": {
       "typedRoutes": true

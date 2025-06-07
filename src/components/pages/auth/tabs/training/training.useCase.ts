@@ -1,9 +1,13 @@
+import { useExercise } from "@store/useExercise";
+import { useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { NTrainingPage } from "./training.types";
 
 export const useTraining = () => {
   const [selectedDay, setSelectedDay] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { setSelectedExercise } = useExercise();
 
   const weekDays: NTrainingPage.WeekDay[] = [
     { id: 1, name: "Segunda", shortName: "Seg", isActive: false },
@@ -29,8 +33,8 @@ export const useTraining = () => {
           },
           sets: 5,
           repetitions: 10,
-          load: "60kg",
-          rest: "90 segundos",
+          load: 60,
+          rest: 90,
           notes: "Movimento controlado",
         },
         {
@@ -43,8 +47,8 @@ export const useTraining = () => {
           },
           sets: 2,
           repetitions: 10,
-          load: "15kg",
-          rest: "60 segundos",
+          load: 15,
+          rest: 60,
           notes: "Foco na contração",
         },
       ],
@@ -63,8 +67,8 @@ export const useTraining = () => {
           },
           sets: 5,
           repetitions: 10,
-          load: "60kg",
-          rest: "90 segundos",
+          load: 60,
+          rest: 90,
           notes: "Movimento controlado",
         },
         {
@@ -77,8 +81,8 @@ export const useTraining = () => {
           },
           sets: 2,
           repetitions: 10,
-          load: "15kg",
-          rest: "60 segundos",
+          load: 15,
+          rest: 60,
           notes: "Foco na contração",
         },
       ],
@@ -110,9 +114,23 @@ export const useTraining = () => {
 
   const handleExercisePress = useCallback(
     (exercise: NTrainingPage.TrainingExercise) => {
-      console.log("Navegando para exercício:", exercise.exercise.name);
+      const exerciseData = {
+        id: exercise.exercise.id.toString(),
+        name: exercise.exercise.name,
+        series: exercise.sets,
+        repetitions: exercise.repetitions,
+        weight: exercise.load,
+        restTime: exercise.rest,
+        muscleGroups: exercise.exercise.muscles_worked,
+        description: exercise.exercise.execution_description,
+        observations: exercise.notes,
+        currentRepetition: 0,
+      };
+
+      setSelectedExercise(exerciseData);
+      router.push("/(auth)/exercise-details");
     },
-    []
+    [router, setSelectedExercise]
   );
 
   return {

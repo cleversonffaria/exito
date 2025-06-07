@@ -11,8 +11,8 @@ export namespace NTrainingPage {
     exercise: Exercise;
     sets: number;
     repetitions: number;
-    load: string;
-    rest: string;
+    load: number;
+    rest: number;
     notes: string;
   }
 

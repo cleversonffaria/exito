@@ -12,7 +12,12 @@ config.transformer = {
 
 config.resolver = {
   ...resolver,
-  assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
+  assetExts: [
+    ...resolver.assetExts.filter((ext) => ext !== "svg"),
+    "mp4",
+    "avi",
+    "mov",
+  ],
   sourceExts: [...resolver.sourceExts, "svg"],
   alias: {
     "@": "./src",

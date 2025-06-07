@@ -68,7 +68,7 @@ export default function HomePage() {
 
             <View>
               <TextAtom className="text-gym-primary-500 text-4xl font-bold">
-                {totalValue}
+                {String(totalValue)}
               </TextAtom>
               <TextAtom className="text-gym-gray-400 text-sm">
                 Total da Semana

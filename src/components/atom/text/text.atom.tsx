@@ -16,7 +16,6 @@ export const TextAtom: FC<PropsWithChildren<NTextAtom.Props>> = ({
     <As
       testID={testID}
       {...props}
-      aria-label={children}
       className={cn(textVariants({ size }), className)}
     >
       {children}

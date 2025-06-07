@@ -25,14 +25,19 @@ export const createCustomHeader = (options: HeaderConfigOptions) => {
       fontFamily: "Epilogue",
       fontSize: 18,
       fontWeight: "600" as const,
+      textAlign: "center" as const,
     },
+    headerTitleAlign: "center" as const,
     headerShadowVisible: false,
     headerStatusBarHeight: 0,
     ...(showBackButton && {
+      headerLeftContainerStyle: {
+        paddingLeft: 16,
+      },
       headerLeft: () => (
         <TouchableOpacity
           onPress={onBackPress || (() => router.back())}
-          className="p-2 -ml-2"
+          className="p-2"
           activeOpacity={0.7}
         >
           <ArrowLeft width={20} height={20} color={colors.gray[400]} />

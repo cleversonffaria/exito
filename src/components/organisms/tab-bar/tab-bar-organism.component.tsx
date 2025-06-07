@@ -3,7 +3,7 @@ import { colors } from "@constants/colors";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { cn } from "@utils/cn";
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 import {
   TAB_BAR_ICONS,
   TAB_BAR_LABELS,
@@ -15,8 +15,13 @@ export function TabBarOrganism({
   descriptors,
   navigation,
 }: BottomTabBarProps) {
+  const bottomPosition = Platform.OS === "android" ? 20 : 2;
+
   return (
-    <View className="absolute left-0 right-0 bg-gym-black-400 border border-gym-gray-700 rounded-2xl shadow-lg mx-6 h-20 bottom-2">
+    <View
+      className="absolute left-0 right-0 bg-gym-black-400 border border-gym-gray-700 rounded-2xl shadow-lg mx-6 h-20"
+      style={{ bottom: bottomPosition }}
+    >
       <View className="flex-row h-full items-center justify-around px-4">
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
