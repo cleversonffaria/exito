@@ -1,5 +1,6 @@
 import { colors } from "@/constants/colors";
 import { TabBarOrganism } from "@organisms/tab-bar";
+import { createCustomHeader } from "@utils/header-config";
 import { Tabs } from "expo-router";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,9 +26,9 @@ export default function TabLayout() {
         />
         <Tabs.Screen
           name="training"
-          options={{
+          options={createCustomHeader({
             title: "Treino",
-          }}
+          })}
         />
         <Tabs.Screen
           name="profile"

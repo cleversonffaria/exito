@@ -18,6 +18,7 @@ export const createCustomHeader = (options: HeaderConfigOptions) => {
     title,
     headerStyle: {
       backgroundColor: colors.black[500],
+      paddingTop: 0,
     },
     headerTintColor: colors.gray[300],
     headerTitleStyle: {
@@ -26,6 +27,7 @@ export const createCustomHeader = (options: HeaderConfigOptions) => {
       fontWeight: "600" as const,
     },
     headerShadowVisible: false,
+    headerStatusBarHeight: 0,
     ...(showBackButton && {
       headerLeft: () => (
         <TouchableOpacity
