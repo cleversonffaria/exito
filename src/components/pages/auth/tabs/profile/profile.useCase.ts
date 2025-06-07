@@ -1,27 +1,35 @@
 import { useAuth } from "@/store/useAuth";
+import { modal } from "@store/useModal";
 import { router } from "expo-router";
-import { Alert } from "react-native";
 
 export const useProfile = () => {
   const { logout } = useAuth();
 
-  const handleLogout = () => {
-    Alert.alert("Logout", "Tem certeza que deseja sair?", [
-      {
-        text: "Cancelar",
-        style: "cancel",
-      },
-      {
-        text: "Sair",
-        onPress: () => {
-          logout();
-          router.replace("/login");
+  const showLogoutModal = () => {
+    modal.show({
+      description: "Tem certeza que deseja sair?",
+      adjustToContentHeight: true,
+      actions: [
+        {
+          title: "Sair",
+          variant: "error",
+          onPress: () => {
+            logout();
+            router.replace("/login");
+          },
         },
-      },
-    ]);
+        {
+          title: "Cancelar",
+          variant: "none",
+          onPress: () => {
+            console.log("Cancelado");
+          },
+        },
+      ],
+    });
   };
 
   return {
-    handleLogout,
+    showLogoutModal,
   };
 };

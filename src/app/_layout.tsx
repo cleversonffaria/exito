@@ -1,6 +1,7 @@
 import "react-native-reanimated";
 import "../../global.css";
 
+import { ModalProvider } from "@/providers/modal-provider";
 import { useStorePersist } from "@hooks/useStorePersist";
 import { useAuth } from "@store/useAuth";
 import { useFonts } from "expo-font";
@@ -8,6 +9,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { colors } from "../constants/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -30,7 +32,7 @@ export default function RootLayout() {
   if (!loaded || !isHydrated) return null;
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack
         screenOptions={{
           contentStyle: { backgroundColor: colors.black[500] },
@@ -53,6 +55,8 @@ export default function RootLayout() {
       </Stack>
 
       <StatusBar style="light" />
-    </>
+
+      <ModalProvider />
+    </GestureHandlerRootView>
   );
 }

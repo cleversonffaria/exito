@@ -18,7 +18,6 @@ export const createCustomHeader = (options: HeaderConfigOptions) => {
     title,
     headerStyle: {
       backgroundColor: colors.black[500],
-      paddingTop: 0,
     },
     headerTintColor: colors.gray[300],
     headerTitleStyle: {
