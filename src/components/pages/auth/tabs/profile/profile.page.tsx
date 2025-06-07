@@ -41,15 +41,15 @@ export default function ProfilePage() {
           />
         </View>
 
-        <TextAtom className="text-2xl font-semibold text-gym-gray-200 mb-1">
+        <TextAtom className="text-2xl font-semibold text-gym-gray-200">
           {userInfo.name}
         </TextAtom>
 
-        <TextAtom className="text-sm text-gym-gray-400 mb-2">
+        <TextAtom className="text-base text-gym-gray-400">
           {userInfo.role}
         </TextAtom>
 
-        <TextAtom className="text-sm text-gym-gray-400 mb-10">
+        <TextAtom className="text-base text-gym-gray-400 mb-10">
           Início: {userInfo.startDate}
         </TextAtom>
 
