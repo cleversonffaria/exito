@@ -23,6 +23,18 @@ export default function AuthLayout() {
             title: "Detalhes do Exercício",
           })}
         />
+        <Stack.Screen
+          name="exercises"
+          options={createCustomHeader({
+            title: "Exercícios",
+          })}
+        />
+        <Stack.Screen
+          name="students"
+          options={createCustomHeader({
+            title: "Alunos",
+          })}
+        />
       </Stack>
     </SafeAreaView>
   );

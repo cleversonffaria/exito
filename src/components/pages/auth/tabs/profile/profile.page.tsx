@@ -1,13 +1,27 @@
-import { colors } from "@/constants/colors";
-import LogoutIcon from "@assets/svg/power-fill.svg";
-import { TextAtom } from "@atom/text";
 import { useNavigation } from "@react-navigation/native";
 import React, { useLayoutEffect } from "react";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+
+import { colors } from "@/constants/colors";
+
+import { ButtonAtom } from "@atom/button";
+import { TextAtom } from "@atom/text";
+import { NProfilePage } from "./profile.types";
 import { useProfile } from "./profile.useCase";
 
-export default function ProfilePage() {
-  const { userInfo, profileStats, showLogoutModal } = useProfile();
+import ExercisesIcon from "@assets/svg/exercise.svg";
+import LogoutIcon from "@assets/svg/power-fill.svg";
+import StudentsIcon from "@assets/svg/user-card.svg";
+
+export default function ProfilePage({}: NProfilePage.Props) {
+  const {
+    isTeacher,
+    userInfo,
+    profileStats,
+    navigateToStudents,
+    navigateToExercises,
+    showLogoutModal,
+  } = useProfile();
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -53,7 +67,7 @@ export default function ProfilePage() {
           Início: {userInfo.startDate}
         </TextAtom>
 
-        <View className="flex-row justify-between w-full px-4 mb-8">
+        <View className="flex-row justify-around w-full px-4 mb-8">
           {profileStats.map((stat, index) => (
             <View key={index} className="items-center">
               <TextAtom className="text-3xl font-bold text-gym-primary-500 mb-1">
@@ -65,6 +79,42 @@ export default function ProfilePage() {
             </View>
           ))}
         </View>
+
+        {isTeacher && (
+          <View className="w-full gap-4">
+            <ButtonAtom.Root
+              onPress={navigateToStudents}
+              className="bg-gym-black-400 border border-gym-gray-700"
+            >
+              <View className="flex-row items-stretch gap-2 w-full">
+                <StudentsIcon
+                  width={20}
+                  height={20}
+                  color={colors.primary[500]}
+                />
+                <ButtonAtom.Text className="text-gym-gray-200 font-normal">
+                  Alunos
+                </ButtonAtom.Text>
+              </View>
+            </ButtonAtom.Root>
+
+            <ButtonAtom.Root
+              onPress={navigateToExercises}
+              className="bg-gym-black-400 border border-gym-gray-700"
+            >
+              <View className="flex-row items-stretch gap-2 w-full">
+                <ExercisesIcon
+                  width={20}
+                  height={20}
+                  color={colors.primary[500]}
+                />
+                <ButtonAtom.Text className="text-gym-gray-200 font-normal">
+                  Exercícios
+                </ButtonAtom.Text>
+              </View>
+            </ButtonAtom.Root>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
