@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { View } from "react-native";
 import { Modalize } from "react-native-modalize";
 
@@ -8,6 +8,7 @@ import { ButtonAtom } from "@atom/button";
 import { TextAtom } from "@atom/text";
 import { useModal } from "@store/useModal";
 import { cn } from "@utils/cn";
+import { debounce } from "lodash";
 
 export function ModalProvider() {
   const modalizeRef = useRef<Modalize>(null);
@@ -22,6 +23,14 @@ export function ModalProvider() {
     reset();
     currentConfig?.onDismiss?.();
   };
+
+  const debouncedActionPress = useCallback(
+    debounce((onPress: () => void) => {
+      onPress();
+      hide();
+    }, 300),
+    [hide]
+  );
 
   return (
     <Modalize
@@ -70,8 +79,7 @@ export function ModalProvider() {
                     key={index}
                     {...buttonProps}
                     onPress={() => {
-                      onPress();
-                      hide();
+                      debouncedActionPress(onPress);
                     }}
                     className={cn(
                       buttonProps.className,
