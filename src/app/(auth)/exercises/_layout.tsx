@@ -20,12 +20,12 @@ export default function AuthLayout() {
           title: "Exercícios",
         })}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="register"
         options={createCustomHeader({
-          title: "Cadastro de Alunos",
+          title: "Exercícios",
         })}
-      /> */}
+      />
     </Stack>
   );
 }

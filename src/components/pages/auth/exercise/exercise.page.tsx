@@ -1,11 +1,15 @@
-import { useExerciseSelection } from "@/components/pages/auth/exercise-training/exercise-training.useCase";
+import { useNavigation } from "expo-router";
+import React, { useLayoutEffect } from "react";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+
 import { colors } from "@/constants/colors";
-import SearchIcon from "@assets/svg/search.svg";
 import { InputAtom } from "@atom/input";
 import { TextAtom } from "@atom/text";
-import React from "react";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { NExerciseTrainingPage } from "./exercise.types";
+import { useExerciseSelection } from "./exercise.useCase";
+
+import PlusIcon from "@assets/svg/plus-solid.svg";
+import SearchIcon from "@assets/svg/search.svg";
 
 export default function ExercisePage() {
   const {
@@ -13,7 +17,25 @@ export default function ExercisePage() {
     setSearchQuery,
     filteredExercises,
     handleSelectExercise,
+    addNewExercise,
   } = useExerciseSelection();
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={addNewExercise}
+          className="p-1.5 bg-gym-primary-500 rounded-full"
+          activeOpacity={0.7}
+          hitSlop={20}
+        >
+          <PlusIcon width={12} height={12} color={colors.black[500]} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, addNewExercise]);
 
   return (
     <View className="flex-1 px-6 mt-4">

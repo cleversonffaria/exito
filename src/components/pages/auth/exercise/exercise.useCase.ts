@@ -65,10 +65,15 @@ export const useExerciseSelection = () => {
     [setSelectedExercise]
   );
 
+  const addNewExercise = () => {
+    router.push("/(auth)/exercises/register");
+  };
+
   return {
     searchQuery,
     setSearchQuery,
     filteredExercises,
     handleSelectExercise,
+    addNewExercise,
   };
 };
