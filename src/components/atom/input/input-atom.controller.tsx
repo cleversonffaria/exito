@@ -11,6 +11,7 @@ export function InputController<T extends FieldValues>({
   placeholder,
   fieldProps,
   onSubmitEditing,
+  classNameContainer,
   ...rootProps
 }: NInputAtom.ControllerProps<T>) {
   return (
@@ -18,7 +19,12 @@ export function InputController<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <InputRoot error={error?.message} {...rootProps} label={label}>
+        <InputRoot
+          error={error?.message}
+          {...rootProps}
+          label={label}
+          classNameContainer={classNameContainer}
+        >
           <InputField
             value={value}
             onChangeText={onChange}

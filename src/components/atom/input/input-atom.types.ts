@@ -15,6 +15,7 @@ export namespace NInputAtom {
     extends ViewProps,
       VariantProps<typeof inputVariants> {
     children: React.ReactNode;
+    classNameContainer?: string;
     error?: string;
     label?: string;
   }

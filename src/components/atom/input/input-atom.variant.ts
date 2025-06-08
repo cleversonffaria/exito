@@ -58,7 +58,7 @@ export const inputVariants = tv({
     disabled: {
       true: {
         input: "text-gym-gray-500",
-        container: "bg-gym-gray-200",
+        container: "opacity-90",
         label: "text-gym-gray-500",
       },
     },

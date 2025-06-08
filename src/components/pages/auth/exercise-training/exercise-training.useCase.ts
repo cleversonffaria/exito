@@ -1,3 +1,4 @@
+import { useSelectedExercise } from "@/store/useSelectedExercise";
 import { router } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { NExerciseTrainingPage } from "./exercise-training.types";
@@ -36,6 +37,7 @@ const mockExercises: NExerciseTrainingPage.Option[] = [
 
 export const useExerciseSelection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { setSelectedExercise } = useSelectedExercise();
 
   const filteredExercises = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -51,10 +53,16 @@ export const useExerciseSelection = () => {
 
   const handleSelectExercise = useCallback(
     (exercise: NExerciseTrainingPage.Option) => {
-      console.log("Exercício selecionado:", exercise);
-      router.back();
+      setSelectedExercise({
+        id: exercise.id,
+        name: exercise.name,
+        category: exercise.category,
+        image: exercise.image,
+      });
+
+      router.push("/(auth)/students/register-training");
     },
-    []
+    [setSelectedExercise]
   );
 
   return {

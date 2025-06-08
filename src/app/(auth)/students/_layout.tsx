@@ -50,6 +50,12 @@ export default function AuthLayout() {
           title: "Treino do Aluno",
         })}
       />
+      <Stack.Screen
+        name="register-training"
+        options={createCustomHeader({
+          title: "Treino do Aluno",
+        })}
+      />
     </Stack>
   );
 }

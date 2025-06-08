@@ -14,6 +14,7 @@ export function InputRoot({
   disabled = false,
   error,
   className,
+  classNameContainer,
   label,
   ...props
 }: NInputAtom.RootProps) {
@@ -36,7 +37,10 @@ export function InputRoot({
       <View className={cn("gap-2", className)}>
         {label && <InputLabel>{label}</InputLabel>}
 
-        <View className={container()} {...props}>
+        <View
+          className={container({ className: classNameContainer })}
+          {...props}
+        >
           {children}
         </View>
 
