@@ -57,6 +57,7 @@ export interface Database {
         Row: {
           id: number;
           name: string;
+          muscle_groups: string[];
           equipment: string;
           execution_description: string | null;
           thumbnail_url: string | null;
@@ -68,6 +69,7 @@ export interface Database {
         Insert: {
           id?: number;
           name: string;
+          muscle_groups: string[];
           equipment: string;
           execution_description?: string | null;
           thumbnail_url?: string | null;
@@ -79,6 +81,7 @@ export interface Database {
         Update: {
           id?: number;
           name?: string;
+          muscle_groups?: string[];
           equipment?: string;
           execution_description?: string | null;
           thumbnail_url?: string | null;
@@ -88,37 +91,7 @@ export interface Database {
           updated_at?: string;
         };
       };
-      muscle_groups: {
-        Row: {
-          id: number;
-          name: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: number;
-          name: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: number;
-          name?: string;
-          created_at?: string;
-        };
-      };
-      exercise_muscle_groups: {
-        Row: {
-          exercise_id: number;
-          muscle_group_id: number;
-        };
-        Insert: {
-          exercise_id: number;
-          muscle_group_id: number;
-        };
-        Update: {
-          exercise_id?: number;
-          muscle_group_id?: number;
-        };
-      };
+
       trainings: {
         Row: {
           id: number;
@@ -253,38 +226,6 @@ export interface Database {
           duration_seconds?: number | null;
         };
       };
-      student_progress: {
-        Row: {
-          id: string;
-          student_id: string;
-          training_id: number;
-          total_sessions: number;
-          completed_sessions: number;
-          last_session_date: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          student_id: string;
-          training_id: number;
-          total_sessions?: number;
-          completed_sessions?: number;
-          last_session_date?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          student_id?: string;
-          training_id?: number;
-          total_sessions?: number;
-          completed_sessions?: number;
-          last_session_date?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
     };
     Views: {
       [_ in never]: never;
@@ -333,15 +274,12 @@ export interface Database {
 
 export type User = Database["public"]["Tables"]["users"]["Row"];
 export type Exercise = Database["public"]["Tables"]["exercises"]["Row"];
-export type MuscleGroup = Database["public"]["Tables"]["muscle_groups"]["Row"];
 export type Training = Database["public"]["Tables"]["trainings"]["Row"];
 export type TrainingExercise =
   Database["public"]["Tables"]["training_exercises"]["Row"];
 export type StudentTraining =
   Database["public"]["Tables"]["student_trainings"]["Row"];
 export type TrainingLog = Database["public"]["Tables"]["training_logs"]["Row"];
-export type StudentProgress =
-  Database["public"]["Tables"]["student_progress"]["Row"];
 
 export type UserRole = Database["public"]["Enums"]["user_role"];
 export type GenderType = Database["public"]["Enums"]["gender_type"];
@@ -368,13 +306,9 @@ export type UpdateTrainingExercise =
 export type UpdateStudentTraining =
   Database["public"]["Tables"]["student_trainings"]["Update"];
 
-export interface ExerciseWithMuscleGroups extends Exercise {
-  muscle_groups: MuscleGroup[];
-}
-
 export interface TrainingWithExercises extends Training {
   training_exercises: (TrainingExercise & {
-    exercise: ExerciseWithMuscleGroups;
+    exercise: Exercise;
   })[];
 }
 
@@ -386,6 +320,5 @@ export interface StudentWithTrainings extends User {
 
 export interface StudentTrainingWithProgress extends StudentTraining {
   training: TrainingWithExercises;
-  progress?: StudentProgress;
   today_logs: TrainingLog[];
 }

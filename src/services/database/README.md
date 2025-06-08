@@ -38,29 +38,12 @@ Catálogo de exercícios disponíveis.
 ```sql
 - id: SERIAL (PK) - ID do exercício
 - name: VARCHAR - Nome do exercício
+- muscle_groups: TEXT[] - Array de grupos musculares (ex: ["Peitoral maior", "Tríceps"])
 - equipment: VARCHAR - Equipamento necessário
 - execution_description: TEXT - Descrição da execução
 - thumbnail_url: TEXT - URL da imagem do exercício
 - video_demo_url: TEXT - URL do vídeo demonstrativo
 - created_by: UUID (FK) - Professor que criou o exercício
-```
-
-### 3. `muscle_groups`
-
-Grupos musculares trabalhados pelos exercícios.
-
-```sql
-- id: SERIAL (PK) - ID do grupo muscular
-- name: VARCHAR - Nome do grupo muscular
-```
-
-### 4. `exercise_muscle_groups`
-
-Relacionamento N:N entre exercícios e grupos musculares.
-
-```sql
-- exercise_id: INTEGER (FK) - Referência ao exercício
-- muscle_group_id: INTEGER (FK) - Referência ao grupo muscular
 ```
 
 ### 5. `trainings`
@@ -120,19 +103,6 @@ Histórico de execução dos treinos pelos estudantes.
 - duration_seconds: INTEGER - Duração do exercício
 ```
 
-### 9. `student_progress`
-
-Resumo do progresso geral dos estudantes.
-
-```sql
-- id: UUID (PK) - ID único
-- student_id: UUID (FK) - Estudante
-- training_id: INTEGER (FK) - Treino
-- total_sessions: INTEGER - Total de sessões programadas
-- completed_sessions: INTEGER - Sessões completadas
-- last_session_date: DATE - Data da última sessão
-```
-
 ## Relacionamentos
 
 ```
@@ -140,7 +110,7 @@ users (teacher) 1:N exercises
 users (teacher) 1:N trainings
 users (student) 1:N student_trainings
 trainings 1:N training_exercises
-exercises N:N muscle_groups (via exercise_muscle_groups)
+
 student_trainings 1:N training_logs
 ```
 
@@ -181,12 +151,16 @@ SELECT * FROM get_student_trainings_with_exercises('uuid-do-estudante');
 ### Buscar exercícios por grupo muscular
 
 ```sql
-SELECT e.*, array_agg(mg.name) as muscle_groups
-FROM exercises e
-JOIN exercise_muscle_groups emg ON e.id = emg.exercise_id
-JOIN muscle_groups mg ON emg.muscle_group_id = mg.id
-WHERE mg.name ILIKE '%peitoral%'
-GROUP BY e.id;
+-- Buscar exercícios que trabalham Peitoral maior
+SELECT * FROM exercises
+WHERE muscle_groups @> '["Peitoral maior"]';
+
+-- Buscar exercícios que trabalham qualquer músculo do peito
+SELECT * FROM exercises
+WHERE EXISTS (
+  SELECT 1 FROM unnest(muscle_groups) AS mg
+  WHERE mg ILIKE '%peitoral%'
+);
 ```
 
 ### Calcular progresso diário
