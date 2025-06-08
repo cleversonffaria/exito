@@ -34,8 +34,8 @@ export default function RegisterStudentPage() {
           <InputAtom.Controller
             control={form.control}
             name="email"
-            label="Email"
-            placeholder="Digite o email do aluno"
+            label="E-mail"
+            placeholder="Digite o e-mail do aluno"
             fieldProps={{
               keyboardType: "email-address",
               autoCapitalize: "none",
