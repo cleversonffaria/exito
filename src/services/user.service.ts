@@ -30,7 +30,10 @@ class UserService {
           .from("users")
           .select("id", { count: "exact" })
           .eq("role", "student"),
-        supabase.from("exercises").select("id", { count: "exact" }),
+        supabase
+          .from("exercises")
+          .select("id", { count: "exact" })
+          .is("deleted_at", null),
       ]);
 
       if (studentsResponse.error) {

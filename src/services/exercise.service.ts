@@ -28,7 +28,7 @@ class ExerciseService {
 
   async getExercises(filters?: ExerciseFilters): Promise<ExerciseResponse> {
     try {
-      let query = supabase.from("exercises").select("*");
+      let query = supabase.from("exercises").select("*").is("deleted_at", null);
 
       if (filters?.muscleGroups && filters.muscleGroups.length > 0) {
         query = query.overlaps("muscle_groups", filters.muscleGroups);
@@ -66,6 +66,7 @@ class ExerciseService {
         .from("exercises")
         .select("*")
         .eq("id", id)
+        .is("deleted_at", null)
         .single();
 
       if (error) {
@@ -104,7 +105,14 @@ class ExerciseService {
     id: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase.from("exercises").delete().eq("id", id);
+      const { error } = await supabase
+        .from("exercises")
+        .update({
+          deleted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", id)
+        .is("deleted_at", null);
 
       if (error) {
         return { success: false, error: error.message };
@@ -124,6 +132,7 @@ class ExerciseService {
         .from("exercises")
         .select("*")
         .contains("muscle_groups", [muscleGroup])
+        .is("deleted_at", null)
         .order("name");
 
       if (error) {
@@ -144,7 +153,8 @@ class ExerciseService {
     try {
       const { data, error } = await supabase
         .from("exercises")
-        .select("muscle_groups");
+        .select("muscle_groups")
+        .is("deleted_at", null);
 
       if (error) {
         return { success: false, error: error.message };
@@ -170,7 +180,8 @@ class ExerciseService {
       const { data, error } = await supabase
         .from("exercises")
         .select("equipment")
-        .not("equipment", "is", null);
+        .not("equipment", "is", null)
+        .is("deleted_at", null);
 
       if (error) {
         return { success: false, error: error.message };

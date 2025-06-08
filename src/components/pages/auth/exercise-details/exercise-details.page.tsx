@@ -1,12 +1,15 @@
-import { useRef } from "react";
-import { Image, ScrollView, View } from "react-native";
+import { useRef, useLayoutEffect } from "react";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import Video from "react-native-video";
+import { useNavigation } from "@react-navigation/native";
+import TrashIcon from "@assets/svg/trash.svg";
 import {
   ExerciseSection,
   ExerciseInfoItem,
   ExerciseDetailsSkeleton,
 } from "./_components";
 import { useExerciseDetailsPage } from "./exercise-details.useCase";
+import { colors } from "@/constants/colors";
 
 export default function ExerciseDetailsPage() {
   const {
@@ -18,9 +21,29 @@ export default function ExerciseDetailsPage() {
     isFullscreen,
     handleFullscreenEnter,
     handleFullscreenExit,
+    handleDeleteExercise,
+    isDeleting,
+    canDelete,
   } = useExerciseDetailsPage();
 
   const videoRef = useRef<any>(null);
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    if (canDelete) {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={handleDeleteExercise}
+            activeOpacity={0.7}
+            hitSlop={20}
+          >
+            <TrashIcon width={16} height={16} color={colors.error[400]} />
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [navigation, canDelete, handleDeleteExercise, isDeleting]);
 
   if (isLoading) return <ExerciseDetailsSkeleton />;
   if (!exercise) return null;

@@ -1,9 +1,8 @@
+import { userService } from "@/services/user.service";
 import { useAuth } from "@/store/useAuth";
 import { modal } from "@store/useModal";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { userService } from "@/services/user.service";
-import { NProfilePage } from "./profile.types";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 
 export const useProfile = () => {
   const { signOut, user } = useAuth();
@@ -46,44 +45,46 @@ export const useProfile = () => {
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
   };
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      if (!user?.id) return;
+  const fetchStats = useCallback(async () => {
+    if (!user?.id) return;
 
-      setLoading(true);
-      try {
-        if (isTeacher) {
-          const result = await userService.getTeacherStats();
-          if (result.success && result.stats) {
-            setStats({
-              students: result.stats.totalStudents,
-              exercises: result.stats.totalExercises,
-              trainings: 0,
-              progress: 0,
-              completed: 0,
-            });
-          }
-        } else {
-          const result = await userService.getStudentStats(user.id);
-          if (result.success && result.stats) {
-            setStats({
-              students: 0,
-              exercises: 0,
-              trainings: result.stats.totalTrainings,
-              progress: result.stats.inProgress,
-              completed: result.stats.completed,
-            });
-          }
+    setLoading(true);
+    try {
+      if (isTeacher) {
+        const result = await userService.getTeacherStats();
+        if (result.success && result.stats) {
+          setStats({
+            students: result.stats.totalStudents,
+            exercises: result.stats.totalExercises,
+            trainings: 0,
+            progress: 0,
+            completed: 0,
+          });
         }
-      } catch (error) {
-        console.error("Erro ao buscar estatísticas:", error);
-      } finally {
-        setLoading(false);
+      } else {
+        const result = await userService.getStudentStats(user.id);
+        if (result.success && result.stats) {
+          setStats({
+            students: 0,
+            exercises: 0,
+            trainings: result.stats.totalTrainings,
+            progress: result.stats.inProgress,
+            completed: result.stats.completed,
+          });
+        }
       }
-    };
-
-    fetchStats();
+    } catch (error) {
+      console.error("Erro ao buscar estatísticas:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [user, isTeacher]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchStats();
+    }, [fetchStats])
+  );
 
   const navigateToStudents = () => {
     router.push("/(auth)/students");

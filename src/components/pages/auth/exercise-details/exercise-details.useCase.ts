@@ -4,14 +4,22 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { useEffect, useState, useCallback } from "react";
 import type { Exercise } from "@/types/database.types";
 import { DIFFICULTY_OPTIONS } from "@/constants/exercise";
+import { useAuth } from "@/store/useAuth";
+import { toast } from "sonner-native";
+import { useModal } from "@/store/useModal";
 
 export const useExerciseDetailsPage = () => {
   const router = useRouter();
   const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { user } = useAuth();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const modal = useModal();
+
+  const canDelete = user?.role === "teacher";
 
   const fetchExercise = useCallback(async () => {
     if (!id) {
@@ -76,6 +84,46 @@ export const useExerciseDetailsPage = () => {
     return { uri: exercise.image_url };
   };
 
+  const deleteExercise = async () => {
+    if (!canDelete)
+      return toast.error("Apenas professores podem excluir exercícios");
+
+    setIsDeleting(true);
+    try {
+      const result = await exerciseService.deleteExercise(id);
+
+      if (result.success) {
+        toast.success("Exercício excluído com sucesso");
+        router.back();
+      } else {
+        toast.error(result.error || "Erro ao excluir exercício");
+      }
+    } catch (error) {
+      toast.error("Erro ao excluir exercício");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteExercise = useCallback(async () => {
+    modal.show({
+      description: "Tem certeza que deseja excluir este exercício?",
+      actions: [
+        {
+          title: "Excluir",
+          variant: "error",
+          className: "!w-[200px] mx-auto",
+          onPress: deleteExercise,
+        },
+        {
+          title: "Cancelar",
+          variant: "none",
+          onPress: () => null,
+        },
+      ],
+    });
+  }, [id, user, router]);
+
   return {
     exercise,
     isLoading,
@@ -86,5 +134,8 @@ export const useExerciseDetailsPage = () => {
     handleFullscreenEnter,
     handleFullscreenExit,
     getDifficultyLabel,
+    handleDeleteExercise,
+    isDeleting,
+    canDelete,
   };
 };
