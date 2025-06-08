@@ -33,6 +33,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.4",
     "expo-system-ui": "~5.0.7",
+    "expo-updates": "~0.28.14",
     "expo-web-browser": "~14.1.6",
     "lodash": "^4.17.21",
     "nativewind": "^4.1.23",

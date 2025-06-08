@@ -17,7 +17,8 @@
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#1A1A1A"
       },
-      "package": "com.gym.app"
+      "package": "com.gym.app",
+      "permissions": []
     },
     "web": {
       "bundler": "metro",
@@ -47,6 +48,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "root": "./src/app"
+      },
+      "eas": {
+        "projectId": "f112e60b-5640-46e6-849e-8ce42ff00732"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f112e60b-5640-46e6-849e-8ce42ff00732"
     }
   }
 }
