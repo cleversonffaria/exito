@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useMemo } from "react";
 import { NHomePage } from "./home.types";
 
@@ -25,11 +26,11 @@ export const useHome = () => {
   }, [weeklyData, totalValue, maxHeight]);
 
   const handleExercisePress = () => {
-    console.log("Navegando para exercício do dia...");
+    router.push("/(auth)/(tabs)/training");
   };
 
   const handleTrainingPress = () => {
-    console.log("Navegando para treino...");
+    router.push("/(auth)/(tabs)/training");
   };
 
   const user = {
