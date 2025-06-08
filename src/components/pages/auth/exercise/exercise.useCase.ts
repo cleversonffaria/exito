@@ -1,57 +1,56 @@
 import { useExerciseDetails } from "@/store/useExerciseDetails";
 import { useSelectedExercise } from "@/store/useSelectedExercise";
-import { router } from "expo-router";
+import { exerciseService } from "@/services/exercise.service";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { NExerciseTrainingPage } from "./exercise.types";
-
-const mockExercises: NExerciseTrainingPage.Option[] = [
-  {
-    id: "1",
-    name: "Barra",
-    category: "Ombros, Tríceps",
-    image: "https://picsum.photos/150",
-  },
-  {
-    id: "2",
-    name: "Supino",
-    category: "Peito, Tríceps",
-  },
-  {
-    id: "3",
-    name: "Rosca Bíceps",
-    category: "Bíceps",
-    image: "https://picsum.photos/120",
-  },
-  {
-    id: "4",
-    name: "Agachamentos",
-    category: "Pernas, Glúteos",
-    image: "https://picsum.photos/230",
-  },
-  {
-    id: "5",
-    name: "Barra Fixa",
-    category: "Costas, Bíceps, Antebraços",
-    image: "https://picsum.photos/260",
-  },
-];
+import type { Exercise } from "@/types/database.types";
 
 export const useExerciseSelection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [loading, setLoading] = useState(true);
   const { setSelectedExercise } = useSelectedExercise();
   const { setSelectedExercise: setExerciseDetails } = useExerciseDetails();
 
-  const filteredExercises = useMemo(() => {
+  const fetchExercises = useCallback(async () => {
+    setLoading(true);
+    try {
+      const result = await exerciseService.getExercises();
+      if (result.success && result.exercises) {
+        setExercises(result.exercises);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar exercícios:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchExercises();
+    }, [fetchExercises])
+  );
+
+  const filteredExercises: NExerciseTrainingPage.Option[] = useMemo(() => {
+    const exerciseOptions = exercises.map((exercise) => ({
+      id: exercise.id,
+      name: exercise.name,
+      category: exercise.muscle_groups.join(", "),
+      image: exercise.instructions || undefined,
+    }));
+
     if (!searchQuery.trim()) {
-      return mockExercises;
+      return exerciseOptions;
     }
 
-    return mockExercises.filter(
+    return exerciseOptions.filter(
       (exercise) =>
         exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         exercise.category.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [exercises, searchQuery]);
 
   const handleViewExerciseDetails = useCallback(
     (exercise: NExerciseTrainingPage.Option) => {
@@ -79,6 +78,7 @@ export const useExerciseSelection = () => {
     searchQuery,
     setSearchQuery,
     filteredExercises,
+    loading,
     handleViewExerciseDetails,
     addNewExercise,
   };

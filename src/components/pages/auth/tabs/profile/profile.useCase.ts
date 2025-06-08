@@ -1,32 +1,89 @@
 import { useAuth } from "@/store/useAuth";
 import { modal } from "@store/useModal";
 import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { userService } from "@/services/user.service";
 import { NProfilePage } from "./profile.types";
 
 export const useProfile = () => {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+  const [stats, setStats] = useState({
+    students: 0,
+    exercises: 0,
+    trainings: 0,
+    progress: 0,
+    completed: 0,
+  });
+  const [loading, setLoading] = useState(true);
 
-  const userType = "teacher" as NProfilePage.UserType;
-  const isTeacher = userType === "teacher";
+  const isTeacher = user?.role === "teacher";
 
   const profileStats = isTeacher
     ? [
-        { value: "72", label: "Total de Alunos" },
-        { value: "36", label: "Total de Exercícios" },
+        { value: stats.students.toString(), label: "Total de Alunos" },
+        { value: stats.exercises.toString(), label: "Total de Exercícios" },
       ]
     : [
-        { value: "12", label: "Treinos" },
-        { value: "36", label: "Em progresso" },
-        { value: "24", label: "Completo" },
+        { value: stats.trainings.toString(), label: "Treinos" },
+        { value: stats.progress.toString(), label: "Em progresso" },
+        { value: stats.completed.toString(), label: "Completo" },
       ];
 
   const userInfo = {
-    name: "John Doe",
+    name: user?.name || "Usuário",
     role: isTeacher ? "Professor" : "Aluno",
-    startDate: "06/2024",
+    startDate: user?.start_date
+      ? new Date(user.start_date).toLocaleDateString("pt-BR", {
+          month: "2-digit",
+          year: "numeric",
+        })
+      : new Date().toLocaleDateString("pt-BR", {
+          month: "2-digit",
+          year: "numeric",
+        }),
     avatar:
+      user?.avatar_url ||
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
   };
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!user?.id) return;
+
+      setLoading(true);
+      try {
+        if (isTeacher) {
+          const result = await userService.getTeacherStats();
+          if (result.success && result.stats) {
+            setStats({
+              students: result.stats.totalStudents,
+              exercises: result.stats.totalExercises,
+              trainings: 0,
+              progress: 0,
+              completed: 0,
+            });
+          }
+        } else {
+          const result = await userService.getStudentStats(user.id);
+          if (result.success && result.stats) {
+            setStats({
+              students: 0,
+              exercises: 0,
+              trainings: result.stats.totalTrainings,
+              progress: result.stats.inProgress,
+              completed: result.stats.completed,
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao buscar estatísticas:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [user, isTeacher]);
 
   const navigateToStudents = () => {
     router.push("/(auth)/students");
@@ -45,8 +102,8 @@ export const useProfile = () => {
           title: "Sair",
           variant: "error",
           className: "!w-[200px] mx-auto",
-          onPress: () => {
-            signOut();
+          onPress: async () => {
+            await signOut();
             router.replace("/login");
           },
         },
@@ -65,6 +122,7 @@ export const useProfile = () => {
     isTeacher,
     userInfo,
     profileStats,
+    loading,
     navigateToStudents,
     navigateToExercises,
     showLogoutModal,

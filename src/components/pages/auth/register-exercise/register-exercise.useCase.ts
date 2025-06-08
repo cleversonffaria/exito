@@ -1,8 +1,10 @@
 import { useFileUpload } from "@/hooks/useFileUpload";
+import { exerciseService } from "@/services/exercise.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner-native";
 import { registerExerciseSchema } from "./register-exercise.schema";
 import { NRegisterExercisePage } from "./register-exercise.types";
 
@@ -76,10 +78,31 @@ export const useRegisterExercise = () => {
   const handleSubmit = useCallback(
     async (data: NRegisterExercisePage.FormData) => {
       setIsLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIsLoading(false);
-      console.log("Dados do exercício:", data);
-      router.back();
+
+      try {
+        const exerciseData = {
+          name: data.name,
+          muscle_groups: data.muscleGroups,
+          equipment: data.equipment || null,
+          difficulty: "beginner" as const,
+          description: null,
+          instructions: null,
+        };
+
+        const result = await exerciseService.createExercise(exerciseData);
+
+        if (result.success) {
+          toast.success("Exercício cadastrado com sucesso!");
+          router.back();
+        } else {
+          toast.error(result.error || "Erro ao cadastrar exercício");
+        }
+      } catch (error) {
+        console.error("Erro ao cadastrar exercício:", error);
+        toast.error("Erro inesperado ao cadastrar exercício");
+      } finally {
+        setIsLoading(false);
+      }
     },
     []
   );

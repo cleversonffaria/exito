@@ -1,0 +1,150 @@
+import type { Database, User } from "@/types/database.types";
+import { supabase } from "./supabase";
+
+type UserUpdate = Database["public"]["Tables"]["users"]["Update"];
+
+interface UserStatsResponse {
+  success: boolean;
+  error?: string;
+  stats?: {
+    totalStudents: number;
+    totalExercises: number;
+  };
+}
+
+interface StudentStatsResponse {
+  success: boolean;
+  error?: string;
+  stats?: {
+    totalTrainings: number;
+    inProgress: number;
+    completed: number;
+  };
+}
+
+class UserService {
+  async getTeacherStats(): Promise<UserStatsResponse> {
+    try {
+      const [studentsResponse, exercisesResponse] = await Promise.all([
+        supabase
+          .from("users")
+          .select("id", { count: "exact" })
+          .eq("role", "student"),
+        supabase.from("exercises").select("id", { count: "exact" }),
+      ]);
+
+      if (studentsResponse.error) {
+        return { success: false, error: studentsResponse.error.message };
+      }
+
+      if (exercisesResponse.error) {
+        return { success: false, error: exercisesResponse.error.message };
+      }
+
+      return {
+        success: true,
+        stats: {
+          totalStudents: studentsResponse.count || 0,
+          totalExercises: exercisesResponse.count || 0,
+        },
+      };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async getStudentStats(studentId: string): Promise<StudentStatsResponse> {
+    try {
+      const trainingsResponse = await supabase
+        .from("student_trainings")
+        .select("id", { count: "exact" })
+        .eq("student_id", studentId)
+        .eq("is_active", true);
+
+      if (trainingsResponse.error) {
+        return { success: false, error: trainingsResponse.error.message };
+      }
+
+      const studentTrainingsIds = await supabase
+        .from("student_trainings")
+        .select("id")
+        .eq("student_id", studentId)
+        .eq("is_active", true);
+
+      const trainingIds = studentTrainingsIds.data?.map((t) => t.id) || [];
+
+      const logsResponse =
+        trainingIds.length > 0
+          ? await supabase
+              .from("training_logs")
+              .select("id", { count: "exact" })
+              .in("student_training_id", trainingIds)
+          : { count: 0, error: null };
+
+      if (logsResponse.error) {
+        return { success: false, error: logsResponse.error.message };
+      }
+
+      const totalTrainings = trainingsResponse.count || 0;
+      const completedLogs = logsResponse.count || 0;
+      const inProgress = Math.max(0, totalTrainings - completedLogs);
+
+      return {
+        success: true,
+        stats: {
+          totalTrainings,
+          inProgress,
+          completed: completedLogs,
+        },
+      };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async getAllStudents(): Promise<{
+    success: boolean;
+    error?: string;
+    students?: User[];
+  }> {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("role", "student")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, students: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async updateUser(
+    userId: string,
+    updates: UserUpdate
+  ): Promise<{ success: boolean; error?: string; user?: User }> {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .update(updates)
+        .eq("id", userId)
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, user: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+}
+
+export const userService = new UserService();
