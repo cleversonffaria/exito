@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gym.app"
+      "bundleIdentifier": "com.gym.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -54,14 +57,15 @@
         "root": "./src/app"
       },
       "eas": {
-        "projectId": "f112e60b-5640-46e6-849e-8ce42ff00732"
+        "projectId": "619c157f-0cfe-452e-8318-788558de96c5"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
+    "owner": "cleversonfaria",
     "updates": {
-      "url": "https://u.expo.dev/f112e60b-5640-46e6-849e-8ce42ff00732"
+      "url": "https://u.expo.dev/619c157f-0cfe-452e-8318-788558de96c5"
     }
   }
 }
