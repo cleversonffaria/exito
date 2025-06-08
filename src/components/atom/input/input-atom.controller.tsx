@@ -1,6 +1,5 @@
 import React from "react";
 import { Controller, FieldValues } from "react-hook-form";
-import { InputError } from "./input-atom.error";
 import { InputField } from "./input-atom.field";
 import { InputRoot } from "./input-atom.root";
 import { NInputAtom } from "./input-atom.types";
@@ -27,7 +26,6 @@ export function InputController<T extends FieldValues>({
             onSubmitEditing={onSubmitEditing}
             {...fieldProps}
           />
-          <InputError />
         </InputRoot>
       )}
     />

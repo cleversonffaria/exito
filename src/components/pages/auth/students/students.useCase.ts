@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useState } from "react";
 import { NStudentsPage } from "./students.types";
 
@@ -33,7 +34,7 @@ export const useStudents = () => {
   );
 
   const addNewStudent = () => {
-    console.log("Adicionar novo aluno");
+    router.push("/(auth)/students/register");
   };
 
   return {

@@ -6,7 +6,7 @@ export default function App() {
   const { isAuth } = useAuth();
 
   if (isAuth) {
-    return <Redirect href="/(auth)/home" />;
+    return <Redirect href="/(auth)/(tabs)/home" />;
   }
 
   return <Redirect href="/login" />;

@@ -1,1 +1,1 @@
-export { default } from "../../../components/pages/auth/tabs/profile";
+export { default } from "@pages/auth/tabs/profile";

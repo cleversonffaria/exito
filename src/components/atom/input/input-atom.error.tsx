@@ -51,7 +51,10 @@ export function InputError({
   }, [hasErrorContent]);
 
   return (
-    <Animated.View style={animatedStyle} className="overflow-hidden min-h-5">
+    <Animated.View
+      style={animatedStyle}
+      className="overflow-hidden min-h-5 mb-2"
+    >
       {hasErrorContent && (
         <TextAtom className={errorText({ className })} {...props}>
           {children || error}

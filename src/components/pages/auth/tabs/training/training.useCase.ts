@@ -128,7 +128,7 @@ export const useTraining = () => {
       };
 
       setSelectedExercise(exerciseData);
-      router.push("/(auth)/exercise-details");
+      router.push("/(auth)/students/exercise-details");
     },
     [router, setSelectedExercise]
   );

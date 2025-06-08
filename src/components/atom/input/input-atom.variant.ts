@@ -3,10 +3,10 @@ import { tv } from "tailwind-variants";
 export const inputVariants = tv({
   slots: {
     container:
-      "bg-gym-black-400 rounded-xl px-4 text-base border my-2 w-full flex-row items-center gap-3",
+      "bg-gym-black-400 rounded-xl px-4 text-base border w-full flex-row items-center gap-3",
     label: "font-semibold",
     input: "w-full h-full text-base",
-    errorText: "min-h-5",
+    errorText: "min-h-4",
   },
   variants: {
     variant: {
@@ -18,7 +18,7 @@ export const inputVariants = tv({
       glass: {
         label: "text-gym-gray-400",
         container: "border-white/30 bg-white/15 backdrop-blur-sm ",
-        input: " text-white placeholder:text-gym-gray-400",
+        input: "text-white placeholder:text-gym-gray-400",
       },
     },
     hasError: {

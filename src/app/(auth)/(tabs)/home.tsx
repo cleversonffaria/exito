@@ -1,1 +1,1 @@
-export { default } from "../../../components/pages/auth/tabs/home";
+export { default } from "@pages/auth/tabs/home";

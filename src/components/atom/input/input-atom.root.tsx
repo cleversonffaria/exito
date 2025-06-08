@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import { InputContext } from "./input-atom.context";
+import { InputError } from "./input-atom.error";
 import { InputLabel } from "./input-atom.label";
 import { NInputAtom } from "./input-atom.types";
 import { inputVariants } from "./input-atom.variant";
@@ -29,21 +30,16 @@ export function InputRoot({
 
   return (
     <InputContext.Provider
-      value={{
-        variant,
-        size,
-        disabled,
-        focused,
-        setFocused,
-        error,
-        hasError,
-      }}
+      value={{ variant, size, disabled, focused, setFocused, error, hasError }}
     >
-      <View>
-        <InputLabel>{label}</InputLabel>
+      <View className="gap-2">
+        {label && <InputLabel>{label}</InputLabel>}
+
         <View className={container({ className })} {...props}>
           {children}
         </View>
+
+        <InputError />
       </View>
     </InputContext.Provider>
   );

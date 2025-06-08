@@ -25,6 +25,7 @@ config.resolver = {
     "@atom": "./src/components/atom",
     "@molecules": "./src/components/molecules",
     "@organisms": "./src/components/organisms",
+    "@pages": "./src/components/pages",
     "@store": "./src/store",
     "@hooks": "./src/hooks",
     "@schemas": "./src/schemas",

@@ -1,5 +1,4 @@
 import { colors } from "@/constants/colors";
-import { createCustomHeader } from "@utils/header-config";
 import { Stack } from "expo-router";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,24 +16,6 @@ export default function AuthLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen
-          name="exercise-details"
-          options={createCustomHeader({
-            title: "Detalhes do Exercício",
-          })}
-        />
-        <Stack.Screen
-          name="exercises"
-          options={createCustomHeader({
-            title: "Exercícios",
-          })}
-        />
-        <Stack.Screen
-          name="students"
-          options={createCustomHeader({
-            title: "Alunos",
-          })}
-        />
       </Stack>
     </SafeAreaView>
   );

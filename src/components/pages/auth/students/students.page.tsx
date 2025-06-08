@@ -39,8 +39,8 @@ export default function StudentsPage() {
   );
 
   return (
-    <View className="flex-1 bg-gym-black-500">
-      <View className="px-6 py-4">
+    <View className="flex-1 mt-4">
+      <View className="px-6">
         <InputAtom.Root>
           <InputAtom.Icon
             icon={
