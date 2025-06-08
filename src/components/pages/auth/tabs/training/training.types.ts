@@ -4,7 +4,7 @@ export namespace NTrainingPage {
     name: string;
     muscles_worked: string[];
     equipment: string;
-    execution_description: string;
+    description: string;
   }
 
   export interface TrainingExercise {

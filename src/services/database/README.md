@@ -40,7 +40,7 @@ Catálogo de exercícios disponíveis.
 - name: VARCHAR - Nome do exercício
 - muscle_groups: TEXT[] - Array de grupos musculares (ex: ["Peitoral maior", "Tríceps"])
 - equipment: VARCHAR - Equipamento necessário
-- execution_description: TEXT - Descrição da execução
+- description: TEXT - Descrição da execução
 - thumbnail_url: TEXT - URL da imagem do exercício
 - video_demo_url: TEXT - URL do vídeo demonstrativo
 - created_by: UUID (FK) - Professor que criou o exercício

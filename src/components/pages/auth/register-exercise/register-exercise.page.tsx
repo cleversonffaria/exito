@@ -1,5 +1,6 @@
 import { TextAtom } from "@/components/atom/text";
 import { colors } from "@/constants/colors";
+import { cn } from "@/utils/cn";
 import MinusIcon from "@assets/svg/minus-solid.svg";
 import PlusIcon from "@assets/svg/plus-solid.svg";
 import UploadIcon from "@assets/svg/upload.svg";
@@ -14,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { useRegisterExercise } from "./register-exercise.useCase";
+import { DIFFICULTY_OPTIONS } from "@/constants/exercise";
 
 export default function RegisterExercisePage() {
   const {
@@ -48,6 +50,18 @@ export default function RegisterExercisePage() {
               name="name"
               label="Nome"
               placeholder="Digite o nome do exercício"
+            />
+
+            <InputAtom.Controller
+              control={form.control}
+              name="description"
+              label="Descrição de execução"
+              placeholder="Como executar o exercício"
+              fieldProps={{
+                multiline: true,
+                numberOfLines: 3,
+                textAlignVertical: "top",
+              }}
             />
 
             <View className="mb-4">
@@ -129,6 +143,46 @@ export default function RegisterExercisePage() {
               label="Equipamento"
               placeholder="Digite o equipamento necessário"
             />
+
+            <View className="mb-4">
+              <TextAtom className="text-gym-gray-200 font-semibold mb-2">
+                Dificuldade
+              </TextAtom>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 14, flexGrow: 1 }}
+              >
+                {DIFFICULTY_OPTIONS.map((difficulty) => {
+                  const isSelected =
+                    form.watch("difficulty") === difficulty.value;
+
+                  return (
+                    <TouchableOpacity
+                      key={difficulty.value}
+                      className={cn("flex-1 py-3 px-4 rounded-lg border", {
+                        "bg-gym-primary-500 border-gym-primary-500": isSelected,
+                        "bg-gym-black-400 border-gym-gray-700": !isSelected,
+                      })}
+                      onPress={() =>
+                        form.setValue("difficulty", difficulty.value as any, {
+                          shouldValidate: true,
+                        })
+                      }
+                    >
+                      <TextAtom
+                        className={cn("text-center font-medium", {
+                          "text-black": isSelected,
+                          "text-gym-gray-300": !isSelected,
+                        })}
+                      >
+                        {difficulty.label}
+                      </TextAtom>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
 
             <View className="mb-4">
               <TextAtom className="text-gym-gray-200 font-semibold mb-2">

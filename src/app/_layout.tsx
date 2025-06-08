@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native";
 import { colors } from "../constants/colors";
+import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,14 +71,17 @@ export default function RootLayout() {
             alignSelf: "center",
             padding: 10,
           },
+          toastContent: {
+            alignItems: "center",
+            justifyContent: "center",
+          },
         }}
+        gap={22}
         toastOptions={{
           style: {
             backgroundColor: colors.black[500],
             borderColor: colors.gray[700],
             borderWidth: 1,
-            alignItems: "center",
-            justifyContent: "center",
           },
           descriptionStyle: {
             color: colors.gray[500],

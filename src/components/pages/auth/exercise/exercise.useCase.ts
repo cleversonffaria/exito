@@ -60,7 +60,7 @@ export const useExerciseSelection = () => {
         category: exercise.category,
         muscleGroups: exercise.category.split(", "),
         equipment: "Equipamento padrão",
-        description: `Descrição detalhada do exercício ${exercise.name}. Este exercício trabalha principalmente os músculos: ${exercise.category}.`,
+        description: `Descrição detalhada`,
         videoUrl: require("@assets/video/supino.mp4"),
         imageUrl: exercise.image,
       });
