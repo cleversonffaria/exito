@@ -1,7 +1,5 @@
-import { useExerciseDetails } from "@/store/useExerciseDetails";
-import { useSelectedExercise } from "@/store/useSelectedExercise";
 import { exerciseService } from "@/services/exercise.service";
-import { router, useFocusEffect } from "expo-router";
+import { Href, router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { NExerciseTrainingPage } from "./exercise.types";
 import type { Exercise } from "@/types/database.types";
@@ -10,8 +8,6 @@ export const useExerciseSelection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
-  const { setSelectedExercise } = useSelectedExercise();
-  const { setSelectedExercise: setExerciseDetails } = useExerciseDetails();
 
   const fetchExercises = useCallback(async () => {
     setLoading(true);
@@ -38,7 +34,7 @@ export const useExerciseSelection = () => {
       id: exercise.id,
       name: exercise.name,
       category: exercise.muscle_groups.join(", "),
-      image: exercise.instructions || undefined,
+      image: exercise.image_url || undefined,
     }));
 
     if (!searchQuery.trim()) {
@@ -54,20 +50,9 @@ export const useExerciseSelection = () => {
 
   const handleViewExerciseDetails = useCallback(
     (exercise: NExerciseTrainingPage.Option) => {
-      setExerciseDetails({
-        id: exercise.id,
-        name: exercise.name,
-        category: exercise.category,
-        muscleGroups: exercise.category.split(", "),
-        equipment: "Equipamento padrão",
-        description: `Descrição detalhada`,
-        videoUrl: require("@assets/video/supino.mp4"),
-        imageUrl: exercise.image,
-      });
-
-      router.push("/(auth)/exercises/details");
+      router.push(`/(auth)/exercises/${exercise.id}` as Href);
     },
-    [setExerciseDetails]
+    []
   );
 
   const addNewExercise = () => {

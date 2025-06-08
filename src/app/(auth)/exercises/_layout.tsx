@@ -27,7 +27,7 @@ export default function AuthLayout() {
         })}
       />
       <Stack.Screen
-        name="details"
+        name="[id]"
         options={createCustomHeader({
           title: "Detalhes do Exercício",
         })}

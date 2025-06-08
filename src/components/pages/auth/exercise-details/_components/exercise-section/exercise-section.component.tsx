@@ -9,7 +9,7 @@ export function ExerciseSection({
 }: NExerciseSection.Props) {
   return (
     <View className="pt-4">
-      <TextAtom className="text-white text-lg font-medium mb-2">
+      <TextAtom className="text-white text-base font-medium mb-2">
         {title}
       </TextAtom>
       <TextAtom className={`text-gym-gray-400 ${className}`}>
