@@ -1,9 +1,11 @@
+import { FileUploadResult } from "@/hooks/useFileUpload";
+
 export namespace NRegisterExercisePage {
   export type FormData = {
     name: string;
-    thumbnail: string;
+    thumbnail: FileUploadResult | null;
     muscleGroups: string[];
     equipment: string;
-    videoDemo: string;
+    videoDemo: FileUploadResult | null;
   };
 }

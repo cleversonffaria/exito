@@ -1,3 +1,4 @@
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useCallback, useState } from "react";
@@ -8,15 +9,16 @@ import { NRegisterExercisePage } from "./register-exercise.types";
 export const useRegisterExercise = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [muscleInputs, setMuscleInputs] = useState<string[]>([""]);
+  const { pickImage, pickVideo, isUploading } = useFileUpload();
 
   const form = useForm<NRegisterExercisePage.FormData>({
     resolver: zodResolver(registerExerciseSchema),
     defaultValues: {
       name: "",
-      thumbnail: "",
+      thumbnail: null,
       muscleGroups: [],
       equipment: "",
-      videoDemo: "",
+      videoDemo: null,
     },
   });
 
@@ -57,6 +59,20 @@ export const useRegisterExercise = () => {
     [form]
   );
 
+  const handleThumbnailUpload = useCallback(async () => {
+    const result = await pickImage();
+    if (result) {
+      form.setValue("thumbnail", result, { shouldValidate: true });
+    }
+  }, [pickImage, form]);
+
+  const handleVideoUpload = useCallback(async () => {
+    const result = await pickVideo();
+    if (result) {
+      form.setValue("videoDemo", result, { shouldValidate: true });
+    }
+  }, [pickVideo, form]);
+
   const handleSubmit = useCallback(
     async (data: NRegisterExercisePage.FormData) => {
       setIsLoading(true);
@@ -70,11 +86,13 @@ export const useRegisterExercise = () => {
 
   return {
     form,
-    isLoading,
+    isLoading: isLoading || isUploading,
     muscleInputs,
     handleAddMuscleInput,
     handleRemoveMuscleInput,
     handleMuscleInputChange,
+    handleThumbnailUpload,
+    handleVideoUpload,
     handleSubmit: form.handleSubmit(handleSubmit),
   };
 };

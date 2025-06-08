@@ -23,6 +23,8 @@ export default function RegisterExercisePage() {
     handleAddMuscleInput,
     handleRemoveMuscleInput,
     handleMuscleInputChange,
+    handleThumbnailUpload,
+    handleVideoUpload,
     handleSubmit,
   } = useRegisterExercise();
 
@@ -55,9 +57,13 @@ export default function RegisterExercisePage() {
               <TouchableOpacity
                 className="bg-gym-black-400 rounded-xl p-4 h-14 flex-row items-center justify-between border border-gym-gray-700"
                 activeOpacity={0.8}
+                onPress={handleThumbnailUpload}
+                disabled={isLoading}
               >
                 <TextAtom className="text-gym-gray-400 ml-2">
-                  Selecionar arquivo
+                  {form.watch("thumbnail")
+                    ? form.watch("thumbnail")?.name
+                    : "Selecionar arquivo"}
                 </TextAtom>
                 <UploadIcon width={20} height={20} color={colors.gray[500]} />
               </TouchableOpacity>
@@ -131,9 +137,13 @@ export default function RegisterExercisePage() {
               <TouchableOpacity
                 className="bg-gym-black-400 rounded-xl p-4 h-14 flex-row items-center justify-between border border-gym-gray-700"
                 activeOpacity={0.8}
+                onPress={handleVideoUpload}
+                disabled={isLoading}
               >
                 <TextAtom className="text-gym-gray-400 ml-2">
-                  Selecionar arquivo
+                  {form.watch("videoDemo")
+                    ? form.watch("videoDemo")?.name
+                    : "Selecionar arquivo"}
                 </TextAtom>
                 <UploadIcon width={20} height={20} color={colors.gray[500]} />
               </TouchableOpacity>
