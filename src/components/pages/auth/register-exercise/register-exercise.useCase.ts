@@ -36,8 +36,6 @@ export const useRegisterExercise = () => {
     setMuscleInputs((prev) => [...prev, ""]);
   }, []);
 
-  console.log(form.formState.errors);
-
   const handleRemoveMuscleInput = useCallback(
     (index: number) => {
       setMuscleInputs((prev) => {
@@ -87,7 +85,6 @@ export const useRegisterExercise = () => {
 
   const handleSubmit = useCallback(
     async (data: NRegisterExercisePage.FormData) => {
-      console.log("data", data);
       setIsLoading(true);
 
       try {
@@ -96,8 +93,6 @@ export const useRegisterExercise = () => {
           setIsLoading(false);
           return;
         }
-
-        console.log(data);
 
         if (user.role !== "teacher") {
           toast.error("Apenas professores podem cadastrar exercícios");
