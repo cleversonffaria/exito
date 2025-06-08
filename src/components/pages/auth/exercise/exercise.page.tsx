@@ -16,7 +16,7 @@ export default function ExercisePage() {
     searchQuery,
     setSearchQuery,
     filteredExercises,
-    handleSelectExercise,
+    handleViewExerciseDetails,
     addNewExercise,
   } = useExerciseSelection();
 
@@ -57,7 +57,7 @@ export default function ExercisePage() {
             key={exercise.id}
             className="flex-row items-center rounded-xl p-4 mb-3"
             activeOpacity={0.8}
-            onPress={() => handleSelectExercise(exercise)}
+            onPress={() => handleViewExerciseDetails(exercise)}
           >
             <View className="w-12 h-12 bg-gym-black-500 rounded-lg mr-4 items-center justify-center overflow-hidden">
               {exercise.image ? (

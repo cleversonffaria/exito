@@ -23,7 +23,7 @@ interface TrainingState {
   clearSelectedTraining: () => void;
 }
 
-export const useTraining = create<TrainingState>((set, get) => ({
+export const useTrainingDetails = create<TrainingState>((set, get) => ({
   selectedTraining: null,
 
   setSelectedTraining: (exercise: Training) => {

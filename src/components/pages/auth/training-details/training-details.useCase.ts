@@ -1,5 +1,5 @@
+import { useTrainingDetails as useTrainingDetailsStore } from "@/store/useTrainingDetails";
 import { useNavigation } from "@react-navigation/native";
-import { useTraining } from "@store/useTraining";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
@@ -9,7 +9,7 @@ export const useTrainingDetails = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const { selectedTraining, completeRepetition, clearSelectedTraining } =
-    useTraining();
+    useTrainingDetailsStore();
 
   useEffect(() => {
     if (!selectedTraining) {

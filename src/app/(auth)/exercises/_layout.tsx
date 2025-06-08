@@ -26,6 +26,12 @@ export default function AuthLayout() {
           title: "Exercícios",
         })}
       />
+      <Stack.Screen
+        name="details"
+        options={createCustomHeader({
+          title: "Detalhes do Exercício",
+        })}
+      />
     </Stack>
   );
 }

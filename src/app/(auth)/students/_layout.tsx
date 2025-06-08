@@ -51,6 +51,12 @@ export default function AuthLayout() {
         })}
       />
       <Stack.Screen
+        name="training-details"
+        options={createCustomHeader({
+          title: "Detalhes do Treino",
+        })}
+      />
+      <Stack.Screen
         name="register-training"
         options={createCustomHeader({
           title: "Treino do Aluno",

@@ -1,3 +1,4 @@
+import { useExerciseDetails } from "@/store/useExerciseDetails";
 import { useSelectedExercise } from "@/store/useSelectedExercise";
 import { router } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
@@ -38,6 +39,7 @@ const mockExercises: NExerciseTrainingPage.Option[] = [
 export const useExerciseSelection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { setSelectedExercise } = useSelectedExercise();
+  const { setSelectedExercise: setExerciseDetails } = useExerciseDetails();
 
   const filteredExercises = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -51,18 +53,22 @@ export const useExerciseSelection = () => {
     );
   }, [searchQuery]);
 
-  const handleSelectExercise = useCallback(
+  const handleViewExerciseDetails = useCallback(
     (exercise: NExerciseTrainingPage.Option) => {
-      setSelectedExercise({
+      setExerciseDetails({
         id: exercise.id,
         name: exercise.name,
         category: exercise.category,
-        image: exercise.image,
+        muscleGroups: exercise.category.split(", "),
+        equipment: "Equipamento padrão",
+        description: `Descrição detalhada do exercício ${exercise.name}. Este exercício trabalha principalmente os músculos: ${exercise.category}.`,
+        videoUrl: require("@assets/video/supino.mp4"),
+        imageUrl: exercise.image,
       });
 
-      router.push("/(auth)/students/register-training");
+      router.push("/(auth)/exercises/details");
     },
-    [setSelectedExercise]
+    [setExerciseDetails]
   );
 
   const addNewExercise = () => {
@@ -73,7 +79,7 @@ export const useExerciseSelection = () => {
     searchQuery,
     setSearchQuery,
     filteredExercises,
-    handleSelectExercise,
+    handleViewExerciseDetails,
     addNewExercise,
   };
 };
