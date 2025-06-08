@@ -2,12 +2,15 @@ import { router } from "expo-router";
 import { useCallback, useState } from "react";
 
 import { ROLE_MAP } from "@/constants/profile";
+import { useModal } from "@/store/useModal";
 import { formatWeekDays } from "@utils/dates.utils";
 import { maskPhone } from "@utils/phone-mask.utils";
 import { NStudentDetailsPage } from "./student-details.types";
 
 export const useStudentDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const modal = useModal();
 
   const studentData: NStudentDetailsPage.StudentDetails = {
     id: "1",
@@ -69,6 +72,27 @@ export const useStudentDetails = () => {
 
   const handleRemoveTraining = useCallback((trainingId: string) => {
     console.log("Remover treino:", trainingId);
+    modal.show({
+      title: "Remover treino",
+      description: "Tem certeza que deseja remover este treino?",
+      actions: [
+        {
+          title: "Excluir",
+          variant: "error",
+          className: "!w-[200px] mx-auto",
+          onPress: () => {
+            console.log("Treino removido");
+          },
+        },
+        {
+          title: "Cancelar",
+          variant: "none",
+          onPress: () => {
+            console.log("Treino removido");
+          },
+        },
+      ],
+    });
   }, []);
 
   const goBack = useCallback(() => {

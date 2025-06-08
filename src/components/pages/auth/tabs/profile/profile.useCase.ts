@@ -44,6 +44,7 @@ export const useProfile = () => {
         {
           title: "Sair",
           variant: "error",
+          className: "!w-[200px] mx-auto",
           onPress: () => {
             logout();
             router.replace("/login");

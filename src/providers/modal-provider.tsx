@@ -62,7 +62,7 @@ export function ModalProvider() {
           )}
 
           {config.description && (
-            <TextAtom className="text-gym-gray-300 text-base text-center mb-6 leading-6">
+            <TextAtom className="text-gym-gray-200 text-lg text-center mb-6 mt-2 leading-6">
               {config.description}
             </TextAtom>
           )}
@@ -70,7 +70,7 @@ export function ModalProvider() {
           {config.content && <HocRenderComponent component={config.content} />}
 
           {config.actions && config.actions.length > 0 && (
-            <View>
+            <>
               {config.actions.map((action, index) => {
                 const { title, onPress, ...buttonProps } = action;
 
@@ -90,7 +90,7 @@ export function ModalProvider() {
                   </ButtonAtom.Root>
                 );
               })}
-            </View>
+            </>
           )}
         </View>
       )}
