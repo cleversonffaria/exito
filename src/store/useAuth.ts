@@ -1,50 +1,108 @@
-import * as SecureStore from "expo-secure-store";
+import { authService } from "@/services/auth.service";
+import type { User } from "@/types/database.types";
+import { secureStorage } from "@/utils/secure-store.utils";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-const secureStorage = {
-  getItem: async (name: string) => {
-    try {
-      const value = await SecureStore.getItemAsync(name);
-      return value || null;
-    } catch (error) {
-      console.error("Erro ao carregar dados do SecureStore:", error);
-      return null;
-    }
-  },
-  setItem: async (name: string, value: string) => {
-    try {
-      await SecureStore.setItemAsync(name, value);
-    } catch (error) {
-      console.error("Erro ao salvar dados no SecureStore:", error);
-    }
-  },
-  removeItem: async (name: string) => {
-    try {
-      await SecureStore.deleteItemAsync(name);
-    } catch (error) {
-      console.error("Erro ao remover dados do SecureStore:", error);
-    }
-  },
-};
-
 interface AuthState {
   isAuth: boolean;
-  setAuth: (isAuthenticated: boolean) => void;
-  logout: () => void;
+  user: User | null;
+  loading: boolean;
+  signIn: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  signUp: (
+    email: string,
+    password: string,
+    name: string,
+    role?: "student" | "teacher"
+  ) => Promise<{ success: boolean; error?: string }>;
+  signOut: () => Promise<void>;
+  checkSession: () => Promise<void>;
 }
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       isAuth: false,
-      setAuth: (isAuthenticated: boolean) => set({ isAuth: isAuthenticated }),
-      logout: () => set({ isAuth: false }),
+      user: null,
+      loading: false,
+
+      signIn: async (email: string, password: string) => {
+        set({ loading: true });
+
+        const result = await authService.signIn(email, password);
+
+        if (result.success && result.user) {
+          set({ isAuth: true, user: result.user, loading: false });
+        } else {
+          set({ loading: false });
+        }
+
+        return result;
+      },
+
+      signUp: async (
+        email: string,
+        password: string,
+        name: string,
+        role = "student"
+      ) => {
+        set({ loading: true });
+
+        const result = await authService.signUp({
+          email,
+          password,
+          name,
+          role,
+        });
+
+        set({ loading: false });
+        return result;
+      },
+
+      signOut: async () => {
+        set({ loading: true });
+
+        const result = await authService.signOut();
+
+        if (result.success) {
+          set({
+            isAuth: false,
+            user: null,
+            loading: false,
+          });
+        } else {
+          console.error("Erro ao fazer logout:", result.error);
+          set({ loading: false });
+        }
+      },
+
+      checkSession: async () => {
+        set({ loading: true });
+
+        const result = await authService.getCurrentSession();
+
+        if (result.success && result.user) {
+          set({
+            isAuth: true,
+            user: result.user,
+            loading: false,
+          });
+        } else {
+          set({
+            isAuth: false,
+            user: null,
+            loading: false,
+          });
+        }
+      },
     }),
     {
       name: "auth-storage",
       storage: createJSONStorage(() => secureStorage),
-      partialize: (state) => ({ isAuth: state.isAuth }),
+      partialize: (state) => ({ isAuth: state.isAuth, user: state.user }),
       version: 1,
       migrate: (persistedState: any, version: number) => {
         return persistedState;

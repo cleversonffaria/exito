@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import { NProfilePage } from "./profile.types";
 
 export const useProfile = () => {
-  const { logout } = useAuth();
+  const { signOut } = useAuth();
 
   const userType = "teacher" as NProfilePage.UserType;
   const isTeacher = userType === "teacher";
@@ -46,7 +46,7 @@ export const useProfile = () => {
           variant: "error",
           className: "!w-[200px] mx-auto",
           onPress: () => {
-            logout();
+            signOut();
             router.replace("/login");
           },
         },

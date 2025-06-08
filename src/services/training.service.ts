@@ -1,0 +1,347 @@
+import type {
+  CreateTrainingData,
+  StudentTrainingResponse,
+  TrainingResponse,
+  TrainingWithExercises,
+} from "@/interfaces";
+import type { Database, TrainingExercise } from "@/types/database.types";
+import { supabase } from "./supabase";
+
+type TrainingInsert = Database["public"]["Tables"]["trainings"]["Insert"];
+type TrainingUpdate = Database["public"]["Tables"]["trainings"]["Update"];
+type TrainingExerciseInsert =
+  Database["public"]["Tables"]["training_exercises"]["Insert"];
+type TrainingExerciseUpdate =
+  Database["public"]["Tables"]["training_exercises"]["Update"];
+type StudentTrainingInsert =
+  Database["public"]["Tables"]["student_trainings"]["Insert"];
+type StudentTrainingUpdate =
+  Database["public"]["Tables"]["student_trainings"]["Update"];
+
+class TrainingService {
+  async createTraining(
+    trainingData: CreateTrainingData
+  ): Promise<TrainingResponse> {
+    try {
+      const { data: training, error: trainingError } = await supabase
+        .from("trainings")
+        .insert({
+          name: trainingData.name,
+          description: trainingData.description,
+          teacher_id: trainingData.teacherId,
+        })
+        .select()
+        .single();
+
+      if (trainingError) {
+        return { success: false, error: trainingError.message };
+      }
+
+      if (trainingData.exercises.length > 0) {
+        const exercisesToInsert: TrainingExerciseInsert[] =
+          trainingData.exercises.map((exercise) => ({
+            training_id: training.id,
+            exercise_id: exercise.exerciseId,
+            sets: exercise.sets,
+            reps: exercise.reps,
+            weight: exercise.weight,
+            rest_time: exercise.restTime,
+            order_index: exercise.orderIndex,
+          }));
+
+        const { error: exercisesError } = await supabase
+          .from("training_exercises")
+          .insert(exercisesToInsert);
+
+        if (exercisesError) {
+          await supabase.from("trainings").delete().eq("id", training.id);
+          return {
+            success: false,
+            error: "Erro ao adicionar exercícios ao treino",
+          };
+        }
+      }
+
+      return { success: true, training };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async getTrainingsByTeacher(teacherId: string): Promise<TrainingResponse> {
+    try {
+      const { data, error } = await supabase
+        .from("trainings")
+        .select("*")
+        .eq("teacher_id", teacherId)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, trainings: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async getTrainingWithExercises(trainingId: string): Promise<{
+    success: boolean;
+    error?: string;
+    training?: TrainingWithExercises;
+  }> {
+    try {
+      const { data, error } = await supabase
+        .from("trainings")
+        .select(
+          `
+          *,
+          training_exercises (
+            *,
+            exercises (
+              id,
+              name,
+              muscle_groups,
+              equipment,
+              difficulty
+            )
+          )
+        `
+        )
+        .eq("id", trainingId)
+        .single();
+
+      if (error) {
+        return { success: false, error: "Treino não encontrado" };
+      }
+
+      return { success: true, training: data as TrainingWithExercises };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async updateTraining(
+    id: string,
+    updates: TrainingUpdate
+  ): Promise<TrainingResponse> {
+    try {
+      const { data, error } = await supabase
+        .from("trainings")
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, training: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async deleteTraining(
+    id: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase.from("trainings").delete().eq("id", id);
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async assignTrainingToStudent(
+    studentId: string,
+    trainingId: string,
+    weekDays: string[],
+    startDate: string,
+    endDate?: string
+  ): Promise<StudentTrainingResponse> {
+    try {
+      const { data, error } = await supabase
+        .from("student_trainings")
+        .insert({
+          student_id: studentId,
+          training_id: trainingId,
+          week_days: weekDays,
+          start_date: startDate,
+          end_date: endDate,
+          is_active: true,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, studentTraining: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async getStudentTrainings(
+    studentId: string,
+    activeOnly: boolean = true
+  ): Promise<StudentTrainingResponse> {
+    try {
+      let query = supabase
+        .from("student_trainings")
+        .select(
+          `
+          *,
+          trainings (
+            id,
+            name,
+            description,
+            teacher_id
+          )
+        `
+        )
+        .eq("student_id", studentId);
+
+      if (activeOnly) {
+        query = query.eq("is_active", true);
+      }
+
+      const { data, error } = await query.order("created_at", {
+        ascending: false,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, studentTrainings: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async updateStudentTraining(
+    id: string,
+    updates: StudentTrainingUpdate
+  ): Promise<StudentTrainingResponse> {
+    try {
+      const { data, error } = await supabase
+        .from("student_trainings")
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, studentTraining: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async deactivateStudentTraining(
+    id: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase
+        .from("student_trainings")
+        .update({ is_active: false, updated_at: new Date().toISOString() })
+        .eq("id", id);
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async addExerciseToTraining(
+    trainingId: string,
+    exerciseData: Omit<TrainingExerciseInsert, "training_id">
+  ): Promise<{
+    success: boolean;
+    error?: string;
+    trainingExercise?: TrainingExercise;
+  }> {
+    try {
+      const { data, error } = await supabase
+        .from("training_exercises")
+        .insert({
+          ...exerciseData,
+          training_id: trainingId,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, trainingExercise: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async updateTrainingExercise(
+    id: string,
+    updates: TrainingExerciseUpdate
+  ): Promise<{
+    success: boolean;
+    error?: string;
+    trainingExercise?: TrainingExercise;
+  }> {
+    try {
+      const { data, error } = await supabase
+        .from("training_exercises")
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, trainingExercise: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async removeExerciseFromTraining(
+    id: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase
+        .from("training_exercises")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+}
+
+export const trainingService = new TrainingService();

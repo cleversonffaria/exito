@@ -55,38 +55,35 @@ export interface Database {
       };
       exercises: {
         Row: {
-          id: number;
+          id: string;
           name: string;
+          description: string | null;
           muscle_groups: string[];
-          equipment: string;
-          execution_description: string | null;
-          thumbnail_url: string | null;
-          video_demo_url: string | null;
-          created_by: string | null;
+          equipment: string | null;
+          difficulty: "beginner" | "intermediate" | "advanced";
+          instructions: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
-          id?: number;
+          id?: string;
           name: string;
+          description?: string | null;
           muscle_groups: string[];
-          equipment: string;
-          execution_description?: string | null;
-          thumbnail_url?: string | null;
-          video_demo_url?: string | null;
-          created_by?: string | null;
+          equipment?: string | null;
+          difficulty?: "beginner" | "intermediate" | "advanced";
+          instructions?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
-          id?: number;
+          id?: string;
           name?: string;
+          description?: string | null;
           muscle_groups?: string[];
-          equipment?: string;
-          execution_description?: string | null;
-          thumbnail_url?: string | null;
-          video_demo_url?: string | null;
-          created_by?: string | null;
+          equipment?: string | null;
+          difficulty?: "beginner" | "intermediate" | "advanced";
+          instructions?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -94,72 +91,74 @@ export interface Database {
 
       trainings: {
         Row: {
-          id: number;
+          id: string;
           name: string;
-          created_by: string;
+          description: string | null;
+          teacher_id: string;
           created_at: string;
           updated_at: string;
         };
         Insert: {
-          id?: number;
+          id?: string;
           name: string;
-          created_by: string;
+          description?: string | null;
+          teacher_id: string;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
-          id?: number;
+          id?: string;
           name?: string;
-          created_by?: string;
+          description?: string | null;
+          teacher_id?: string;
           created_at?: string;
           updated_at?: string;
         };
       };
       training_exercises: {
         Row: {
-          id: number;
-          training_id: number;
-          exercise_id: number;
+          id: string;
+          training_id: string;
+          exercise_id: string;
           sets: number;
-          repetitions: number;
-          load: number | null;
-          rest_seconds: number | null;
-          notes: string | null;
+          reps: number | null;
+          weight: number | null;
+          rest_time: number | null;
           order_index: number;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
-          id?: number;
-          training_id: number;
-          exercise_id: number;
-          sets?: number;
-          repetitions?: number;
-          load?: number | null;
-          rest_seconds?: number | null;
-          notes?: string | null;
-          order_index?: number;
+          id?: string;
+          training_id: string;
+          exercise_id: string;
+          sets: number;
+          reps?: number | null;
+          weight?: number | null;
+          rest_time?: number | null;
+          order_index: number;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
-          id?: number;
-          training_id?: number;
-          exercise_id?: number;
+          id?: string;
+          training_id?: string;
+          exercise_id?: string;
           sets?: number;
-          repetitions?: number;
-          load?: number | null;
-          rest_seconds?: number | null;
-          notes?: string | null;
+          reps?: number | null;
+          weight?: number | null;
+          rest_time?: number | null;
           order_index?: number;
           created_at?: string;
+          updated_at?: string;
         };
       };
       student_trainings: {
         Row: {
-          id: number;
+          id: string;
           student_id: string;
-          training_id: number;
-          assigned_by: string | null;
-          week_days: number[];
+          training_id: string;
+          week_days: string[];
           start_date: string;
           end_date: string | null;
           is_active: boolean;
@@ -167,23 +166,21 @@ export interface Database {
           updated_at: string;
         };
         Insert: {
-          id?: number;
+          id?: string;
           student_id: string;
-          training_id: number;
-          assigned_by?: string | null;
-          week_days?: number[];
-          start_date?: string;
+          training_id: string;
+          week_days: string[];
+          start_date: string;
           end_date?: string | null;
           is_active?: boolean;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
-          id?: number;
+          id?: string;
           student_id?: string;
-          training_id?: number;
-          assigned_by?: string | null;
-          week_days?: number[];
+          training_id?: string;
+          week_days?: string[];
           start_date?: string;
           end_date?: string | null;
           is_active?: boolean;
@@ -194,36 +191,42 @@ export interface Database {
       training_logs: {
         Row: {
           id: string;
-          student_training_id: number;
-          training_exercise_id: number;
-          completed_at: string;
+          student_training_id: string;
+          exercise_id: string;
           sets_completed: number;
-          repetitions_completed: number;
-          load_used: number | null;
+          reps_completed: number | null;
+          weight_used: number | null;
+          duration: number | null;
           notes: string | null;
-          duration_seconds: number | null;
+          completed_at: string;
+          created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
-          student_training_id: number;
-          training_exercise_id: number;
-          completed_at?: string;
-          sets_completed?: number;
-          repetitions_completed?: number;
-          load_used?: number | null;
+          student_training_id: string;
+          exercise_id: string;
+          sets_completed: number;
+          reps_completed?: number | null;
+          weight_used?: number | null;
+          duration?: number | null;
           notes?: string | null;
-          duration_seconds?: number | null;
+          completed_at?: string;
+          created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
-          student_training_id?: number;
-          training_exercise_id?: number;
-          completed_at?: string;
+          student_training_id?: string;
+          exercise_id?: string;
           sets_completed?: number;
-          repetitions_completed?: number;
-          load_used?: number | null;
+          reps_completed?: number | null;
+          weight_used?: number | null;
+          duration?: number | null;
           notes?: string | null;
-          duration_seconds?: number | null;
+          completed_at?: string;
+          created_at?: string;
+          updated_at?: string;
         };
       };
     };
@@ -265,6 +268,7 @@ export interface Database {
     Enums: {
       user_role: "student" | "teacher";
       gender_type: "Masculino" | "Feminino" | "Outros";
+      exercise_difficulty: "beginner" | "intermediate" | "advanced";
     };
     CompositeTypes: {
       [_ in never]: never;

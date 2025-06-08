@@ -10,6 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Toaster } from "sonner-native";
 import { colors } from "../constants/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -57,6 +58,35 @@ export default function RootLayout() {
       <StatusBar style="light" />
 
       <ModalProvider />
+
+      <Toaster
+        theme="dark"
+        position="bottom-center"
+        richColors
+        closeButton
+        duration={3000}
+        styles={{
+          closeButton: {
+            alignSelf: "center",
+            padding: 10,
+          },
+        }}
+        toastOptions={{
+          style: {
+            backgroundColor: colors.black[500],
+            borderColor: colors.gray[700],
+            borderWidth: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+          descriptionStyle: {
+            color: colors.gray[500],
+          },
+          titleStyle: {
+            color: colors.gray[200],
+          },
+        }}
+      />
     </GestureHandlerRootView>
   );
 }

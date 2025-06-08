@@ -54,6 +54,7 @@
     "react-native-video": "^6.14.1",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
+    "sonner-native": "^0.20.0",
     "tailwind-variants": "^1.0.0",
     "yup": "^1.6.1",
     "zod": "^3.25.45",

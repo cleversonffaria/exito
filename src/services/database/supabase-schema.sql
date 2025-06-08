@@ -13,60 +13,83 @@ CREATE TYPE gender_type AS ENUM ('Masculino', 'Feminino', 'Outros');
 -- Tabela de usuários (teachers e students)
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255) NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
   phone VARCHAR(20),
   age INTEGER,
   gender gender_type,
   avatar_url TEXT,
-  role user_role NOT NULL DEFAULT 'student',
+  role TEXT NOT NULL DEFAULT 'student' CHECK (role IN ('student', 'teacher')),
   goal TEXT,
   start_date DATE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Tabela de exercícios
 CREATE TABLE exercises (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  muscle_groups TEXT [] NOT NULL,
-  equipment VARCHAR(255) NOT NULL,
-  execution_description TEXT,
-  thumbnail_url TEXT,
-  video_demo_url TEXT,
-  created_by UUID REFERENCES users(id) ON DELETE
-  SET
-    NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  muscle_groups TEXT [] NOT NULL DEFAULT '{}',
+  equipment TEXT,
+  difficulty TEXT NOT NULL DEFAULT 'beginner' CHECK (
+    difficulty IN ('beginner', 'intermediate', 'advanced')
+  ),
+  instructions TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Tabela de treinos (templates)
 CREATE TABLE trainings (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  created_by UUID REFERENCES users(id) ON DELETE CASCADE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  teacher_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tabela de exercícios do treino com configurações
+-- Tabela de exercícios do treino
 CREATE TABLE training_exercises (
-  id SERIAL PRIMARY KEY,
-  training_id INTEGER REFERENCES trainings(id) ON DELETE CASCADE,
-  exercise_id INTEGER REFERENCES exercises(id) ON DELETE CASCADE,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  training_id UUID NOT NULL REFERENCES trainings(id) ON DELETE CASCADE,
+  exercise_id UUID NOT NULL REFERENCES exercises(id) ON DELETE CASCADE,
   sets INTEGER NOT NULL DEFAULT 1,
-  repetitions INTEGER NOT NULL DEFAULT 1,
-  load DECIMAL(5, 2),
-  rest_seconds INTEGER,
-  notes TEXT,
+  reps INTEGER,
+  weight DECIMAL,
+  rest_time INTEGER,
   order_index INTEGER NOT NULL DEFAULT 0,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tabela de atribuição de treinos para estudantes
+-- Tabela de treinos atribuídos aos estudantes
 CREATE TABLE student_trainings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  training_id UUID NOT NULL REFERENCES trainings(id) ON DELETE CASCADE,
+  week_days TEXT [] NOT NULL DEFAULT '{}',
+  start_date DATE NOT NULL,
+  end_date DATE,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabela de logs de treino
+CREATE TABLE training_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_training_id UUID NOT NULL REFERENCES student_trainings(id) ON DELETE CASCADE,
+  exercise_id UUID NOT NULL REFERENCES exercises(id) ON DELETE CASCADE,
+  sets_completed INTEGER NOT NULL DEFAULT 0,
+  reps_completed INTEGER,
+  weight_used DECIMAL,
+  duration INTEGER,
+  notes TEXT,
+  completed_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
   id SERIAL PRIMARY KEY,
   student_id UUID REFERENCES users(id) ON DELETE CASCADE,
   training_id INTEGER REFERENCES trainings(id) ON DELETE CASCADE,

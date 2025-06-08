@@ -1,18 +1,14 @@
+import { useToast } from "@/hooks/useToast";
 import { useAuth } from "@/store/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "@schemas/login.schema";
 import { router } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { LoginCredentials, LoginResponse, LoginState } from "./login.types";
 
 export const useLogin = () => {
-  const [loginState, setLoginState] = useState<LoginState>({
-    isLoading: false,
-    error: undefined,
-  });
-
-  const { setAuth } = useAuth();
+  const { signIn, loading } = useAuth();
+  const toast = useToast();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -22,68 +18,46 @@ export const useLogin = () => {
     },
   });
 
-  const authenticate = useCallback(
-    async (credentials: LoginCredentials): Promise<LoginResponse | null> => {
-      setLoginState({ isLoading: true, error: undefined });
-
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        if (!credentials.email || !credentials.password) {
-          throw new Error("Email e senha são obrigatórios");
-        }
-
-        const response: LoginResponse = {
-          success: true,
-          user: {
-            id: "1",
-            email: credentials.email,
-            name: "Usuário",
-          },
-          token: "mock-jwt-token",
-        };
-
-        setAuth(true);
-
-        setLoginState({ isLoading: false, error: undefined });
-        return response;
-      } catch (error) {
-        const errorResponse: LoginResponse = {
-          success: false,
-        };
-
-        setLoginState({
-          isLoading: false,
-          error: "Erro na autenticação",
-        });
-
-        return errorResponse;
-      }
-    },
-    []
-  );
-
   const handleSubmit = useCallback(
     async (data: LoginFormData) => {
-      return await authenticate(data);
+      try {
+        const signInUser = await signIn(data.email, data.password);
+
+        if (signInUser.success) {
+          toast.success("Login realizado com sucesso!", {
+            description: "Bem-vindo ao sistema",
+          });
+          router.push("/(auth)/(tabs)/home");
+        } else {
+          toast.error("Erro na autenticação", {
+            description: signInUser.error || "Erro na autenticação",
+          });
+        }
+
+        return signInUser;
+      } catch (error) {
+        toast.error("Erro inesperado", {
+          description: "Tente novamente mais tarde",
+        });
+
+        console.error("Erro ao fazer login:", error);
+      }
     },
-    [authenticate]
+    [signIn, form, toast]
   );
 
   const clearErrors = useCallback(() => {
-    setLoginState((prev) => ({ ...prev, error: undefined }));
-  }, []);
+    form.clearErrors();
+  }, [form]);
 
   const handleRecoverPassword = () => {
     router.push("/first-access");
   };
 
   return {
-    isLoading: loginState.isLoading,
-    error: loginState.error,
+    isLoading: loading,
     form,
     handleSubmit: form.handleSubmit(handleSubmit),
-    authenticate,
     clearErrors,
     handleRecoverPassword,
   };

@@ -1759,42 +1759,42 @@
 
 "@supabase/auth-js@2.70.0":
   version "2.70.0"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-js/-/auth-js-2.70.0.tgz#d4a0021d8a229d1ec23dd49ca76c486a686b6c14"
+  resolved "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.70.0.tgz"
   integrity sha512-BaAK/tOAZFJtzF1sE3gJ2FwTjLf4ky3PSvcvLGEgEmO4BSBkwWKu8l67rLLIBZPDnCyV7Owk2uPyKHa0kj5QGg==
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
 "@supabase/functions-js@2.4.4":
   version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@supabase/functions-js/-/functions-js-2.4.4.tgz#45fcd94d546bdfa66d01f93a796ca0304ec154b8"
+  resolved "https://registry.npmjs.org/@supabase/functions-js/-/functions-js-2.4.4.tgz"
   integrity sha512-WL2p6r4AXNGwop7iwvul2BvOtuJ1YQy8EbOd0dhG1oN1q8el/BIRSFCFnWAMM/vJJlHWLi4ad22sKbKr9mvjoA==
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
 "@supabase/node-fetch@2.6.15", "@supabase/node-fetch@^2.6.14":
   version "2.6.15"
-  resolved "https://registry.yarnpkg.com/@supabase/node-fetch/-/node-fetch-2.6.15.tgz#731271430e276983191930816303c44159e7226c"
+  resolved "https://registry.npmjs.org/@supabase/node-fetch/-/node-fetch-2.6.15.tgz"
   integrity sha512-1ibVeYUacxWYi9i0cf5efil6adJ9WRyZBLivgjs+AUpewx1F3xPi7gLgaASI2SmIQxPoCEjAsLAzKPgMJVgOUQ==
   dependencies:
     whatwg-url "^5.0.0"
 
 "@supabase/node-fetch@^2.6.13":
   version "2.6.13"
-  resolved "https://registry.yarnpkg.com/@supabase/node-fetch/-/node-fetch-2.6.13.tgz#0d36219a9e2134049a7317591e1d4fbf73a42ec4"
+  resolved "https://registry.npmjs.org/@supabase/node-fetch/-/node-fetch-2.6.13.tgz"
   integrity sha512-rEHQaDVzxLZMCK3p+JW2nzEsK4AJpOQhetppaqAzrFum0Ub8wcnoM/8f1dWRZSulY5fRDP6rJaWT/8X3VleCzg==
   dependencies:
     whatwg-url "^5.0.0"
 
 "@supabase/postgrest-js@1.19.4":
   version "1.19.4"
-  resolved "https://registry.yarnpkg.com/@supabase/postgrest-js/-/postgrest-js-1.19.4.tgz#41de1e4310ce8ddba87becd7e0878f4ad7a659a2"
+  resolved "https://registry.npmjs.org/@supabase/postgrest-js/-/postgrest-js-1.19.4.tgz"
   integrity sha512-O4soKqKtZIW3olqmbXXbKugUtByD2jPa8kL2m2c1oozAO11uCcGrRhkZL0kVxjBLrXHE0mdSkFsMj7jDSfyNpw==
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
 "@supabase/realtime-js@2.11.10":
   version "2.11.10"
-  resolved "https://registry.yarnpkg.com/@supabase/realtime-js/-/realtime-js-2.11.10.tgz#602fffa96082a05c07f144369736eaec4301d6f1"
+  resolved "https://registry.npmjs.org/@supabase/realtime-js/-/realtime-js-2.11.10.tgz"
   integrity sha512-SJKVa7EejnuyfImrbzx+HaD9i6T784khuw1zP+MBD7BmJYChegGxYigPzkKX8CK8nGuDntmeSD3fvriaH0EGZA==
   dependencies:
     "@supabase/node-fetch" "^2.6.13"
@@ -1804,14 +1804,14 @@
 
 "@supabase/storage-js@2.7.1":
   version "2.7.1"
-  resolved "https://registry.yarnpkg.com/@supabase/storage-js/-/storage-js-2.7.1.tgz#761482f237deec98a59e5af1ace18c7a5e0a69af"
+  resolved "https://registry.npmjs.org/@supabase/storage-js/-/storage-js-2.7.1.tgz"
   integrity sha512-asYHcyDR1fKqrMpytAS1zjyEfvxuOIp1CIXX7ji4lHHcJKqyk+sLl/Vxgm4sN6u8zvuUtae9e4kDxQP2qrwWBA==
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
 "@supabase/supabase-js@^2.50.0":
   version "2.50.0"
-  resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.50.0.tgz#77b908f42e819cc0146c44319852c35a5f353628"
+  resolved "https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.50.0.tgz"
   integrity sha512-M1Gd5tPaaghYZ9OjeO1iORRqbTWFEz/cF3pPubRnMPzA+A8SiUsXXWDP+DWsASZcjEcVEcVQIAF38i5wrijYOg==
   dependencies:
     "@supabase/auth-js" "2.70.0"
@@ -2011,7 +2011,7 @@
 
 "@types/lodash@^4.17.17":
   version "4.17.17"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.17.tgz#fb85a04f47e9e4da888384feead0de05f7070355"
+  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.17.17.tgz"
   integrity sha512-RRVJ+J3J+WmyOTqnz3PiBLA501eKwXl2noseKOrNo/6+XEHjTAxO4xHvxQB6QuNm+s4WRbn6rSiap8+EA+ykFQ==
 
 "@types/node@*":
@@ -2023,7 +2023,7 @@
 
 "@types/phoenix@^1.6.6":
   version "1.6.6"
-  resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-1.6.6.tgz#3c1ab53fd5a23634b8e37ea72ccacbf07fbc7816"
+  resolved "https://registry.npmjs.org/@types/phoenix/-/phoenix-1.6.6.tgz"
   integrity sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A==
 
 "@types/react-test-renderer@^19.0.0":
@@ -2052,7 +2052,7 @@
 
 "@types/ws@^8.18.1":
   version "8.18.1"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.18.1.tgz#48464e4bf2ddfd17db13d845467f6070ffea4aa9"
+  resolved "https://registry.npmjs.org/@types/ws/-/ws-8.18.1.tgz"
   integrity sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==
   dependencies:
     "@types/node" "*"
@@ -2244,7 +2244,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
 
 arg@4.1.0:
   version "4.1.0"
-  resolved "https://registry.yarnpkg.com/arg/-/arg-4.1.0.tgz#583c518199419e0037abb74062c37f8519e575f0"
+  resolved "https://registry.npmjs.org/arg/-/arg-4.1.0.tgz"
   integrity sha512-ZWc51jO3qegGkVh8Hwpv636EkbesNV5ZNQPCtRa+0qytRYPEs9IYT9qITY9buezqUH5uqyzlWLcufrzU2rffdg==
 
 arg@^5.0.2:
@@ -3388,12 +3388,12 @@ expo-constants@~17.1.5, expo-constants@~17.1.6:
 
 expo-document-picker@~13.1.5:
   version "13.1.5"
-  resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-13.1.5.tgz#0fae00b69ae6418767503cc2d5481ba1ec2948aa"
+  resolved "https://registry.npmjs.org/expo-document-picker/-/expo-document-picker-13.1.5.tgz"
   integrity sha512-ELsGFW+k6xEkz7YKpop9u+9M9yUTNNruQdyKd2lSGR4thQFKRPOmKDsgYDZxc18hysGQN4evzp54lZqQwYdk4Q==
 
 expo-eas-client@~0.14.3:
   version "0.14.3"
-  resolved "https://registry.yarnpkg.com/expo-eas-client/-/expo-eas-client-0.14.3.tgz#3fc22378cc454953ecba88f70c16c20a74e0aa27"
+  resolved "https://registry.npmjs.org/expo-eas-client/-/expo-eas-client-0.14.3.tgz"
   integrity sha512-BW2mSNEjFRFC8/CbkMQ3mfVhBdeZIjZhNfncw7PP80xEptLWhVjGTqwG8Usi0/yPpIu/YNYgop+XGMfhXyh9uA==
 
 expo-file-system@~18.1.10:
@@ -3415,19 +3415,19 @@ expo-haptics@~14.1.4:
 
 expo-image-loader@~5.1.0:
   version "5.1.0"
-  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-5.1.0.tgz#f7d65f9b9a9714eaaf5d50a406cb34cb25262153"
+  resolved "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-5.1.0.tgz"
   integrity sha512-sEBx3zDQIODWbB5JwzE7ZL5FJD+DK3LVLWBVJy6VzsqIA6nDEnSFnsnWyCfCTSvbGigMATs1lgkC2nz3Jpve1Q==
 
 expo-image-picker@~16.1.4:
   version "16.1.4"
-  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-16.1.4.tgz#d4ac2d1f64f6ec9347c3f64f8435b40e6e4dcc40"
+  resolved "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-16.1.4.tgz"
   integrity sha512-bTmmxtw1AohUT+HxEBn2vYwdeOrj1CLpMXKjvi9FKSoSbpcarT4xxI0z7YyGwDGHbrJqyyic3I9TTdP2J2b4YA==
   dependencies:
     expo-image-loader "~5.1.0"
 
 expo-json-utils@~0.15.0:
   version "0.15.0"
-  resolved "https://registry.yarnpkg.com/expo-json-utils/-/expo-json-utils-0.15.0.tgz#6723574814b9e6b0a90e4e23662be76123ab6ae9"
+  resolved "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-0.15.0.tgz"
   integrity sha512-duRT6oGl80IDzH2LD2yEFWNwGIC2WkozsB6HF3cDYNoNNdUvFk6uN3YiwsTsqVM/D0z6LEAQ01/SlYvN+Fw0JQ==
 
 expo-keep-awake@~14.1.4:
@@ -3445,7 +3445,7 @@ expo-linking@~7.1.5:
 
 expo-manifests@~0.16.5:
   version "0.16.5"
-  resolved "https://registry.yarnpkg.com/expo-manifests/-/expo-manifests-0.16.5.tgz#bb57ceff3db4eb74679d4a155b2ca2050375ce10"
+  resolved "https://registry.npmjs.org/expo-manifests/-/expo-manifests-0.16.5.tgz"
   integrity sha512-zLUeJogn2C7qOE75Zz7jcmJorMfIbSRR35ctspN0OK/Hq/+PAAptA8p9jNVC8xp/91uP9uI8f3xPhh+A11eR2A==
   dependencies:
     "@expo/config" "~11.0.10"
@@ -3513,7 +3513,7 @@ expo-status-bar@~2.2.3:
 
 expo-structured-headers@~4.1.0:
   version "4.1.0"
-  resolved "https://registry.yarnpkg.com/expo-structured-headers/-/expo-structured-headers-4.1.0.tgz#5475fc3f9559701cc755fd2d50605f8817d42ad0"
+  resolved "https://registry.npmjs.org/expo-structured-headers/-/expo-structured-headers-4.1.0.tgz"
   integrity sha512-2X+aUNzC/qaw7/WyUhrVHNDB0uQ5rE12XA2H/rJXaAiYQSuOeU90ladaN0IJYV9I2XlhYrjXLktLXWbO7zgbag==
 
 expo-symbols@~0.4.4:
@@ -3533,12 +3533,12 @@ expo-system-ui@~5.0.7:
 
 expo-updates-interface@~1.1.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-1.1.0.tgz#62497d4647b381da9fdb68868ed180203ae737ef"
+  resolved "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-1.1.0.tgz"
   integrity sha512-DeB+fRe0hUDPZhpJ4X4bFMAItatFBUPjw/TVSbJsaf3Exeami+2qbbJhWkcTMoYHOB73nOIcaYcWXYJnCJXO0w==
 
 expo-updates@~0.28.14:
   version "0.28.14"
-  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.28.14.tgz#bc75b00c0744fec33ba36f8c96e7c86ed0d3c7f6"
+  resolved "https://registry.npmjs.org/expo-updates/-/expo-updates-0.28.14.tgz"
   integrity sha512-kxI428W7LGSdDWmN/ud5cIg8+SjmQ5XSaUrYauZ0DKsHm2qq1Lh+NYSUWLvYmps+Baalafe6mILmAX8ZnNg26Q==
   dependencies:
     "@expo/code-signing-certificates" "0.0.5"
@@ -3986,7 +3986,7 @@ ieee754@^1.1.13:
 
 ignore@^5.3.1:
   version "5.3.2"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.2.tgz#3cd40e729f3643fd87cb04e50bf0eb722bc596f5"
+  resolved "https://registry.npmjs.org/ignore/-/ignore-5.3.2.tgz"
   integrity sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==
 
 image-size@^1.0.2:
@@ -4910,7 +4910,7 @@ lodash.throttle@^4.1.1:
 
 lodash@^4.17.19, lodash@^4.17.21:
   version "4.17.21"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 log-symbols@^2.2.0:
@@ -5918,7 +5918,7 @@ react-native-is-edge-to-edge@1.1.7, react-native-is-edge-to-edge@^1.1.6:
 
 react-native-modalize@^2.1.1:
   version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.1.1.tgz#dcb67d208f4c5bdc76f45075e727be43fd008561"
+  resolved "https://registry.npmjs.org/react-native-modalize/-/react-native-modalize-2.1.1.tgz"
   integrity sha512-4/7EZWsrUqAAkkAVEnOsSdpAPQaEBewX7TvwFuzgvGDzxKpq3O58I9SnSeU8QtG/r91XYHJNaU5dAuDrcLjUaQ==
 
 react-native-reanimated@~3.17.4:
@@ -5973,14 +5973,14 @@ react-native-svg@^15.12.0:
 
 react-native-url-polyfill@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-url-polyfill/-/react-native-url-polyfill-2.0.0.tgz#db714520a2985cff1d50ab2e66279b9f91ffd589"
+  resolved "https://registry.npmjs.org/react-native-url-polyfill/-/react-native-url-polyfill-2.0.0.tgz"
   integrity sha512-My330Do7/DvKnEvwQc0WdcBnFPploYKp9CYlefDXzIdEaA+PAhDYllkvGeEroEzvc4Kzzj2O4yVdz8v6fjRvhA==
   dependencies:
     whatwg-url-without-unicode "8.0.0-3"
 
 react-native-video@^6.14.1:
   version "6.14.1"
-  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-6.14.1.tgz#1b62acb8f3e1821b08f1ff20271ab427329f544c"
+  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.14.1.tgz"
   integrity sha512-nTPHqg+GKu6UV6Hr5Ph48Hn2jod963bHCt0wWtlK9jv9lE1FDGyDdX0Jl15lky8v7VhNdqjqb9DX0EUhMontWg==
 
 react-native-web@~0.20.0:
@@ -6450,6 +6450,11 @@ snake-case@^3.0.4:
   dependencies:
     dot-case "^3.0.4"
     tslib "^2.0.3"
+
+sonner-native@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/sonner-native/-/sonner-native-0.20.0.tgz#bb9dfb35fe54610a931252b2d975c1e2ff0baa8c"
+  integrity sha512-DU31DDEYpFsLdL0yOQDPZizqXr4TIUaC/t1K6NCPgRSXdZAXYwUPH7VWRY6KGO4MZ8Wt/gHU4EXuHFtATVPAqg==
 
 source-map-js@^1.0.1, source-map-js@^1.2.1:
   version "1.2.1"
@@ -7177,7 +7182,7 @@ ws@^8.11.0, ws@^8.12.1:
 
 ws@^8.18.2:
   version "8.18.2"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.2.tgz#42738b2be57ced85f46154320aabb51ab003705a"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.18.2.tgz"
   integrity sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==
 
 xcode@^3.0.1:
