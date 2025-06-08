@@ -1,3 +1,4 @@
+import { cn } from "@/utils/cn";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { InputContext } from "./input-atom.context";
@@ -32,10 +33,10 @@ export function InputRoot({
     <InputContext.Provider
       value={{ variant, size, disabled, focused, setFocused, error, hasError }}
     >
-      <View className="gap-2">
+      <View className={cn("gap-2", className)}>
         {label && <InputLabel>{label}</InputLabel>}
 
-        <View className={container({ className })} {...props}>
+        <View className={container()} {...props}>
           {children}
         </View>
 

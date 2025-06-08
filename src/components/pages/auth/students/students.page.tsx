@@ -40,22 +40,18 @@ export default function StudentsPage() {
   );
 
   return (
-    <View className="flex-1 mt-4">
-      <View className="px-6">
-        <InputAtom.Root>
-          <InputAtom.Icon
-            icon={
-              <SearchIcon width={16} height={16} color={colors.gray[400]} />
-            }
-          />
+    <View className="flex-1 mt-4 px-6">
+      <InputAtom.Root>
+        <InputAtom.Icon
+          icon={<SearchIcon width={16} height={16} color={colors.gray[400]} />}
+        />
 
-          <InputAtom.Field
-            placeholder="Procurar Aluno"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </InputAtom.Root>
-      </View>
+        <InputAtom.Field
+          placeholder="Procurar Aluno"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </InputAtom.Root>
 
       {students.length === 0 ? (
         <View className="flex-1 items-center justify-center">

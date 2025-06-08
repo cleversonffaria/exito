@@ -12,7 +12,7 @@ export function StudentItem({ student, onPress }: StudentItemProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex-row items-center px-6 py-4 border-b border-gym-gray-700"
+      className="flex-row items-center py-4 border-b border-gym-gray-700"
       activeOpacity={0.7}
     >
       <View className="w-12 h-12 rounded-full overflow-hidden mr-4">

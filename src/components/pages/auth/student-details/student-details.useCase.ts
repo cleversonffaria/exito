@@ -67,8 +67,8 @@ export const useStudentDetails = () => {
     }));
 
   const handleAddTraining = useCallback(() => {
-    console.log("Adicionar treino para aluno:", studentData.name);
-  }, [studentData.name]);
+    router.push("/(auth)/students/training");
+  }, []);
 
   const handleRemoveTraining = useCallback((trainingId: string) => {
     console.log("Remover treino:", trainingId);
