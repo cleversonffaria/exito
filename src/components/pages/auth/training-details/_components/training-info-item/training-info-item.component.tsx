@@ -1,8 +1,8 @@
 import { TextAtom } from "@atom/text";
 import { View } from "react-native";
-import { NExerciseInfoItem } from "./exercise-info-item.types";
+import { NTrainingInfoItem } from "./training-info-item.types";
 
-export function ExerciseInfoItem({ label, value }: NExerciseInfoItem.Props) {
+export function TrainingInfoItem({ label, value }: NTrainingInfoItem.Props) {
   return (
     <View className="flex-row justify-between items-center">
       <TextAtom className="text-white text-lg font-medium">{label}</TextAtom>

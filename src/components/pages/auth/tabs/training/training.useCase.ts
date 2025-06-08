@@ -1,4 +1,4 @@
-import { useExercise } from "@store/useExercise";
+import { useTraining as useTrainingStore } from "@/store/useTraining";
 import { useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { NTrainingPage } from "./training.types";
@@ -7,7 +7,7 @@ export const useTraining = () => {
   const [selectedDay, setSelectedDay] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { setSelectedExercise } = useExercise();
+  const { setSelectedTraining } = useTrainingStore();
 
   const weekDays: NTrainingPage.WeekDay[] = [
     { id: 1, name: "Segunda", shortName: "Seg", isActive: false },
@@ -127,10 +127,10 @@ export const useTraining = () => {
         currentRepetition: 0,
       };
 
-      setSelectedExercise(exerciseData);
+      setSelectedTraining(exerciseData);
       router.push("/(auth)/students/exercise-details");
     },
-    [router, setSelectedExercise]
+    [router, setSelectedTraining]
   );
 
   return {

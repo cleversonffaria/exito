@@ -1,12 +1,12 @@
 import { TextAtom } from "@atom/text";
 import { View } from "react-native";
-import { NExerciseSection } from "./exercise-section.types";
+import { NTrainingSection } from "./training-section.types";
 
-export function ExerciseSection({
+export function TrainingSection({
   title,
   content,
   className = "text-base",
-}: NExerciseSection.Props) {
+}: NTrainingSection.Props) {
   return (
     <View className="pt-4">
       <TextAtom className="text-white text-lg font-medium mb-2">

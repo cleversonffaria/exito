@@ -2,25 +2,25 @@ import { ButtonAtom } from "@atom/button";
 import { useRef } from "react";
 import { ScrollView, View } from "react-native";
 import Video from "react-native-video";
-import { ExerciseInfoItem } from "./_components/exercise-info-item";
-import { ExerciseSection } from "./_components/exercise-section";
-import { useExerciseDetails } from "./exercise-details.useCase";
+import { TrainingInfoItem } from "./_components/training-info-item";
+import { TrainingSection } from "./_components/training-section";
+import { useTrainingDetails } from "./training-details.useCase";
 
-export default function ExerciseDetailsPage() {
+export default function TrainingDetailsPage() {
   const {
     getVideoSource,
-    selectedExercise,
+    selectedTraining,
     remainingRepetitions,
     handleCompleteRepetition,
     exerciseInfoData,
     isFullscreen,
     handleFullscreenEnter,
     handleFullscreenExit,
-  } = useExerciseDetails();
+  } = useTrainingDetails();
 
   const videoRef = useRef<any>(null);
 
-  if (!selectedExercise) return null;
+  if (!selectedTraining) return null;
 
   return (
     <View className="flex-1">
@@ -51,27 +51,27 @@ export default function ExerciseDetailsPage() {
 
           <View className="space-y-6">
             {exerciseInfoData.map((info, index) => (
-              <ExerciseInfoItem
+              <TrainingInfoItem
                 key={index}
                 label={info.label}
                 value={info.value}
               />
             ))}
 
-            <ExerciseSection
+            <TrainingSection
               title="Músculos trabalhados:"
-              content={selectedExercise.muscleGroups.join(", ")}
+              content={selectedTraining.muscleGroups.join(", ")}
             />
 
-            <ExerciseSection
+            <TrainingSection
               title="Descrição do exercício:"
-              content={selectedExercise.description}
+              content={selectedTraining.description}
               className="text-base leading-6"
             />
 
-            <ExerciseSection
+            <TrainingSection
               title="Observações:"
-              content={selectedExercise.observations}
+              content={selectedTraining.observations}
               className="text-base leading-6"
             />
           </View>

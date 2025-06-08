@@ -1,1 +1,1 @@
-export { default } from "@pages/auth/exercise-details";
+export { default } from "@pages/auth/training-details";
