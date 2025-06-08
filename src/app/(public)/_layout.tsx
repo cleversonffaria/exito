@@ -1,7 +1,7 @@
 import { colors } from "@/constants/colors";
 import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { createCustomHeader } from "../../utils/header-config";
+import { createCustomHeader } from "../../utils/header-config.utils";
 
 export default function PublicLayout() {
   return (

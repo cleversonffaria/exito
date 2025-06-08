@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { devWarning } from "../../../utils/dev-warnings";
+import { devWarning } from "@utils/dev-warnings.utils";
 
 import { NInputAtom } from "./input-atom.types";
 

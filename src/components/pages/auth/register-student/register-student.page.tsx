@@ -1,6 +1,6 @@
 import { TextAtom } from "@/components/atom/text";
 import { cn } from "@/utils/cn";
-import { maskPhone } from "@/utils/phone-mask";
+import { maskPhone } from "@/utils/phone-mask.utils";
 import { ButtonAtom } from "@atom/button";
 import { InputAtom } from "@atom/input";
 import React from "react";

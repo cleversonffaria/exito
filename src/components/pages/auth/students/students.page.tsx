@@ -5,6 +5,7 @@ import SearchIcon from "@assets/svg/search.svg";
 import { InputAtom } from "@atom/input";
 import { TextAtom } from "@atom/text";
 import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import React, { useLayoutEffect } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { StudentItem } from "./_components";
@@ -34,7 +35,7 @@ export default function StudentsPage() {
   const renderStudent = ({ item }: { item: NStudentsPage.Student }) => (
     <StudentItem
       student={item}
-      onPress={() => console.log("Ver aluno:", item.name)}
+      onPress={() => router.push("/(auth)/students/details")}
     />
   );
 

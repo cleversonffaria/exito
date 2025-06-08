@@ -1,6 +1,6 @@
 import { colors } from "@/constants/colors";
+import { createCustomHeader } from "@/utils/header-config.utils";
 import { TabBarOrganism } from "@organisms/tab-bar";
-import { createCustomHeader } from "@utils/header-config";
 import { Tabs } from "expo-router";
 import React from "react";
 

@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import { createCustomHeader } from "@utils/header-config";
+import { createCustomHeader } from "@/utils/header-config.utils";
 import { Stack } from "expo-router";
 import React from "react";
 
