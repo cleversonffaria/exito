@@ -12,6 +12,7 @@ import { useProfile } from "./profile.useCase";
 import ExercisesIcon from "@assets/svg/exercise.svg";
 import LogoutIcon from "@assets/svg/power-fill.svg";
 import StudentsIcon from "@assets/svg/user-card.svg";
+import UserProfileIcon from "@assets/svg/user-profile.svg";
 
 export default function ProfilePage({}: NProfilePage.Props) {
   const {
@@ -48,12 +49,16 @@ export default function ProfilePage({}: NProfilePage.Props) {
       }}
     >
       <View className="items-center px-6 pt-8">
-        <View className="w-32 h-32 rounded-full bg-gym-gray-500 mb-6 overflow-hidden">
-          <Image
-            source={{ uri: userInfo.avatar }}
-            className="w-full h-full"
-            resizeMode="cover"
-          />
+        <View className="w-32 h-32 rounded-full bg-gym-black-400 mb-6 overflow-hidden items-center justify-center">
+          {userInfo.hasAvatar ? (
+            <Image
+              source={{ uri: userInfo.avatar! }}
+              className="w-full h-full"
+              resizeMode="cover"
+            />
+          ) : (
+            <UserProfileIcon width={80} height={80} color={colors.gray[300]} />
+          )}
         </View>
 
         <TextAtom className="text-2xl font-semibold text-gym-gray-200">
