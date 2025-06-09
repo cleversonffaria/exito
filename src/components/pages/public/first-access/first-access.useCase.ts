@@ -6,17 +6,24 @@ import {
 import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useActivationStore } from "@/store/useActivationStore";
+import { supabase } from "@/services/supabase";
 import {
   FirstAccessData,
   FirstAccessResponse,
   FirstAccessState,
 } from "./first-access.types";
+import { useToast } from "@/hooks/useToast";
 
 export const useFirstAccess = () => {
   const [firstAccessState, setFirstAccessState] = useState<FirstAccessState>({
     isLoading: false,
     error: undefined,
   });
+
+  const { setEmail, setStudentName, reset } = useActivationStore();
+
+  const toast = useToast();
 
   const form = useForm<FirstAccessFormData>({
     resolver: zodResolver(firstAccessSchema),
@@ -30,19 +37,24 @@ export const useFirstAccess = () => {
       setFirstAccessState({ isLoading: true, error: undefined });
 
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const { data: userData, error } = await supabase
+          .from("users")
+          .select("name, email")
+          .eq("email", data.email.toLowerCase().trim())
+          .single();
 
-        if (!data.email) {
-          throw new Error("Email é obrigatório");
+        if (error || !userData) {
+          throw toast.error(
+            "Email não encontrado. Verifique se foi cadastrado por um professor."
+          );
         }
 
-        console.log(
-          `Enviando instruções de primeiro acesso para: ${data.email}`
-        );
+        setEmail(userData.email);
+        setStudentName(userData.name);
 
         const response: FirstAccessResponse = {
           success: true,
-          message: `Instruções enviadas para ${data.email}`,
+          message: `Usuário encontrado: ${userData.name}`,
         };
 
         setFirstAccessState({ isLoading: false, error: undefined });
@@ -50,9 +62,14 @@ export const useFirstAccess = () => {
         router.push("/validate-code");
         return response;
       } catch (error) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Erro ao processar primeiro acesso";
+
         const errorResponse: FirstAccessResponse = {
           success: false,
-          message: "Erro ao processar primeiro acesso",
+          message: errorMessage,
         };
 
         setFirstAccessState({
@@ -63,7 +80,7 @@ export const useFirstAccess = () => {
         return errorResponse;
       }
     },
-    []
+    [setEmail, setStudentName]
   );
 
   const handleSubmit = useCallback(

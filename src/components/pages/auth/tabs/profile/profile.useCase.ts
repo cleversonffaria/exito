@@ -13,7 +13,6 @@ export const useProfile = () => {
     progress: 0,
     completed: 0,
   });
-  const [loading, setLoading] = useState(true);
 
   const isTeacher = user?.role === "teacher";
 
@@ -35,10 +34,12 @@ export const useProfile = () => {
       ? new Date(user.start_date).toLocaleDateString("pt-BR", {
           month: "2-digit",
           year: "numeric",
+          day: "2-digit",
         })
       : new Date().toLocaleDateString("pt-BR", {
           month: "2-digit",
           year: "numeric",
+          day: "2-digit",
         }),
     avatar: user?.avatar_url || null,
     hasAvatar: !!user?.avatar_url,
@@ -47,7 +48,6 @@ export const useProfile = () => {
   const fetchStats = useCallback(async () => {
     if (!user?.id) return;
 
-    setLoading(true);
     try {
       if (isTeacher) {
         const result = await userService.getTeacherStats();
@@ -73,9 +73,7 @@ export const useProfile = () => {
         }
       }
     } catch (error) {
-      console.error("Erro ao buscar estatísticas:", error);
-    } finally {
-      setLoading(false);
+      return null;
     }
   }, [user, isTeacher]);
 
@@ -122,7 +120,6 @@ export const useProfile = () => {
     isTeacher,
     userInfo,
     profileStats,
-    loading,
     navigateToStudents,
     navigateToExercises,
     showLogoutModal,

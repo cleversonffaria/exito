@@ -4,7 +4,6 @@ export namespace NRegisterStudentPage {
     email: string;
     phone: string;
     age: string;
-    frequency: string;
     gender: string;
     goal: string;
   };

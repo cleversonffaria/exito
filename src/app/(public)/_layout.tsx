@@ -23,6 +23,10 @@ export default function PublicLayout() {
           name="validate-code"
           options={createCustomHeader({ title: "Primeiro acesso" })}
         />
+        <Stack.Screen
+          name="create-password"
+          options={createCustomHeader({ title: "Criar Senha" })}
+        />
       </Stack>
     </SafeAreaView>
   );

@@ -21,7 +21,8 @@
         "backgroundColor": "#1A1A1A"
       },
       "package": "com.gym.app",
-      "permissions": []
+      "permissions": [],
+      "softInputMode": "adjustPan"
     },
     "web": {
       "bundler": "metro",

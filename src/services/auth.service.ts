@@ -11,29 +11,43 @@ type UserInsert = Database["public"]["Tables"]["users"]["Insert"];
 class AuthService {
   async signIn(email: string, password: string): Promise<AuthResponse> {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data: studentProfile } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .eq("role", "student")
+        .single();
 
-      if (error) {
-        return { success: false, error: translateSupabaseError(error.message) };
-      }
-
-      if (data.user) {
-        const userData = await this.getUserProfile(data.user.id);
-
-        if (!userData.success) {
-          return { success: false, error: "Erro ao carregar dados do usuário" };
-        }
-
+      if (studentProfile && !studentProfile.id) {
         return {
-          success: true,
-          user: userData.user,
+          success: false,
+          error:
+            "Conta não ativada. Use 'Primeiro Acesso' para ativar sua conta com o código enviado por email.",
         };
       }
 
-      return { success: false, error: "Erro inesperado no login" };
+      const { data: loginData, error: loginError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+      if (loginData.user && !loginError) {
+        const userData = await this.getUserProfile(loginData.user.id);
+
+        if (userData.success) {
+          return {
+            success: true,
+            user: userData.user,
+          };
+        }
+      }
+      return {
+        success: false,
+        error: translateSupabaseError(
+          loginError?.message || "Email ou senha incorretos"
+        ),
+      };
     } catch (error) {
       return { success: false, error: "Erro de conexão" };
     }

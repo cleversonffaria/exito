@@ -7,6 +7,7 @@ import {
   Platform,
   SafeAreaView,
   ScrollView,
+  Text,
   View,
 } from "react-native";
 import { useValidateCode } from "./validate-code.useCase";
@@ -35,6 +36,10 @@ export default function ValidateCodePage() {
           </View>
 
           <View className="flex-1 justify-center mb-24">
+            <Text className="text-2xl font-bold text-center text-gym-gray-200 mb-2">
+              Validar Código
+            </Text>
+
             <CodeInputAtom.Controller
               control={form.control}
               name="code"
@@ -53,7 +58,7 @@ export default function ValidateCodePage() {
             variant="primary"
             className="shadow-lg"
           >
-            <ButtonAtom.Text>Concluir</ButtonAtom.Text>
+            <ButtonAtom.Text>Validar Código</ButtonAtom.Text>
           </ButtonAtom.Root>
         </View>
       </KeyboardAvoidingView>

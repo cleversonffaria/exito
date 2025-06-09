@@ -19,7 +19,6 @@ export default function ProfilePage({}: NProfilePage.Props) {
     isTeacher,
     userInfo,
     profileStats,
-    loading,
     navigateToStudents,
     navigateToExercises,
     showLogoutModal,

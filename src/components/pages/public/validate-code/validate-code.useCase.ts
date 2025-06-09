@@ -1,18 +1,16 @@
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  ValidateCodeData,
-  ValidateCodeResponse,
-  ValidateCodeState,
-} from "./validate-code.types";
+import { router } from "expo-router";
+import { activationService } from "@/services/activation.service";
+import { useActivationStore } from "@/store/useActivationStore";
+import { useToast } from "@/hooks/useToast";
+import { ValidateCodeData, ValidateCodeResponse } from "./validate-code.types";
 
 export const useValidateCode = () => {
-  const [validateCodeState, setValidateCodeState] = useState<ValidateCodeState>(
-    {
-      isLoading: false,
-      error: undefined,
-    }
-  );
+  const { email, setCode } = useActivationStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const toast = useToast();
 
   const form = useForm({
     defaultValues: {
@@ -22,13 +20,26 @@ export const useValidateCode = () => {
 
   const validateCode = useCallback(
     async (data: ValidateCodeData): Promise<ValidateCodeResponse | null> => {
-      setValidateCodeState({ isLoading: true, error: undefined });
+      setIsLoading(true);
 
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
         if (!data.code) {
-          throw new Error("Código é obrigatório");
+          throw toast.error("Código é obrigatório");
+        }
+
+        if (!email) {
+          throw toast.error(
+            "Email não encontrado. Volte e digite seu email novamente."
+          );
+        }
+
+        const result = await activationService.verifyActivationCode(
+          email,
+          data.code
+        );
+
+        if (!result.success || !result.isValid) {
+          throw new Error(result.error || "Código inválido ou expirado");
         }
 
         const response: ValidateCodeResponse = {
@@ -36,23 +47,34 @@ export const useValidateCode = () => {
           message: "Código validado com sucesso!",
         };
 
-        setValidateCodeState({ isLoading: false, error: undefined });
-        return response;
-      } catch (error) {
-        const errorResponse: ValidateCodeResponse = {
-          success: false,
-          message: "Código inválido ou expirado",
-        };
-
-        setValidateCodeState({
-          isLoading: false,
-          error: errorResponse.message,
+        toast.success("Código validado com sucesso!", {
+          description: "Agora você pode criar sua senha",
         });
 
+        setCode(data.code);
+
+        router.push("/create-password");
+
+        return response;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Código inválido ou expirado";
+
+        const errorResponse: ValidateCodeResponse = {
+          success: false,
+          message: errorMessage,
+        };
+
+        toast.error(errorMessage);
+
         return errorResponse;
+      } finally {
+        setIsLoading(false);
       }
     },
-    []
+    [email, setCode]
   );
 
   const handleSubmit = useCallback(
@@ -62,16 +84,10 @@ export const useValidateCode = () => {
     [validateCode]
   );
 
-  const clearErrors = useCallback(() => {
-    setValidateCodeState((prev) => ({ ...prev, error: undefined }));
-  }, []);
-
   return {
-    isLoading: validateCodeState.isLoading,
-    error: validateCodeState.error,
+    isLoading,
     form,
     handleSubmit: form.handleSubmit(handleSubmit),
     validateCode,
-    clearErrors,
   };
 };
