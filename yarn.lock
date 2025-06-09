@@ -3413,18 +3413,6 @@ expo-haptics@~14.1.4:
   resolved "https://registry.npmjs.org/expo-haptics/-/expo-haptics-14.1.4.tgz"
   integrity sha512-QZdE3NMX74rTuIl82I+n12XGwpDWKb8zfs5EpwsnGi/D/n7O2Jd4tO5ivH+muEG/OCJOMq5aeaVDqqaQOhTkcA==
 
-expo-image-loader@~5.1.0:
-  version "5.1.0"
-  resolved "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-5.1.0.tgz"
-  integrity sha512-sEBx3zDQIODWbB5JwzE7ZL5FJD+DK3LVLWBVJy6VzsqIA6nDEnSFnsnWyCfCTSvbGigMATs1lgkC2nz3Jpve1Q==
-
-expo-image-picker@~16.1.4:
-  version "16.1.4"
-  resolved "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-16.1.4.tgz"
-  integrity sha512-bTmmxtw1AohUT+HxEBn2vYwdeOrj1CLpMXKjvi9FKSoSbpcarT4xxI0z7YyGwDGHbrJqyyic3I9TTdP2J2b4YA==
-  dependencies:
-    expo-image-loader "~5.1.0"
-
 expo-json-utils@~0.15.0:
   version "0.15.0"
   resolved "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-0.15.0.tgz"
@@ -5980,7 +5968,7 @@ react-native-url-polyfill@^2.0.0:
 
 react-native-video@^6.14.1:
   version "6.14.1"
-  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.14.1.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-6.14.1.tgz#1b62acb8f3e1821b08f1ff20271ab427329f544c"
   integrity sha512-nTPHqg+GKu6UV6Hr5Ph48Hn2jod963bHCt0wWtlK9jv9lE1FDGyDdX0Jl15lky8v7VhNdqjqb9DX0EUhMontWg==
 
 react-native-web@~0.20.0:
@@ -6453,7 +6441,7 @@ snake-case@^3.0.4:
 
 sonner-native@^0.20.0:
   version "0.20.0"
-  resolved "https://registry.yarnpkg.com/sonner-native/-/sonner-native-0.20.0.tgz#bb9dfb35fe54610a931252b2d975c1e2ff0baa8c"
+  resolved "https://registry.npmjs.org/sonner-native/-/sonner-native-0.20.0.tgz"
   integrity sha512-DU31DDEYpFsLdL0yOQDPZizqXr4TIUaC/t1K6NCPgRSXdZAXYwUPH7VWRY6KGO4MZ8Wt/gHU4EXuHFtATVPAqg==
 
 source-map-js@^1.0.1, source-map-js@^1.2.1:

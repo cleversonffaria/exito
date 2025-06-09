@@ -21,8 +21,16 @@
         "backgroundColor": "#1A1A1A"
       },
       "package": "com.gym.app",
-      "permissions": [],
-      "softInputMode": "adjustPan"
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO"
+      ],
+      "softInputMode": "adjustResize"
     },
     "web": {
       "bundler": "metro",
@@ -48,6 +56,7 @@
       "expo-font",
       "expo-web-browser",
       "expo-secure-store",
+      "expo-document-picker",
       "react-native-video"
     ],
     "experiments": {

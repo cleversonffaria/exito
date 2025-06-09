@@ -16,7 +16,8 @@ export const useFileUpload = () => {
       setIsUploading(true);
       const result = await DocumentPicker.getDocumentAsync({
         type: ["image/*"],
-        copyToCacheDirectory: true,
+        copyToCacheDirectory: false,
+        multiple: false,
       });
 
       if (!result.canceled && result.assets[0]) {
@@ -39,9 +40,11 @@ export const useFileUpload = () => {
   const pickVideo = useCallback(async (): Promise<FileUploadResult | null> => {
     try {
       setIsUploading(true);
+
       const result = await DocumentPicker.getDocumentAsync({
         type: ["video/*"],
-        copyToCacheDirectory: true,
+        copyToCacheDirectory: false,
+        multiple: false,
       });
 
       if (!result.canceled && result.assets[0]) {
