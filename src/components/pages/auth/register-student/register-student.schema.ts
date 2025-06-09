@@ -14,4 +14,12 @@ export const registerStudentSchema = z.object({
       }
     ),
   goal: z.string().min(1, "Objetivo obrigatório"),
+  avatar: z
+    .object({
+      uri: z.string(),
+      name: z.string(),
+      type: z.string(),
+      size: z.number().optional(),
+    })
+    .nullable(),
 });

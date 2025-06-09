@@ -1,3 +1,5 @@
+import { FileUploadResult } from "@/hooks/useFileUpload";
+
 export namespace NRegisterStudentPage {
   export type FormData = {
     name: string;
@@ -6,5 +8,6 @@ export namespace NRegisterStudentPage {
     age: string;
     gender: string;
     goal: string;
+    avatar: FileUploadResult | null;
   };
 }

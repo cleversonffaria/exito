@@ -14,7 +14,8 @@ export interface UploadResponse {
 }
 
 class StorageService {
-  private readonly BUCKET_NAME = "exercises";
+  private readonly EXERCISES_BUCKET = "exercises";
+  private readonly AVATARS_BUCKET = "avatars";
 
   async uploadImage(file: FileUploadResult): Promise<UploadResponse> {
     try {
@@ -32,7 +33,7 @@ class StorageService {
       } as any);
 
       const { data, error } = await supabase.storage
-        .from(this.BUCKET_NAME)
+        .from(this.EXERCISES_BUCKET)
         .upload(filePath, formData, {
           contentType: file.type,
           upsert: false,
@@ -43,12 +44,48 @@ class StorageService {
       }
 
       const { data: publicData } = supabase.storage
-        .from(this.BUCKET_NAME)
+        .from(this.EXERCISES_BUCKET)
         .getPublicUrl(data.path);
 
       return { success: true, url: publicData.publicUrl };
     } catch (error) {
       return { success: false, error: "Erro ao fazer upload da imagem" };
+    }
+  }
+
+  async uploadAvatar(file: FileUploadResult): Promise<UploadResponse> {
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random()
+        .toString(36)
+        .substring(2)}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const formData = new FormData();
+      formData.append("file", {
+        uri: file.uri,
+        name: file.name,
+        type: file.type,
+      } as any);
+
+      const { data, error } = await supabase.storage
+        .from(this.AVATARS_BUCKET)
+        .upload(filePath, formData, {
+          contentType: file.type,
+          upsert: false,
+        });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      const { data: publicData } = supabase.storage
+        .from(this.AVATARS_BUCKET)
+        .getPublicUrl(data.path);
+
+      return { success: true, url: publicData.publicUrl };
+    } catch (error) {
+      return { success: false, error: "Erro ao fazer upload do avatar" };
     }
   }
 
@@ -68,7 +105,7 @@ class StorageService {
       } as any);
 
       const { data, error } = await supabase.storage
-        .from(this.BUCKET_NAME)
+        .from(this.EXERCISES_BUCKET)
         .upload(filePath, formData, {
           contentType: file.type,
           upsert: false,
@@ -79,7 +116,7 @@ class StorageService {
       }
 
       const { data: publicData } = supabase.storage
-        .from(this.BUCKET_NAME)
+        .from(this.EXERCISES_BUCKET)
         .getPublicUrl(data.path);
 
       return { success: true, url: publicData.publicUrl };
@@ -93,7 +130,7 @@ class StorageService {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase.storage
-        .from(this.BUCKET_NAME)
+        .from(this.EXERCISES_BUCKET)
         .remove([filePath]);
 
       if (error) {
@@ -110,7 +147,7 @@ class StorageService {
     try {
       const urlObj = new URL(url);
       const pathParts = urlObj.pathname.split("/");
-      const bucketIndex = pathParts.indexOf(this.BUCKET_NAME);
+      const bucketIndex = pathParts.indexOf(this.EXERCISES_BUCKET);
 
       if (bucketIndex === -1) return null;
 

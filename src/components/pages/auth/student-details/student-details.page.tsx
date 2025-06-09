@@ -1,6 +1,7 @@
 import { colors } from "@/constants/colors";
 import MinusIcon from "@assets/svg/minus-solid.svg";
 import PlusIcon from "@assets/svg/plus-solid.svg";
+import UserProfileIcon from "@assets/svg/user-profile.svg";
 import { TextAtom } from "@atom/text";
 import React from "react";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
@@ -8,20 +9,34 @@ import { StudentInfoItem } from "./_components";
 import { useStudentDetails } from "./student-details.useCase";
 
 export default function StudentDetailsPage() {
-  const { student, handleAddTraining, handleRemoveTraining } =
+  const { student, isLoading, handleAddTraining, handleRemoveTraining } =
     useStudentDetails();
+
+  if (isLoading || !student) {
+    return (
+      <View className="flex-1 bg-gym-black-500 items-center justify-center">
+        <TextAtom className="text-gym-gray-400 text-lg">
+          {isLoading ? "Carregando..." : "Aluno não encontrado"}
+        </TextAtom>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-gym-black-500">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="items-center px-6 gap-1 mt-4">
           <View className="flex-row items-center justify-between w-full gap-4 mb-2">
-            <View className="w-16 h-16 rounded-full bg-gym-gray-500 mb-4 overflow-hidden">
-              <Image
-                source={{ uri: student.avatar }}
-                className="w-full h-full"
-                resizeMode="cover"
-              />
+            <View className="w-16 h-16 rounded-full bg-gym-black-400 mb-4 overflow-hidden items-center justify-center">
+              {student.avatar ? (
+                <Image
+                  source={{ uri: student.avatar }}
+                  className="w-full h-full"
+                  resizeMode="cover"
+                />
+              ) : (
+                <UserProfileIcon width={50} height={50} />
+              )}
             </View>
             <View className="flex-row flex-1 justify-between items-center mb-2">
               <View>

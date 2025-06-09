@@ -1,70 +1,79 @@
-import { router } from "expo-router";
-import { useCallback, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useCallback, useState, useEffect } from "react";
 
 import { ROLE_MAP } from "@/constants/profile";
 import { useModal } from "@/store/useModal";
 import { formatWeekDays } from "@utils/dates.utils";
 import { maskPhone } from "@utils/phone-mask.utils";
+import { studentService } from "@/services/student.service";
+import { toast } from "sonner-native";
 import { NStudentDetailsPage } from "./student-details.types";
 
 export const useStudentDetails = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [student, setStudent] =
+    useState<NStudentDetailsPage.StudentDetailsWithFormattedTrainings | null>(
+      null
+    );
 
+  const { id } = useLocalSearchParams<{ id: string }>();
   const modal = useModal();
 
-  const studentData: NStudentDetailsPage.StudentDetails = {
-    id: "1",
-    name: "John Doe",
-    gender: "Masculino",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    email: "exemple@gmail.com",
-    phone: maskPhone("2299999-9999"),
-    age: "27",
-    goal: "Emagrecimento",
-    startDate: "06/2024",
-    role: "student",
-    trainings: [
-      {
-        id: "1",
-        student_id: 101,
-        training_id: 1,
-        name: "Treino Full Body",
-        exercises: [
-          {
-            exercise_id: 1,
-            sets: 4,
-            repetitions: 10,
-            load: "60kg",
-            rest: "90 segundos",
-            notes: "Descer até 90°",
-          },
-          {
-            exercise_id: 2,
-            sets: 3,
-            repetitions: 12,
-            load: "40kg",
-            rest: "60 segundos",
-            notes: "Movimento controlado",
-          },
-          {
-            exercise_id: 3,
-            sets: 3,
-            repetitions: 15,
-            load: "20kg",
-            rest: "45 segundos",
-            notes: "Foco na contração",
-          },
-        ],
-        week_days: [1, 3, 5],
-      },
-    ],
-  };
+  const loadStudent = useCallback(async () => {
+    if (!id) {
+      toast.error("ID do aluno não encontrado");
+      router.back();
+      return;
+    }
 
-  const trainingsWithFormattedDays: NStudentDetailsPage.TrainingWithDays[] =
-    studentData.trainings.map((training) => ({
-      ...training,
-      days: formatWeekDays(training.week_days),
-    }));
+    try {
+      setIsLoading(true);
+      const result = await studentService.getStudentById(id);
+
+      if (!result.success || !result.student) {
+        toast.error("Erro ao carregar dados do aluno", {
+          description: result.error || "Tente novamente",
+        });
+        router.back();
+        return;
+      }
+
+      const studentData = result.student;
+
+      const formattedStudent: NStudentDetailsPage.StudentDetailsWithFormattedTrainings =
+        {
+          id: studentData.id!,
+          name: studentData.name || "",
+          gender: studentData.gender as "Masculino" | "Feminino" | "Outros",
+          avatar: studentData.avatar_url || "",
+          email: studentData.email || "",
+          phone: maskPhone(studentData.phone || ""),
+          age: studentData.age?.toString() || "",
+          goal: studentData.goal || "",
+          startDate:
+            studentData.start_date ||
+            new Date().toLocaleDateString("pt-BR", {
+              month: "2-digit",
+              year: "numeric",
+            }),
+          role: ROLE_MAP["student"],
+          trainings: [], // Por enquanto vazio, como solicitado
+        };
+
+      setStudent(formattedStudent);
+    } catch (error) {
+      toast.error("Erro inesperado", {
+        description: "Tente novamente mais tarde",
+      });
+      router.back();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    loadStudent();
+  }, [loadStudent]);
 
   const handleAddTraining = useCallback(() => {
     router.push("/(auth)/students/training");
@@ -99,15 +108,18 @@ export const useStudentDetails = () => {
     router.back();
   }, []);
 
-  const studentWithFormattedTrainings: NStudentDetailsPage.StudentDetailsWithFormattedTrainings =
-    {
-      ...studentData,
-      role: ROLE_MAP[studentData.role],
-      trainings: trainingsWithFormattedDays,
+  if (!student) {
+    return {
+      student: null,
+      isLoading,
+      handleAddTraining,
+      handleRemoveTraining,
+      goBack,
     };
+  }
 
   return {
-    student: studentWithFormattedTrainings,
+    student,
     isLoading,
     handleAddTraining,
     handleRemoveTraining,

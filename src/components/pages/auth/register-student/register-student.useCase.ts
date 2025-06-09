@@ -4,11 +4,13 @@ import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner-native";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { registerStudentSchema } from "./register-student.schema";
 import { NRegisterStudentPage } from "./register-student.types";
 
 export const useRegisterStudent = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { isUploading, pickImage } = useFileUpload();
 
   const form = useForm<NRegisterStudentPage.FormData>({
     resolver: zodResolver(registerStudentSchema),
@@ -19,8 +21,16 @@ export const useRegisterStudent = () => {
       age: "",
       gender: "" as any,
       goal: "",
+      avatar: null,
     },
   });
+
+  const handleSelectAvatar = useCallback(async () => {
+    const result = await pickImage();
+    if (result) {
+      form.setValue("avatar", result, { shouldValidate: true });
+    }
+  }, [pickImage, form]);
 
   const handleSubmit = useCallback(
     async (data: NRegisterStudentPage.FormData) => {
@@ -34,6 +44,7 @@ export const useRegisterStudent = () => {
           age: parseInt(data.age, 10),
           gender: data.gender as "Masculino" | "Feminino" | "Outros",
           goal: data.goal.trim(),
+          avatar: data.avatar || undefined,
         });
 
         if (!result.success) {
@@ -60,5 +71,11 @@ export const useRegisterStudent = () => {
     [form]
   );
 
-  return { form, isLoading, handleSubmit: form.handleSubmit(handleSubmit) };
+  return {
+    form,
+    isLoading,
+    isUploading,
+    handleSelectAvatar,
+    handleSubmit: form.handleSubmit(handleSubmit),
+  };
 };

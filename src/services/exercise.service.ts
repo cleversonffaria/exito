@@ -1,5 +1,6 @@
 import type { ExerciseFilters, ExerciseResponse } from "@/interfaces";
 import type { Database } from "@/types/database.types";
+import { RequestInterceptor } from "@/utils/request-interceptor";
 import { supabase } from "./supabase";
 
 type ExerciseInsert = Database["public"]["Tables"]["exercises"]["Insert"];
@@ -10,6 +11,11 @@ class ExerciseService {
     exerciseData: ExerciseInsert
   ): Promise<ExerciseResponse> {
     try {
+      const isAuthorized = await RequestInterceptor.validateTeacherAuth();
+      if (!isAuthorized) {
+        return { success: false, error: "Sem autorização" };
+      }
+
       const { data, error } = await supabase
         .from("exercises")
         .insert(exerciseData)
@@ -28,6 +34,11 @@ class ExerciseService {
 
   async getExercises(filters?: ExerciseFilters): Promise<ExerciseResponse> {
     try {
+      const isAuthorized = await RequestInterceptor.validateAuth();
+      if (!isAuthorized) {
+        return { success: false, error: "Sem autorização" };
+      }
+
       let query = supabase.from("exercises").select("*").is("deleted_at", null);
 
       if (filters?.muscleGroups && filters.muscleGroups.length > 0) {
@@ -84,6 +95,11 @@ class ExerciseService {
     updates: ExerciseUpdate
   ): Promise<ExerciseResponse> {
     try {
+      const isAuthorized = await RequestInterceptor.validateTeacherAuth();
+      if (!isAuthorized) {
+        return { success: false, error: "Sem autorização" };
+      }
+
       const { data, error } = await supabase
         .from("exercises")
         .update({ ...updates, updated_at: new Date().toISOString() })
@@ -105,6 +121,11 @@ class ExerciseService {
     id: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
+      const isAuthorized = await RequestInterceptor.validateTeacherAuth();
+      if (!isAuthorized) {
+        return { success: false, error: "Sem autorização" };
+      }
+
       const { error } = await supabase
         .from("exercises")
         .update({

@@ -1,11 +1,13 @@
 import { TextAtom } from "@/components/atom/text";
 import { cn } from "@/utils/cn";
 import { maskPhone } from "@/utils/phone-mask.utils";
+import UserScanIcon from "@assets/svg/user-scan.svg";
 import { ButtonAtom } from "@atom/button";
 import { InputAtom } from "@atom/input";
 import React from "react";
 import { Controller } from "react-hook-form";
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -13,9 +15,11 @@ import {
   View,
 } from "react-native";
 import { useRegisterStudent } from "./register-student.useCase";
+import { colors } from "@/constants/colors";
 
 export default function RegisterStudentPage() {
-  const { form, isLoading, handleSubmit } = useRegisterStudent();
+  const { form, isLoading, isUploading, handleSubmit, handleSelectAvatar } =
+    useRegisterStudent();
 
   return (
     <KeyboardAvoidingView
@@ -32,6 +36,35 @@ export default function RegisterStudentPage() {
           automaticallyAdjustKeyboardInsets={true}
         >
           <View className="pt-8">
+            <View className="mb-6">
+              <TextAtom className="font-semibold mb-2 text-gym-gray-200">
+                Foto do Perfil
+              </TextAtom>
+              <TouchableOpacity
+                onPress={handleSelectAvatar}
+                className="w-24 h-24 mx-auto bg-gym-black-400 rounded-full items-center justify-center overflow-hidden"
+                activeOpacity={0.7}
+                disabled={isUploading}
+              >
+                {form.watch("avatar") ? (
+                  <Image
+                    source={{ uri: form.watch("avatar")?.uri }}
+                    className="w-full h-full"
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <UserScanIcon
+                    width={32}
+                    height={32}
+                    color={colors.primary[500]}
+                  />
+                )}
+              </TouchableOpacity>
+              <TextAtom className="text-center text-gym-gray-400 text-sm mt-2">
+                Toque para adicionar uma foto
+              </TextAtom>
+            </View>
+
             <InputAtom.Controller
               control={form.control}
               name="name"
@@ -100,7 +133,7 @@ export default function RegisterStudentPage() {
                     <TouchableOpacity
                       key={gender}
                       className={cn(
-                        "py-3 px-4 rounded-lg border min-w-[100px]",
+                        "py-3 px-4 rounded-lg border min-w-[100px] flex-1",
                         {
                           "bg-gym-primary-500 border-gym-primary-500":
                             isSelected,

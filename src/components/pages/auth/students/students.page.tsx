@@ -5,16 +5,22 @@ import SearchIcon from "@assets/svg/search.svg";
 import { InputAtom } from "@atom/input";
 import { TextAtom } from "@atom/text";
 import { useNavigation } from "@react-navigation/native";
-import { router } from "expo-router";
 import React, { useLayoutEffect } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { StudentItem } from "./_components";
+import { StudentItem } from "./_components/student-item";
 import { NStudentsPage } from "./students.types";
 import { useStudents } from "./students.useCase";
 
 export default function StudentsPage() {
-  const { students, searchQuery, setSearchQuery, addNewStudent } =
-    useStudents();
+  const {
+    students,
+    isLoading,
+    searchQuery,
+    setSearchQuery,
+    addNewStudent,
+    handleStudentPress,
+    refreshStudents,
+  } = useStudents();
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -33,10 +39,7 @@ export default function StudentsPage() {
   }, [navigation, addNewStudent]);
 
   const renderStudent = ({ item }: { item: NStudentsPage.Student }) => (
-    <StudentItem
-      student={item}
-      onPress={() => router.push("/(auth)/students/details")}
-    />
+    <StudentItem student={item} onPress={() => handleStudentPress(item.id)} />
   );
 
   return (
@@ -53,7 +56,13 @@ export default function StudentsPage() {
         />
       </InputAtom.Root>
 
-      {students.length === 0 ? (
+      {isLoading ? (
+        <View className="flex-1 items-center justify-center">
+          <TextAtom className="text-gym-gray-400 text-lg">
+            Carregando alunos...
+          </TextAtom>
+        </View>
+      ) : students.length === 0 ? (
         <View className="flex-1 items-center justify-center">
           <TextAtom className="text-gym-gray-400 text-lg">
             Nenhum aluno encontrado
@@ -65,6 +74,8 @@ export default function StudentsPage() {
           renderItem={renderStudent}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
+          onRefresh={refreshStudents}
+          refreshing={isLoading}
         />
       )}
     </View>

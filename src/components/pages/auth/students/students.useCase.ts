@@ -1,35 +1,51 @@
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useState, useCallback } from "react";
+import { studentService } from "@/services/student.service";
+import { toast } from "sonner-native";
 import { NStudentsPage } from "./students.types";
 
 export const useStudents = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [students, setStudents] = useState<NStudentsPage.Student[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const studentsData: NStudentsPage.Student[] = [
-    {
-      id: "1",
-      name: "John Silva",
-      gender: "Masculino",
-      avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
-    },
-    {
-      id: "2",
-      name: "Jone Berk",
-      gender: "Outros",
-      avatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b332c1fd?w=200&h=200&fit=crop&crop=face",
-    },
-    {
-      id: "3",
-      name: "Livia Coelho",
-      gender: "Feminino",
-      avatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
-    },
-  ];
+  const loadStudents = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const result = await studentService.getStudents();
 
-  const filteredStudents = studentsData.filter((student) =>
+      if (!result.success) {
+        toast.error("Erro ao carregar alunos", {
+          description: result.error || "Tente novamente",
+        });
+        return;
+      }
+
+      const formattedStudents: NStudentsPage.Student[] =
+        result.students?.map((student) => ({
+          id: student.id!,
+          name: student.name || "",
+          gender: student.gender as "Masculino" | "Feminino" | "Outros",
+          avatar: student.avatar_url || "",
+        })) || [];
+
+      setStudents(formattedStudents);
+    } catch (error) {
+      toast.error("Erro inesperado", {
+        description: "Tente novamente mais tarde",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadStudents();
+    }, [loadStudents])
+  );
+
+  const filteredStudents = students.filter((student) =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -37,10 +53,20 @@ export const useStudents = () => {
     router.push("/(auth)/students/register");
   };
 
+  const handleStudentPress = (studentId: string) => {
+    router.push({
+      pathname: "/(auth)/students/details",
+      params: { id: studentId },
+    });
+  };
+
   return {
     students: filteredStudents,
+    isLoading,
     searchQuery,
     setSearchQuery,
     addNewStudent,
+    handleStudentPress,
+    refreshStudents: loadStudents,
   };
 };

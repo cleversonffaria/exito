@@ -1,5 +1,8 @@
 import type { Database } from "@/types/database.types";
+import { FileUploadResult } from "@/hooks/useFileUpload";
+import { RequestInterceptor } from "@/utils/request-interceptor";
 import { supabase } from "./supabase";
+import { storageService } from "./storage.service";
 
 interface CreateStudentData {
   name: string;
@@ -8,6 +11,7 @@ interface CreateStudentData {
   age: number;
   gender: "Masculino" | "Feminino" | "Outros";
   goal: string;
+  avatar?: FileUploadResult;
 }
 
 interface StudentResponse {
@@ -18,42 +22,18 @@ interface StudentResponse {
 }
 
 class StudentService {
-  // Gerar código de ativação
   private generateActivationCode(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString(); // 6 dígitos
+    return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
-  // Verificar se usuário logado é professor
-  private async isCurrentUserTeacher(): Promise<boolean> {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) return false;
-
-      const { data, error } = await supabase
-        .from("users")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-
-      return !error && data?.role === "teacher";
-    } catch {
-      return false;
-    }
-  }
-
-  // Enviar código de ativação por email
   private async sendActivationCode(
     email: string,
     code: string,
     studentName: string
   ): Promise<boolean> {
     try {
-      // Salvar código na tabela password_reset_codes
       const expiresAt = new Date();
-      expiresAt.setHours(expiresAt.getHours() + 24); // Expira em 24 horas
+      expiresAt.setHours(expiresAt.getHours() + 24);
 
       const { error } = await supabase.from("password_reset_codes").insert({
         email,
@@ -67,7 +47,6 @@ class StudentService {
         return false;
       }
 
-      // Enviar email via Edge Function
       const { data, error: emailError } = await supabase.functions.invoke(
         "send-activation-email",
         {
@@ -94,17 +73,14 @@ class StudentService {
     studentData: CreateStudentData
   ): Promise<StudentResponse> {
     try {
-      // 🔒 VALIDAÇÃO: Verificar se é professor
-      const isTeacher = await this.isCurrentUserTeacher();
-
-      if (!isTeacher) {
+      const isAuthorized = await RequestInterceptor.validateTeacherAuth();
+      if (!isAuthorized) {
         return {
           success: false,
-          error: "Apenas professores podem cadastrar alunos",
+          error: "Sem autorização",
         };
       }
 
-      // Verificar se email já existe
       const { data: existingUser } = await supabase
         .from("users")
         .select("email")
@@ -118,10 +94,22 @@ class StudentService {
         };
       }
 
-      // Gerar código de ativação
       const activationCode = this.generateActivationCode();
 
-      // Criar registro na tabela users
+      let avatarUrl: string | null = null;
+      if (studentData.avatar) {
+        const avatarUpload = await storageService.uploadAvatar(
+          studentData.avatar
+        );
+        if (!avatarUpload.success) {
+          return {
+            success: false,
+            error: avatarUpload.error || "Erro ao fazer upload do avatar",
+          };
+        }
+        avatarUrl = avatarUpload.url!;
+      }
+
       const { data, error } = await supabase
         .from("users")
         .insert({
@@ -132,6 +120,7 @@ class StudentService {
           gender: studentData.gender,
           goal: studentData.goal,
           role: "student",
+          avatar_url: avatarUrl,
         })
         .select()
         .single();
@@ -140,7 +129,6 @@ class StudentService {
         return { success: false, error: error.message };
       }
 
-      // Enviar código por email
       const emailSent = await this.sendActivationCode(
         studentData.email,
         activationCode,
@@ -148,7 +136,6 @@ class StudentService {
       );
 
       if (!emailSent) {
-        // Se falhar ao enviar email, remover o usuário criado
         await supabase.from("users").delete().eq("email", studentData.email);
 
         return {
@@ -173,6 +160,11 @@ class StudentService {
     students?: Database["public"]["Tables"]["users"]["Row"][];
   }> {
     try {
+      const isAuthorized = await RequestInterceptor.validateAuth();
+      if (!isAuthorized) {
+        return { success: false, error: "Sem autorização" };
+      }
+
       const { data, error } = await supabase
         .from("users")
         .select("*")
@@ -184,6 +176,34 @@ class StudentService {
       }
 
       return { success: true, students: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async getStudentById(id: string): Promise<{
+    success: boolean;
+    error?: string;
+    student?: Database["public"]["Tables"]["users"]["Row"];
+  }> {
+    try {
+      const isAuthorized = await RequestInterceptor.validateAuth();
+      if (!isAuthorized) {
+        return { success: false, error: "Sem autorização" };
+      }
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", id)
+        .eq("role", "student")
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, student: data };
     } catch (error) {
       return { success: false, error: "Erro de conexão" };
     }

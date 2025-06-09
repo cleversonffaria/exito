@@ -1,6 +1,7 @@
 import { authService } from "@/services/auth.service";
 import type { User } from "@/types/database.types";
 import { secureStorage } from "@/utils/secure-store.utils";
+import { supabase } from "@/services/supabase";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -20,6 +21,7 @@ interface AuthState {
   ) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   checkSession: () => Promise<void>;
+  validateSupabaseSession: () => Promise<boolean>;
 }
 
 export const useAuth = create<AuthState>()(
@@ -97,6 +99,18 @@ export const useAuth = create<AuthState>()(
             loading: false,
           });
         }
+      },
+
+      validateSupabaseSession: async () => {
+        const { data: sessionData } = await supabase.auth.getUser();
+        const { isAuth, user } = get();
+
+        if (isAuth && user && !sessionData.user) {
+          await get().signOut();
+          return false;
+        }
+
+        return sessionData.user !== null;
       },
     }),
     {
