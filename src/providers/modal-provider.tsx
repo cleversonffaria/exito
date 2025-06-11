@@ -8,7 +8,6 @@ import { ButtonAtom } from "@atom/button";
 import { TextAtom } from "@atom/text";
 import { useModal } from "@store/useModal";
 import { cn } from "@utils/cn";
-import { debounce } from "lodash";
 
 export function ModalProvider() {
   const modalizeRef = useRef<Modalize>(null);
@@ -24,11 +23,11 @@ export function ModalProvider() {
     currentConfig?.onDismiss?.();
   };
 
-  const debouncedActionPress = useCallback(
-    debounce((onPress: () => void) => {
+  const handleActionPress = useCallback(
+    (onPress: () => void) => {
       onPress();
       hide();
-    }, 300),
+    },
     [hide]
   );
 
@@ -79,7 +78,7 @@ export function ModalProvider() {
                     key={index}
                     {...buttonProps}
                     onPress={() => {
-                      debouncedActionPress(onPress);
+                      handleActionPress(onPress);
                     }}
                     className={cn(
                       buttonProps.className,
