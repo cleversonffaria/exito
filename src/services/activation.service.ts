@@ -101,17 +101,6 @@ class ActivationService {
         };
       }
 
-      if (authData.user) {
-        const { error: updateError } = await supabase
-          .from("users")
-          .update({ id: authData.user.id })
-          .eq("email", email);
-
-        if (updateError) {
-          console.error("Erro ao atualizar ID do usuário:", updateError);
-        }
-      }
-
       await supabase
         .from("password_reset_codes")
         .update({ used: true })
@@ -141,7 +130,6 @@ class ActivationService {
         user: userProfile,
       };
     } catch (error) {
-      console.error("Erro na ativação:", error);
       return {
         success: false,
         error: "Erro de conexão",
@@ -189,8 +177,6 @@ class ActivationService {
           error: "Erro ao gerar novo código",
         };
       }
-
-      console.log(`📧 Novo código para ${email}: ${newCode}`);
 
       return { success: true };
     } catch (error) {

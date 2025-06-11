@@ -40,7 +40,6 @@ export const useExerciseDetailsPage = () => {
         router.back();
       }
     } catch (error) {
-      console.error("Erro ao buscar exercício:", error);
       router.back();
     } finally {
       setIsLoading(false);

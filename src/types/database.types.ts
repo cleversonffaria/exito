@@ -204,11 +204,11 @@ export interface Database {
         Row: {
           id: string;
           student_training_id: string;
-          exercise_id: string;
+          training_exercise_id: string;
           sets_completed: number;
-          reps_completed: number | null;
-          weight_used: number | null;
-          duration: number | null;
+          repetitions_completed: number | null;
+          load_used: number | null;
+          duration_seconds: number | null;
           notes: string | null;
           completed_at: string;
           created_at: string;
@@ -217,11 +217,11 @@ export interface Database {
         Insert: {
           id?: string;
           student_training_id: string;
-          exercise_id: string;
+          training_exercise_id: string;
           sets_completed: number;
-          reps_completed?: number | null;
-          weight_used?: number | null;
-          duration?: number | null;
+          repetitions_completed?: number | null;
+          load_used?: number | null;
+          duration_seconds?: number | null;
           notes?: string | null;
           completed_at?: string;
           created_at?: string;
@@ -230,11 +230,11 @@ export interface Database {
         Update: {
           id?: string;
           student_training_id?: string;
-          exercise_id?: string;
+          training_exercise_id?: string;
           sets_completed?: number;
-          reps_completed?: number | null;
-          weight_used?: number | null;
-          duration?: number | null;
+          repetitions_completed?: number | null;
+          load_used?: number | null;
+          duration_seconds?: number | null;
           notes?: string | null;
           completed_at?: string;
           created_at?: string;

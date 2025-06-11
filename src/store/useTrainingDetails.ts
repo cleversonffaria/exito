@@ -2,6 +2,8 @@ import { create } from "zustand";
 
 export interface Training {
   id: string;
+  trainingExerciseId?: string;
+  studentTrainingId?: string;
   name: string;
   series: number;
   repetitions: number;
@@ -13,6 +15,7 @@ export interface Training {
   videoUrl?: string;
   imageUrl?: string;
   currentRepetition: number;
+  selectedDate?: string;
 }
 
 interface TrainingState {
@@ -46,7 +49,7 @@ export const useTrainingDetails = create<TrainingState>((set, get) => ({
     const { selectedTraining } = get();
     if (
       selectedTraining &&
-      selectedTraining.currentRepetition < selectedTraining.series
+      selectedTraining.currentRepetition < selectedTraining.repetitions
     ) {
       set({
         selectedTraining: {

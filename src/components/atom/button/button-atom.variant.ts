@@ -45,8 +45,8 @@ export const buttonVariants = tv({
     },
     disabled: {
       true: {
-        root: "bg-gym-black-400",
-        text: "text-gym-gray-500",
+        root: "!bg-gym-black-400",
+        text: "!text-gym-gray-500",
       },
     },
     loading: {

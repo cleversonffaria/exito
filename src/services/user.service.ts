@@ -58,15 +58,28 @@ class UserService {
 
   async getStudentStats(studentId: string): Promise<StudentStatsResponse> {
     try {
-      const trainingsResponse = await supabase
+      const allTrainingsResponse = await supabase
         .from("student_trainings")
-        .select("id", { count: "exact" })
+        .select("id, week_days", { count: "exact" })
         .eq("student_id", studentId)
         .eq("is_active", true);
 
-      if (trainingsResponse.error) {
-        return { success: false, error: trainingsResponse.error.message };
+      if (allTrainingsResponse.error) {
+        return { success: false, error: allTrainingsResponse.error.message };
       }
+
+      const totalTrainings = allTrainingsResponse.count || 0;
+
+      const today = new Date();
+      const currentWeekDay = today.getDay() === 0 ? 7 : today.getDay();
+
+      const todayTrainings =
+        allTrainingsResponse.data?.filter((training) => {
+          const weekDays = training.week_days || [];
+          return weekDays.includes(currentWeekDay);
+        }) || [];
+
+      const inProgress = todayTrainings.length;
 
       const studentTrainingsIds = await supabase
         .from("student_trainings")
@@ -88,9 +101,7 @@ class UserService {
         return { success: false, error: logsResponse.error.message };
       }
 
-      const totalTrainings = trainingsResponse.count || 0;
       const completedLogs = logsResponse.count || 0;
-      const inProgress = Math.max(0, totalTrainings - completedLogs);
 
       return {
         success: true,

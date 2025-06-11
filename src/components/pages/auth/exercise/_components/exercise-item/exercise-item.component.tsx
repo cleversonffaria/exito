@@ -19,7 +19,6 @@ export function ExerciseItemComponent({
             source={{ uri: exercise.image }}
             className="w-full h-full"
             resizeMode="cover"
-            onError={() => console.log("Erro ao carregar imagem")}
           />
         ) : (
           <View className="w-full h-full bg-gym-black-400 items-center justify-center">

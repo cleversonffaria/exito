@@ -22,9 +22,18 @@ export const useProfile = () => {
         { value: stats.exercises.toString(), label: "Total de Exercícios" },
       ]
     : [
-        { value: stats.trainings.toString(), label: "Treinos" },
-        { value: stats.progress.toString(), label: "Em progresso" },
-        { value: stats.completed.toString(), label: "Completo" },
+        {
+          value: stats.trainings.toString(),
+          label: "Total de\nTreinos",
+        },
+        {
+          value: stats.progress.toString(),
+          label: "Treinos em\n Progresso",
+        },
+        {
+          value: stats.completed.toString(),
+          label: "Repetições\nFinalizadas",
+        },
       ];
 
   const userInfo = {
@@ -108,9 +117,7 @@ export const useProfile = () => {
         {
           title: "Cancelar",
           variant: "none",
-          onPress: () => {
-            console.log("Cancelado");
-          },
+          onPress: () => {},
         },
       ],
     });

@@ -3,7 +3,13 @@ import ArrowLeftIcon from "@assets/svg/arrow-left.svg";
 import PlayBrokenIcon from "@assets/svg/play-broken.svg";
 import { TextAtom } from "@atom/text";
 import { cn } from "@utils/cn";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useHome } from "./home.useCase";
 
 export default function HomePage() {
@@ -14,6 +20,9 @@ export default function HomePage() {
     maxHeight,
     handleExercisePress,
     handleTrainingPress,
+    isLoading,
+    isRefreshing,
+    handleRefresh,
   } = useHome();
 
   return (
@@ -22,6 +31,14 @@ export default function HomePage() {
         flexGrow: 1,
         paddingBottom: 100,
       }}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={handleRefresh}
+          tintColor={colors.primary[500]}
+          colors={[colors.primary[500]]}
+        />
+      }
     >
       <View className="px-6 pb-8 mt-2">
         <TextAtom className="text-gym-gray-400 text-base mb-1 text-center">
@@ -30,7 +47,7 @@ export default function HomePage() {
         <View className="flex-row items-center justify-center">
           <TextAtom className="text-white text-2xl text-center">Olá, </TextAtom>
           <TextAtom className="text-white text-2xl font-bold text-center">
-            {user?.name}
+            {user?.name || "Usuário"}
           </TextAtom>
         </View>
       </View>
@@ -68,7 +85,7 @@ export default function HomePage() {
 
             <View>
               <TextAtom className="text-gym-primary-500 text-4xl font-bold">
-                {String(totalValue)}
+                {isLoading ? "..." : String(totalValue)}
               </TextAtom>
               <TextAtom className="text-gym-gray-400 text-sm">
                 Total da Semana

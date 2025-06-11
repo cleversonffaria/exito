@@ -196,16 +196,43 @@ class TrainingService {
     activeOnly: boolean = true
   ): Promise<StudentTrainingResponse> {
     try {
-      let query = supabase
+      let studentTrainingsQuery = supabase
         .from("student_trainings")
-        .select(
-          `
-          *,
-          trainings (
-            id,
-            name,
-            teacher_id,
-            training_exercises (
+        .select("*")
+        .eq("student_id", studentId);
+
+      if (activeOnly) {
+        studentTrainingsQuery = studentTrainingsQuery.eq("is_active", true);
+      }
+
+      const { data: studentTrainings, error: studentTrainingsError } =
+        await studentTrainingsQuery.order("created_at", { ascending: false });
+
+      if (studentTrainingsError) {
+        return { success: false, error: studentTrainingsError.message };
+      }
+
+      if (!studentTrainings || studentTrainings.length === 0) {
+        return { success: true, studentTrainings: [] };
+      }
+
+      const trainingIds = studentTrainings.map((st) => st.training_id);
+
+      const { data: trainings, error: trainingsError } = await supabase
+        .from("trainings")
+        .select("id, name, teacher_id")
+        .in("id", trainingIds);
+
+      if (trainingsError) {
+        return { success: false, error: trainingsError.message };
+      }
+
+      const enrichedTrainings = await Promise.all(
+        (trainings || []).map(async (training) => {
+          const { data: trainingExercises } = await supabase
+            .from("training_exercises")
+            .select(
+              `
               id,
               sets,
               repetitions,
@@ -213,31 +240,44 @@ class TrainingService {
               rest_seconds,
               order_index,
               notes,
-              exercises (
-                id,
-                name,
-                muscle_groups,
-                equipment
-              )
+              exercise_id
+            `
             )
-          )
-        `
-        )
-        .eq("student_id", studentId);
+            .eq("training_id", training.id)
+            .order("order_index", { ascending: true });
 
-      if (activeOnly) {
-        query = query.eq("is_active", true);
-      }
+          const exerciseIds =
+            trainingExercises?.map((te) => te.exercise_id) || [];
+          const { data: exercises } =
+            exerciseIds.length > 0
+              ? await supabase
+                  .from("exercises")
+                  .select("id, name, muscle_groups, equipment")
+                  .in("id", exerciseIds)
+              : { data: [] };
 
-      const { data, error } = await query.order("created_at", {
-        ascending: false,
-      });
+          const exercisesWithData =
+            trainingExercises?.map((te) => ({
+              ...te,
+              exercises:
+                exercises?.find((ex) => ex.id === te.exercise_id) || null,
+            })) || [];
 
-      if (error) {
-        return { success: false, error: error.message };
-      }
+          return {
+            ...training,
+            training_exercises: exercisesWithData,
+          };
+        })
+      );
 
-      return { success: true, studentTrainings: data };
+      const combinedData = studentTrainings.map((studentTraining) => ({
+        ...studentTraining,
+        trainings:
+          enrichedTrainings.find((t) => t.id === studentTraining.training_id) ||
+          null,
+      }));
+
+      return { success: true, studentTrainings: combinedData };
     } catch (error) {
       return { success: false, error: "Erro de conexão" };
     }

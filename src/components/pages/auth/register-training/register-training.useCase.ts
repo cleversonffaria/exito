@@ -60,7 +60,6 @@ export const useRegisterTraining = () => {
         router.dismissAll();
         router.push(`/(auth)/students/training?studentId=${studentId}`);
       } catch (error) {
-        console.error("Erro ao adicionar exercício:", error);
       } finally {
         setIsLoading(false);
       }

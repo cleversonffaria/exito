@@ -13,11 +13,11 @@ export function TrainingCard({
         {training.name}
       </TextAtom>
 
-      {training.exercises.map((exercise, index) => (
+      {training.exercises.map((exercise) => (
         <ExerciseItem
           key={exercise.exercise.id}
           exercise={exercise}
-          isCompleted={index === 0}
+          isCompleted={exercise.isCompleted || false}
           onPress={() => onExercisePress(exercise)}
         />
       ))}

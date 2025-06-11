@@ -76,7 +76,6 @@ export const useAuth = create<AuthState>()(
             loading: false,
           });
         } else {
-          console.error("Erro ao fazer logout:", result.error);
           set({ loading: false });
         }
       },

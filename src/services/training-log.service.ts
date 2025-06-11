@@ -16,11 +16,11 @@ class TrainingLogService {
     try {
       const logInsert: TrainingLogInsert = {
         student_training_id: logData.studentTrainingId,
-        exercise_id: logData.exerciseId,
+        training_exercise_id: logData.exerciseId,
         sets_completed: logData.setsCompleted,
-        reps_completed: logData.repsCompleted,
-        weight_used: logData.weightUsed,
-        duration: logData.duration,
+        repetitions_completed: logData.repsCompleted,
+        load_used: logData.weightUsed,
+        duration_seconds: logData.duration,
         notes: logData.notes,
         completed_at: new Date().toISOString(),
       };
@@ -97,23 +97,12 @@ class TrainingLogService {
     try {
       let query = supabase
         .from("training_logs")
-        .select(
-          `
-          *,
-          exercises (
-            id,
-            name,
-            muscle_groups
-          )
-        `
-        )
+        .select("*")
         .eq("student_training_id", studentTrainingId);
 
       if (date) {
-        const startOfDay = new Date(date);
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date(date);
-        endOfDay.setHours(23, 59, 59, 999);
+        const startOfDay = new Date(date + "T00:00:00.000Z");
+        const endOfDay = new Date(date + "T23:59:59.999Z");
 
         query = query
           .gte("completed_at", startOfDay.toISOString())
@@ -168,6 +157,48 @@ class TrainingLogService {
       }
 
       return { success: true };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async logCompletedSet(data: {
+    studentTrainingId: string;
+    exerciseId: string;
+    setNumber: number;
+    repsCompleted: number;
+    weightUsed: number;
+    duration?: number;
+    customDate?: string;
+  }): Promise<TrainingLogResponse> {
+    try {
+      const completedAt = data.customDate
+        ? new Date(
+            data.customDate + "T" + new Date().toTimeString().split(" ")[0]
+          ).toISOString()
+        : new Date().toISOString();
+
+      const logInsert: TrainingLogInsert = {
+        student_training_id: data.studentTrainingId,
+        training_exercise_id: data.exerciseId,
+        sets_completed: data.setNumber,
+        repetitions_completed: data.repsCompleted,
+        load_used: data.weightUsed,
+        duration_seconds: data.duration || 0,
+        completed_at: completedAt,
+      };
+
+      const { data: result, error } = await supabase
+        .from("training_logs")
+        .insert(logInsert)
+        .select()
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, trainingLog: result };
     } catch (error) {
       return { success: false, error: "Erro de conexão" };
     }

@@ -43,7 +43,6 @@ class StudentService {
       });
 
       if (error) {
-        console.error("Erro ao salvar código:", error);
         return false;
       }
 
@@ -64,7 +63,6 @@ class StudentService {
 
       return true;
     } catch (error) {
-      console.error("Erro ao enviar código:", error);
       return false;
     }
   }

@@ -17,7 +17,6 @@ export const useExerciseSelection = () => {
         setExercises(result.exercises);
       }
     } catch (error) {
-      console.error("Erro ao buscar exercícios:", error);
     } finally {
       setLoading(false);
     }

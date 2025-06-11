@@ -1,16 +1,24 @@
 import { TextAtom } from "@atom/text";
 import { cn } from "@utils/cn";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { TrainingContent } from "./_components";
 import { useTraining } from "./training.useCase";
+import { colors } from "@/constants/colors";
 
 export default function TrainingPage() {
   const {
     weekDays,
     trainings,
     isLoading,
+    isRefreshing,
     handleDaySelect,
     handleExercisePress,
+    handleRefresh,
   } = useTraining();
 
   return (
@@ -51,6 +59,14 @@ export default function TrainingPage() {
           paddingBottom: 100,
         }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.primary[500]}
+            colors={[colors.primary[500]]}
+          />
+        }
       >
         <TrainingContent
           trainings={trainings}

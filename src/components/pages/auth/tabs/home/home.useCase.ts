@@ -1,16 +1,99 @@
-import { router } from "expo-router";
-import { useMemo } from "react";
+import { useAuth } from "@/store/useAuth";
+import { trainingService } from "@/services/training.service";
+import { trainingLogService } from "@/services/training-log.service";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useMemo, useState } from "react";
 import { NHomePage } from "./home.types";
 
 export const useHome = () => {
-  const weeklyData: NHomePage.WeeklyData[] = [
-    { day: "Seg", value: 18 },
-    { day: "Ter", value: 60 },
-    { day: "Qua", value: 10 },
-    { day: "Qui", value: 40 },
-    { day: "Sex", value: 49 },
-    { day: "Sab", value: 19 },
+  const { user } = useAuth();
+  const [weeklyStats, setWeeklyStats] = useState<{ [key: number]: number }>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const weekDays = [
+    { id: 1, day: "Seg" },
+    { id: 2, day: "Ter" },
+    { id: 3, day: "Qua" },
+    { id: 4, day: "Qui" },
+    { id: 5, day: "Sex" },
+    { id: 6, day: "Sab" },
+    { id: 7, day: "Dom" },
   ];
+
+  const loadWeeklyStats = useCallback(async () => {
+    if (!user?.id) return;
+
+    setIsLoading(true);
+    try {
+      const trainingResult = await trainingService.getStudentTrainings(user.id);
+      if (!trainingResult.success || !trainingResult.studentTrainings) return;
+
+      const today = new Date();
+      const currentDayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
+      const mondayDate = new Date(today);
+      mondayDate.setDate(today.getDate() - (currentDayOfWeek - 1));
+
+      const weekStats: { [key: number]: number } = {};
+
+      for (let dayIndex = 1; dayIndex <= 7; dayIndex++) {
+        const targetDate = new Date(mondayDate);
+        targetDate.setDate(mondayDate.getDate() + (dayIndex - 1));
+        const dateString = targetDate.toISOString().split("T")[0];
+
+        const dayTrainings = trainingResult.studentTrainings.filter(
+          (st: any) => {
+            const weekDays = st.week_days || [];
+            return weekDays.includes(dayIndex);
+          }
+        );
+
+        let totalRepetitionsCompleted = 0;
+
+        for (const studentTraining of dayTrainings) {
+          const training = (studentTraining as any).trainings;
+          if (!training?.training_exercises) continue;
+
+          const logsResult = await trainingLogService.getLogsByTraining(
+            studentTraining.id,
+            dateString
+          );
+
+          if (logsResult.success && logsResult.trainingLogs) {
+            for (const exercise of training.training_exercises) {
+              const exerciseLogs = logsResult.trainingLogs.filter(
+                (log: any) =>
+                  String(log.training_exercise_id) === String(exercise.id)
+              );
+
+              totalRepetitionsCompleted += exerciseLogs.length;
+            }
+          }
+        }
+
+        weekStats[dayIndex] = totalRepetitionsCompleted;
+      }
+
+      setWeeklyStats(weekStats);
+    } catch (error) {
+      console.error("Erro ao carregar estatísticas:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user?.id]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadWeeklyStats();
+    }, [loadWeeklyStats])
+  );
+
+  const weeklyData: NHomePage.WeeklyData[] = useMemo(() => {
+    return weekDays.map(({ id, day }) => ({
+      day,
+      value: weeklyStats[id] || 0,
+    }));
+  }, [weeklyStats]);
 
   const maxHeight = 60;
 
@@ -19,31 +102,38 @@ export const useHome = () => {
   }, [weeklyData]);
 
   const weeklyDataWithHeight = useMemo(() => {
+    const maxValue = Math.max(...weeklyData.map((item) => item.value), 1);
     return weeklyData.map((item) => ({
       ...item,
-      height: (item.value / totalValue) * maxHeight,
+      height: maxValue > 0 ? (item.value / maxValue) * maxHeight : 0,
     }));
-  }, [weeklyData, totalValue, maxHeight]);
+  }, [weeklyData, maxHeight]);
 
-  const handleExercisePress = () => {
+  const handleNavigationToTraining = () => {
     router.push("/(auth)/(tabs)/training");
   };
 
-  const handleTrainingPress = () => {
-    router.push("/(auth)/(tabs)/training");
-  };
-
-  const user = {
-    name: "John Doe",
-  };
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await loadWeeklyStats();
+    } catch (error) {
+      // Erro silencioso
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [loadWeeklyStats]);
 
   return {
     weeklyData,
     weeklyDataWithHeight,
     totalValue,
     maxHeight,
-    handleExercisePress,
-    handleTrainingPress,
+    handleExercisePress: handleNavigationToTraining,
+    handleTrainingPress: handleNavigationToTraining,
+    handleRefresh,
     user,
+    isLoading,
+    isRefreshing,
   };
 };

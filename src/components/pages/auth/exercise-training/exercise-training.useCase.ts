@@ -31,7 +31,6 @@ export const useExerciseSelection = () => {
         setExercises(formattedExercises);
       }
     } catch (error) {
-      console.error("Erro ao carregar exercícios:", error);
     } finally {
       setLoading(false);
     }

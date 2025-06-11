@@ -111,7 +111,6 @@ export const useStudentTraining = () => {
       toast.success("Treino salvo com sucesso!");
       router.back();
     } catch (error) {
-      console.error("Erro ao salvar treino:", error);
       toast.error("Falha ao salvar treino. Tente novamente.");
     } finally {
       setIsLoading(false);

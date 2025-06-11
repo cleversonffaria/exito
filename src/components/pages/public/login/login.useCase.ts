@@ -39,8 +39,6 @@ export const useLogin = () => {
         toast.error("Erro inesperado", {
           description: "Tente novamente mais tarde",
         });
-
-        console.error("Erro ao fazer login:", error);
       }
     },
     [signIn, form, toast]

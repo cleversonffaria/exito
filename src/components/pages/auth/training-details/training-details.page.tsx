@@ -5,6 +5,7 @@ import Video from "react-native-video";
 import { TrainingInfoItem } from "./_components/training-info-item";
 import { TrainingSection } from "./_components/training-section";
 import { useTrainingDetails } from "./training-details.useCase";
+import { cn } from "@/utils/cn";
 
 export default function TrainingDetailsPage() {
   const {
@@ -13,6 +14,8 @@ export default function TrainingDetailsPage() {
     remainingRepetitions,
     handleCompleteRepetition,
     exerciseInfoData,
+    isCompleting,
+    isLoading,
     isFullscreen,
     handleFullscreenEnter,
     handleFullscreenExit,
@@ -58,22 +61,28 @@ export default function TrainingDetailsPage() {
               />
             ))}
 
-            <TrainingSection
-              title="Músculos trabalhados:"
-              content={selectedTraining.muscleGroups.join(", ")}
-            />
+            {selectedTraining.muscleGroups.length > 0 && (
+              <TrainingSection
+                title="Músculos trabalhados:"
+                content={selectedTraining.muscleGroups.join(", ")}
+              />
+            )}
 
-            <TrainingSection
-              title="Descrição do exercício:"
-              content={selectedTraining.description}
-              className="text-base leading-6"
-            />
+            {selectedTraining.description && (
+              <TrainingSection
+                title="Descrição do exercício:"
+                content={selectedTraining.description}
+                className="text-base leading-6"
+              />
+            )}
 
-            <TrainingSection
-              title="Observações:"
-              content={selectedTraining.observations}
-              className="text-base leading-6"
-            />
+            {selectedTraining.observations && (
+              <TrainingSection
+                title="Observações:"
+                content={selectedTraining.observations}
+                className="text-base leading-6"
+              />
+            )}
           </View>
         </View>
       </ScrollView>
@@ -81,10 +90,21 @@ export default function TrainingDetailsPage() {
       <View className="px-6 pb-8 pt-4 bg-gym-black-700">
         <ButtonAtom.Root
           onPress={handleCompleteRepetition}
-          className="bg-gym-primary-500"
+          disabled={isCompleting || remainingRepetitions === 0 || isLoading}
+          className={cn(
+            "bg-gym-primary-500",
+            (isCompleting || remainingRepetitions === 0 || isLoading) &&
+              "opacity-50"
+          )}
         >
           <ButtonAtom.Text>
-            Concluir Repetição ({remainingRepetitions})
+            {isLoading
+              ? "Carregando..."
+              : isCompleting
+              ? "Concluindo..."
+              : remainingRepetitions === 0
+              ? "Exercício Concluído"
+              : `Concluir Repetição (${remainingRepetitions})`}
           </ButtonAtom.Text>
         </ButtonAtom.Root>
       </View>

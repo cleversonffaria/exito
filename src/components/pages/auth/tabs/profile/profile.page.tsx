@@ -75,10 +75,10 @@ export default function ProfilePage({}: NProfilePage.Props) {
         <View className="flex-row justify-around w-full px-4 mb-8">
           {profileStats.map((stat, index) => (
             <View key={index} className="items-center">
-              <TextAtom className="text-3xl font-bold text-gym-primary-500 mb-1">
+              <TextAtom className="text-3xl text-center font-bold text-gym-primary-500 mb-1">
                 {stat.value}
               </TextAtom>
-              <TextAtom className="text-sm text-gym-gray-300">
+              <TextAtom className="text-sm text-center text-gym-gray-300">
                 {stat.label}
               </TextAtom>
             </View>
