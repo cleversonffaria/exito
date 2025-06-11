@@ -74,6 +74,7 @@ class TrainingService {
         .from("trainings")
         .select("*")
         .eq("teacher_id", teacherId)
+        .is("deleted_at", null)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -110,6 +111,7 @@ class TrainingService {
         `
         )
         .eq("id", trainingId)
+        .is("deleted_at", null)
         .single();
 
       if (error) {
@@ -148,7 +150,13 @@ class TrainingService {
     id: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase.from("trainings").delete().eq("id", id);
+      const { error } = await supabase
+        .from("trainings")
+        .update({
+          deleted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", id);
 
       if (error) {
         return { success: false, error: error.message };
@@ -221,7 +229,8 @@ class TrainingService {
       const { data: trainings, error: trainingsError } = await supabase
         .from("trainings")
         .select("id, name, teacher_id")
-        .in("id", trainingIds);
+        .in("id", trainingIds)
+        .is("deleted_at", null);
 
       if (trainingsError) {
         return { success: false, error: trainingsError.message };
@@ -244,6 +253,7 @@ class TrainingService {
             `
             )
             .eq("training_id", training.id)
+            .is("deleted_at", null)
             .order("order_index", { ascending: true });
 
           const exerciseIds =
@@ -386,7 +396,10 @@ class TrainingService {
     try {
       const { error } = await supabase
         .from("training_exercises")
-        .delete()
+        .update({
+          deleted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
         .eq("id", id);
 
       if (error) {

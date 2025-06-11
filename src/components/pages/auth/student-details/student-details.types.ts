@@ -47,5 +47,6 @@ export namespace NStudentDetailsPage {
     extends Omit<StudentDetails, "trainings" | "role"> {
     trainings: TrainingWithDays[];
     role: string;
+    isDeleted?: boolean;
   }
 }

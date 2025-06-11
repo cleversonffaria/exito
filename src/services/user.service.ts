@@ -29,7 +29,8 @@ class UserService {
         supabase
           .from("users")
           .select("id", { count: "exact" })
-          .eq("role", "student"),
+          .eq("role", "student")
+          .is("deleted_at", null),
         supabase
           .from("exercises")
           .select("id", { count: "exact" })
@@ -116,17 +117,21 @@ class UserService {
     }
   }
 
-  async getAllStudents(): Promise<{
+  async getAllStudents(includeDeleted: boolean = false): Promise<{
     success: boolean;
     error?: string;
     students?: User[];
   }> {
     try {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("role", "student")
-        .order("created_at", { ascending: false });
+      let query = supabase.from("users").select("*").eq("role", "student");
+
+      if (!includeDeleted) {
+        query = query.is("deleted_at", null);
+      }
+
+      const { data, error } = await query.order("created_at", {
+        ascending: false,
+      });
 
       if (error) {
         return { success: false, error: error.message };
@@ -155,6 +160,62 @@ class UserService {
       }
 
       return { success: true, user: data };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async deleteStudent(
+    studentId: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase
+        .from("users")
+        .update({
+          deleted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", studentId)
+        .eq("role", "student");
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      await supabase
+        .from("student_trainings")
+        .update({ is_active: false })
+        .eq("student_id", studentId);
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: "Erro de conexão" };
+    }
+  }
+
+  async restoreStudent(
+    studentId: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase
+        .from("users")
+        .update({
+          deleted_at: null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", studentId)
+        .eq("role", "student");
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      await supabase
+        .from("student_trainings")
+        .update({ is_active: true })
+        .eq("student_id", studentId);
+
+      return { success: true };
     } catch (error) {
       return { success: false, error: "Erro de conexão" };
     }

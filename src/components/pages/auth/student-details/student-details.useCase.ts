@@ -7,6 +7,7 @@ import { formatWeekDays, normalizeWeekDays } from "@utils/week-days.utils";
 import { maskPhone } from "@utils/phone-mask.utils";
 import { studentService } from "@/services/student.service";
 import { trainingService } from "@/services/training.service";
+import { userService } from "@/services/user.service";
 import { useTrainingExercises } from "@/store/useTrainingExercises";
 import { useTrainingForm } from "@/store/useTrainingForm";
 import { NStudentDetailsPage } from "./student-details.types";
@@ -14,6 +15,9 @@ import { useToast } from "@/hooks/useToast";
 
 export const useStudentDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [removingTrainings, setRemovingTrainings] = useState<Set<string>>(
+    new Set()
+  );
   const [student, setStudent] =
     useState<NStudentDetailsPage.StudentDetailsWithFormattedTrainings | null>(
       null
@@ -34,7 +38,7 @@ export const useStudentDetails = () => {
 
     try {
       setIsLoading(true);
-      const result = await studentService.getStudentById(id);
+      const result = await studentService.getStudentById(id, true); // Incluir excluídos
 
       if (!result.success || !result.student) {
         toast.error("Erro ao carregar dados do aluno", {
@@ -45,10 +49,12 @@ export const useStudentDetails = () => {
       }
 
       const studentData = result.student;
+      const isStudentDeleted = !!studentData.deleted_at;
 
       const trainingsResult = await trainingService.getStudentTrainings(
         studentData.id!
       );
+
       let formattedTrainings: NStudentDetailsPage.TrainingWithDays[] = [];
 
       if (trainingsResult.success && trainingsResult.studentTrainings) {
@@ -100,6 +106,7 @@ export const useStudentDetails = () => {
             }),
           role: ROLE_MAP["student"],
           trainings: formattedTrainings,
+          isDeleted: isStudentDeleted,
         };
 
       setStudent(formattedStudent);
@@ -144,19 +151,47 @@ export const useStudentDetails = () => {
             className: "!w-[200px] mx-auto",
             onPress: async () => {
               try {
+                setRemovingTrainings((prev) => new Set(prev).add(trainingId));
+
+                setStudent((prevStudent) => {
+                  if (!prevStudent) return prevStudent;
+                  return {
+                    ...prevStudent,
+                    trainings: prevStudent.trainings.filter(
+                      (t) => t.id !== trainingId
+                    ),
+                  };
+                });
+
                 const result = await trainingService.deactivateStudentTraining(
                   trainingId
                 );
+
                 if (result.success) {
                   toast.success("Treino removido com sucesso");
-                  loadStudent();
                 } else {
+                  setStudent((prevStudent) => {
+                    if (!prevStudent) return prevStudent;
+                    loadStudent();
+                    return prevStudent;
+                  });
                   toast.error("Erro ao remover treino", {
                     description: result.error,
                   });
                 }
               } catch (error) {
+                setStudent((prevStudent) => {
+                  if (!prevStudent) return prevStudent;
+                  loadStudent();
+                  return prevStudent;
+                });
                 toast.error("Erro ao remover treino");
+              } finally {
+                setRemovingTrainings((prev) => {
+                  const newSet = new Set(prev);
+                  newSet.delete(trainingId);
+                  return newSet;
+                });
               }
             },
           },
@@ -168,8 +203,57 @@ export const useStudentDetails = () => {
         ],
       });
     },
-    [modal, loadStudent]
+    [modal, loadStudent, toast]
   );
+
+  const handleDeleteStudent = useCallback(async () => {
+    if (!id || !student) return;
+
+    const isDeleted = student.isDeleted;
+    const action = isDeleted ? "restaurar" : "excluir";
+    const actionTitle = isDeleted ? "Restaurar" : "Excluir";
+
+    modal.show({
+      title: `${actionTitle} aluno`,
+      description: isDeleted
+        ? "Tem certeza que deseja restaurar este aluno? Ele poderá fazer login no sistema novamente."
+        : "Tem certeza que deseja excluir este aluno? Ele não conseguirá mais fazer login no sistema.",
+      actions: [
+        {
+          title: actionTitle,
+          variant: isDeleted ? "primary" : "error",
+          className: "!w-[200px] mx-auto",
+          onPress: async () => {
+            try {
+              const result = isDeleted
+                ? await userService.restoreStudent(id)
+                : await userService.deleteStudent(id);
+
+              if (result.success) {
+                toast.success(
+                  `Aluno ${
+                    action === "restaurar" ? "restaurado" : "excluído"
+                  } com sucesso`
+                );
+                loadStudent();
+              } else {
+                toast.error(`Erro ao ${action} aluno`, {
+                  description: result.error,
+                });
+              }
+            } catch (error) {
+              toast.error(`Erro ao ${action} aluno`);
+            }
+          },
+        },
+        {
+          title: "Cancelar",
+          variant: "none",
+          onPress: () => {},
+        },
+      ],
+    });
+  }, [id, student, modal, toast, loadStudent]);
 
   const goBack = useCallback(() => {
     router.back();
@@ -179,8 +263,10 @@ export const useStudentDetails = () => {
     return {
       student: null,
       isLoading,
+      removingTrainings,
       handleAddTraining,
       handleRemoveTraining,
+      handleDeleteStudent,
       goBack,
       refreshStudent: loadStudent,
     };
@@ -189,8 +275,10 @@ export const useStudentDetails = () => {
   return {
     student,
     isLoading,
+    removingTrainings,
     handleAddTraining,
     handleRemoveTraining,
+    handleDeleteStudent,
     goBack,
     refreshStudent: loadStudent,
   };

@@ -13,7 +13,7 @@ export const useStudents = () => {
   const loadStudents = useCallback(async () => {
     try {
       setIsLoading(true);
-      const result = await studentService.getStudents();
+      const result = await studentService.getStudents(true); // Incluir excluídos
 
       if (!result.success) {
         toast.error("Erro ao carregar alunos", {
@@ -28,6 +28,7 @@ export const useStudents = () => {
           name: student.name || "",
           gender: student.gender as "Masculino" | "Feminino" | "Outros",
           avatar: student.avatar_url || "",
+          isDeleted: !!student.deleted_at,
         })) || [];
 
       setStudents(formattedStudents);

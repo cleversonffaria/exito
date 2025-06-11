@@ -152,7 +152,7 @@ class StudentService {
     }
   }
 
-  async getStudents(): Promise<{
+  async getStudents(includeDeleted: boolean = false): Promise<{
     success: boolean;
     error?: string;
     students?: Database["public"]["Tables"]["users"]["Row"][];
@@ -163,11 +163,15 @@ class StudentService {
         return { success: false, error: "Sem autorização" };
       }
 
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("role", "student")
-        .order("created_at", { ascending: false });
+      let query = supabase.from("users").select("*").eq("role", "student");
+
+      if (!includeDeleted) {
+        query = query.is("deleted_at", null);
+      }
+
+      const { data, error } = await query.order("created_at", {
+        ascending: false,
+      });
 
       if (error) {
         return { success: false, error: error.message };
@@ -179,7 +183,10 @@ class StudentService {
     }
   }
 
-  async getStudentById(id: string): Promise<{
+  async getStudentById(
+    id: string,
+    includeDeleted: boolean = false
+  ): Promise<{
     success: boolean;
     error?: string;
     student?: Database["public"]["Tables"]["users"]["Row"];
@@ -190,12 +197,17 @@ class StudentService {
         return { success: false, error: "Sem autorização" };
       }
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("users")
         .select("*")
         .eq("id", id)
-        .eq("role", "student")
-        .single();
+        .eq("role", "student");
+
+      if (!includeDeleted) {
+        query = query.is("deleted_at", null);
+      }
+
+      const { data, error } = await query.single();
 
       if (error) {
         return { success: false, error: error.message };

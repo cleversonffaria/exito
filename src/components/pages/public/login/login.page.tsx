@@ -76,11 +76,7 @@ export default function LoginPage() {
                 <ButtonAtom.Text>Entrar</ButtonAtom.Text>
               </ButtonAtom.Root>
 
-              <ButtonAtom.Root
-                onPress={handleRecoverPassword}
-                disabled={isLoading}
-                variant="none"
-              >
+              <ButtonAtom.Root onPress={handleRecoverPassword} variant="none">
                 <ButtonAtom.Text>Primeiro Acesso</ButtonAtom.Text>
               </ButtonAtom.Root>
             </View>

@@ -21,6 +21,7 @@ export interface Database {
           role: "student" | "teacher";
           goal: string | null;
           start_date: string | null;
+          deleted_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -35,6 +36,7 @@ export interface Database {
           role?: "student" | "teacher";
           goal?: string | null;
           start_date?: string | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -49,6 +51,7 @@ export interface Database {
           role?: "student" | "teacher";
           goal?: string | null;
           start_date?: string | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -107,6 +110,7 @@ export interface Database {
           name: string;
           description: string | null;
           teacher_id: string;
+          deleted_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -115,6 +119,7 @@ export interface Database {
           name: string;
           description?: string | null;
           teacher_id: string;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -123,6 +128,7 @@ export interface Database {
           name?: string;
           description?: string | null;
           teacher_id?: string;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -137,6 +143,7 @@ export interface Database {
           weight: number | null;
           rest_time: number | null;
           order_index: number;
+          deleted_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -149,6 +156,7 @@ export interface Database {
           weight?: number | null;
           rest_time?: number | null;
           order_index: number;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -161,6 +169,7 @@ export interface Database {
           weight?: number | null;
           rest_time?: number | null;
           order_index?: number;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };

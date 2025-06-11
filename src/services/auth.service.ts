@@ -16,6 +16,7 @@ class AuthService {
         .select("*")
         .eq("email", email)
         .eq("role", "student")
+        .is("deleted_at", null)
         .single();
 
       if (studentProfile && !studentProfile.id) {
@@ -131,10 +132,14 @@ class AuthService {
         .from("users")
         .select("*")
         .eq("id", userId)
+        .is("deleted_at", null)
         .single();
 
       if (error) {
-        return { success: false, error: "Usuário não encontrado" };
+        return {
+          success: false,
+          error: "Usuário não encontrado ou foi excluído",
+        };
       }
 
       return { success: true, user: data };

@@ -4,5 +4,6 @@ export namespace NStudentsPage {
     name: string;
     gender: "Masculino" | "Feminino" | "Outros";
     avatar: string;
+    isDeleted?: boolean;
   }
 }

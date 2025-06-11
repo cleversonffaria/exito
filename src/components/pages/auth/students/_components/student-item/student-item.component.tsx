@@ -13,7 +13,9 @@ export function StudentItem({ student, onPress }: StudentItemProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex-row items-center py-4 border-b border-gym-gray-700"
+      className={`flex-row items-center py-4 border-b border-gym-gray-700 ${
+        student.isDeleted ? "opacity-60" : ""
+      }`}
       activeOpacity={0.7}
     >
       <View className="w-12 h-12 rounded-full overflow-hidden mr-4 bg-gym-black-400 items-center justify-center">
@@ -28,13 +30,23 @@ export function StudentItem({ student, onPress }: StudentItemProps) {
         )}
       </View>
 
-      <View className="flex-1">
-        <TextAtom className="text-gym-gray-200 text-base font-medium">
-          {student.name}
-        </TextAtom>
-        <TextAtom className="text-gym-gray-400 text-sm">
-          {student.gender}
-        </TextAtom>
+      <View className="flex-1 flex-row items-center justify-between">
+        <View className="flex-1">
+          <View className="flex-row items-center gap-2">
+            <TextAtom className="text-gym-gray-200 text-base font-medium">
+              {student.name}
+            </TextAtom>
+          </View>
+          <TextAtom className="text-gym-gray-400 text-sm">
+            {student.gender}
+          </TextAtom>
+        </View>
+
+        {student.isDeleted && (
+          <TextAtom className="text-red-400 text-xs bg-red-900/30 px-2 py-1 rounded">
+            Excluído
+          </TextAtom>
+        )}
       </View>
     </TouchableOpacity>
   );
