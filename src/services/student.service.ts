@@ -158,7 +158,7 @@ class StudentService {
     students?: Database["public"]["Tables"]["users"]["Row"][];
   }> {
     try {
-      const isAuthorized = await RequestInterceptor.validateAuth();
+      const isAuthorized = await RequestInterceptor.validateTeacherAuth();
       if (!isAuthorized) {
         return { success: false, error: "Sem autorização" };
       }
@@ -192,7 +192,7 @@ class StudentService {
     student?: Database["public"]["Tables"]["users"]["Row"];
   }> {
     try {
-      const isAuthorized = await RequestInterceptor.validateAuth();
+      const isAuthorized = await RequestInterceptor.validateTeacherAuth();
       if (!isAuthorized) {
         return { success: false, error: "Sem autorização" };
       }

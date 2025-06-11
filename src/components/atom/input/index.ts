@@ -3,6 +3,7 @@ import { InputError } from "./input-atom.error";
 import { InputField } from "./input-atom.field";
 import { InputIcon } from "./input-atom.icon";
 import { InputLabel } from "./input-atom.label";
+import { InputPasswordController } from "./input-atom.password";
 import { InputRoot } from "./input-atom.root";
 
 export { useInputContext } from "./input-atom.context";
@@ -13,6 +14,7 @@ export const InputAtom = {
   Root: InputRoot,
   Label: InputLabel,
   Field: InputField,
+  PasswordController: InputPasswordController,
   Error: InputError,
   Controller: InputController,
   Icon: InputIcon,

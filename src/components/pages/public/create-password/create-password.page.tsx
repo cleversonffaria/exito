@@ -41,20 +41,18 @@ export default function CreatePasswordPage() {
             </Text>
 
             <View className="space-y-4">
-              <InputAtom.Controller
+              <InputAtom.PasswordController
                 control={form.control}
                 name="password"
                 label="Nova Senha"
                 placeholder="Digite sua nova senha"
-                fieldProps={{ secureTextEntry: true }}
               />
 
-              <InputAtom.Controller
+              <InputAtom.PasswordController
                 control={form.control}
                 name="confirmPassword"
                 label="Confirmar Senha"
                 placeholder="Digite novamente sua senha"
-                fieldProps={{ secureTextEntry: true }}
               />
             </View>
           </View>

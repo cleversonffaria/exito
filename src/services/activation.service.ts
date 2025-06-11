@@ -94,12 +94,18 @@ class ActivationService {
         },
       });
 
-      if (authError) {
+      if (authError || !authData.user) {
         return {
           success: false,
-          error: authError.message || "Erro ao criar conta de autenticação",
+          error: authError?.message || "Erro ao criar conta de autenticação",
         };
       }
+
+      await supabase
+        .from("users")
+        .update({ id: authData.user.id })
+        .eq("email", email)
+        .eq("role", "student");
 
       await supabase
         .from("password_reset_codes")
@@ -119,11 +125,33 @@ class ActivationService {
         };
       }
 
-      const { data: userProfile } = await supabase
+      const { data: userProfile, error: profileError } = await supabase
         .from("users")
         .select("*")
         .eq("id", loginData.user.id)
         .single();
+
+      if (profileError) {
+        const { data: userByEmail } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", email)
+          .eq("role", "student")
+          .single();
+
+        if (userByEmail) {
+          await supabase
+            .from("users")
+            .update({ id: loginData.user.id })
+            .eq("email", email)
+            .eq("role", "student");
+
+          return {
+            success: true,
+            user: { ...userByEmail, id: loginData.user.id },
+          };
+        }
+      }
 
       return {
         success: true,

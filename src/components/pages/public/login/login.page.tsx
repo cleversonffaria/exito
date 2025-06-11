@@ -50,7 +50,7 @@ export default function LoginPage() {
                 }}
               />
 
-              <InputAtom.Controller
+              <InputAtom.PasswordController
                 control={form.control}
                 name="password"
                 label="Senha"
@@ -58,11 +58,6 @@ export default function LoginPage() {
                 variant="glass"
                 className="mb-6"
                 onSubmitEditing={handleSubmit}
-                fieldProps={{
-                  secureTextEntry: true,
-                  autoComplete: "password",
-                  returnKeyType: "send",
-                }}
               />
             </View>
 

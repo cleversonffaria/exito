@@ -38,7 +38,7 @@ export const useStudentDetails = () => {
 
     try {
       setIsLoading(true);
-      const result = await studentService.getStudentById(id, true); // Incluir excluídos
+      const result = await studentService.getStudentById(id, true);
 
       if (!result.success || !result.student) {
         toast.error("Erro ao carregar dados do aluno", {

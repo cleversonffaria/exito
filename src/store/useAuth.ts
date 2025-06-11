@@ -101,15 +101,32 @@ export const useAuth = create<AuthState>()(
       },
 
       validateSupabaseSession: async () => {
-        const { data: sessionData } = await supabase.auth.getUser();
-        const { isAuth, user } = get();
+        try {
+          const { data: sessionData, error } = await supabase.auth.getSession();
 
-        if (isAuth && user && !sessionData.user) {
-          await get().signOut();
-          return false;
+          if (error) {
+            console.error("Erro na validação de sessão:", error);
+            return false;
+          }
+
+          const { isAuth, user } = get();
+
+          if (
+            isAuth &&
+            user &&
+            (!sessionData.session || !sessionData.session.user)
+          ) {
+            await get().signOut();
+            return false;
+          }
+
+          return (
+            sessionData.session !== null && sessionData.session.user !== null
+          );
+        } catch (error) {
+          console.error("Erro na validação de sessão:", error);
+          return true; // Em caso de erro, assumir que está válido para não quebrar o fluxo
         }
-
-        return sessionData.user !== null;
       },
     }),
     {

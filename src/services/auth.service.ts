@@ -11,22 +11,6 @@ type UserInsert = Database["public"]["Tables"]["users"]["Insert"];
 class AuthService {
   async signIn(email: string, password: string): Promise<AuthResponse> {
     try {
-      const { data: studentProfile } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", email)
-        .eq("role", "student")
-        .is("deleted_at", null)
-        .single();
-
-      if (studentProfile && !studentProfile.id) {
-        return {
-          success: false,
-          error:
-            "Conta não ativada. Use 'Primeiro Acesso' para ativar sua conta com o código enviado por email.",
-        };
-      }
-
       const { data: loginData, error: loginError } =
         await supabase.auth.signInWithPassword({
           email,
@@ -41,8 +25,32 @@ class AuthService {
             success: true,
             user: userData.user,
           };
+        } else {
+          return {
+            success: false,
+            error: userData.error,
+          };
         }
       }
+
+      if (loginError) {
+        const { data: studentProfile } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", email)
+          .eq("role", "student")
+          .is("deleted_at", null)
+          .single();
+
+        if (studentProfile && !studentProfile.id) {
+          return {
+            success: false,
+            error:
+              "Conta não ativada. Use 'Primeiro Acesso' para ativar sua conta com o código enviado por email.",
+          };
+        }
+      }
+
       return {
         success: false,
         error: translateSupabaseError(
@@ -136,6 +144,11 @@ class AuthService {
         .single();
 
       if (error) {
+        const { data: allUsers } = await supabase
+          .from("users")
+          .select("id, email, name")
+          .limit(5);
+
         return {
           success: false,
           error: "Usuário não encontrado ou foi excluído",
@@ -144,6 +157,7 @@ class AuthService {
 
       return { success: true, user: data };
     } catch (error) {
+      console.error("Erro no getUserProfile:", error);
       return { success: false, error: "Erro ao carregar perfil" };
     }
   }
