@@ -16,18 +16,24 @@ export namespace NStudentDetailsPage {
   }
 
   export interface Exercise {
-    exercise_id: number;
+    id: string;
+    exercise: {
+      id: string;
+      name: string;
+      muscle_groups: string[];
+      equipment: string;
+    };
     sets: number;
     repetitions: number;
-    load: string;
-    rest: string;
+    load: number;
+    rest: number;
     notes: string;
   }
 
   export interface Training {
     id: string;
-    student_id: number;
-    training_id: number;
+    student_id: string;
+    training_id: string;
     name: string;
     exercises: Exercise[];
     week_days: number[];

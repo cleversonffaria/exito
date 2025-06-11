@@ -1,55 +1,53 @@
+import { exerciseService } from "@/services/exercise.service";
 import { useSelectedExercise } from "@/store/useSelectedExercise";
-import { router } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { NExerciseTrainingPage } from "./exercise-training.types";
 
-const mockExercises: NExerciseTrainingPage.Option[] = [
-  {
-    id: "1",
-    name: "Barra",
-    category: "Ombros, Tríceps",
-    image: "https://picsum.photos/150",
-  },
-  {
-    id: "2",
-    name: "Supino",
-    category: "Peito, Tríceps",
-  },
-  {
-    id: "3",
-    name: "Rosca Bíceps",
-    category: "Bíceps",
-    image: "https://picsum.photos/120",
-  },
-  {
-    id: "4",
-    name: "Agachamentos",
-    category: "Pernas, Glúteos",
-    image: "https://picsum.photos/230",
-  },
-  {
-    id: "5",
-    name: "Barra Fixa",
-    category: "Costas, Bíceps, Antebraços",
-    image: "https://picsum.photos/260",
-  },
-];
-
 export const useExerciseSelection = () => {
+  const { studentId } = useLocalSearchParams<{ studentId: string }>();
   const [searchQuery, setSearchQuery] = useState("");
+  const [exercises, setExercises] = useState<NExerciseTrainingPage.Option[]>(
+    []
+  );
+  const [loading, setLoading] = useState(true);
   const { setSelectedExercise } = useSelectedExercise();
+
+  useEffect(() => {
+    loadExercises();
+  }, []);
+
+  const loadExercises = async () => {
+    setLoading(true);
+    try {
+      const result = await exerciseService.getExercises();
+      if (result.success && result.exercises) {
+        const formattedExercises = result.exercises.map((exercise) => ({
+          id: exercise.id,
+          name: exercise.name,
+          category: exercise.muscle_groups.join(", "),
+          image: exercise.image_url || undefined,
+        }));
+        setExercises(formattedExercises);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar exercícios:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredExercises = useMemo(() => {
     if (!searchQuery.trim()) {
-      return mockExercises;
+      return exercises;
     }
 
-    return mockExercises.filter(
+    return exercises.filter(
       (exercise) =>
         exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         exercise.category.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, exercises]);
 
   const handleSelectExercise = useCallback(
     (exercise: NExerciseTrainingPage.Option) => {
@@ -60,9 +58,9 @@ export const useExerciseSelection = () => {
         image: exercise.image,
       });
 
-      router.push("/(auth)/students/register-training");
+      router.push(`/(auth)/students/register-training?studentId=${studentId}`);
     },
-    [setSelectedExercise]
+    [setSelectedExercise, studentId]
   );
 
   return {
@@ -70,5 +68,6 @@ export const useExerciseSelection = () => {
     setSearchQuery,
     filteredExercises,
     handleSelectExercise,
+    loading,
   };
 };

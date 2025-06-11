@@ -5,8 +5,8 @@ import { useEffect, useState, useCallback } from "react";
 import type { Exercise } from "@/types/database.types";
 import { DIFFICULTY_OPTIONS } from "@/constants/exercise";
 import { useAuth } from "@/store/useAuth";
-import { toast } from "sonner-native";
 import { useModal } from "@/store/useModal";
+import { useToast } from "@/hooks/useToast";
 
 export const useExerciseDetailsPage = () => {
   const router = useRouter();
@@ -18,6 +18,7 @@ export const useExerciseDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const modal = useModal();
+  const toast = useToast();
 
   const canDelete = user?.role === "teacher";
 

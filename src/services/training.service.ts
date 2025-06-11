@@ -43,9 +43,9 @@ class TrainingService {
             training_id: training.id,
             exercise_id: exercise.exerciseId,
             sets: exercise.sets,
-            reps: exercise.reps,
-            weight: exercise.weight,
-            rest_time: exercise.restTime,
+            repetitions: exercise.repetitions,
+            load: exercise.load,
+            rest_seconds: exercise.restSeconds,
             order_index: exercise.orderIndex,
           }));
 
@@ -163,7 +163,7 @@ class TrainingService {
   async assignTrainingToStudent(
     studentId: string,
     trainingId: string,
-    weekDays: string[],
+    weekDays: number[],
     startDate: string,
     endDate?: string
   ): Promise<StudentTrainingResponse> {
@@ -204,8 +204,22 @@ class TrainingService {
           trainings (
             id,
             name,
-            description,
-            teacher_id
+            teacher_id,
+            training_exercises (
+              id,
+              sets,
+              repetitions,
+              load,
+              rest_seconds,
+              order_index,
+              notes,
+              exercises (
+                id,
+                name,
+                muscle_groups,
+                equipment
+              )
+            )
           )
         `
         )

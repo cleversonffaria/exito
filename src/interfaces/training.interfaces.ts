@@ -37,9 +37,9 @@ export interface CreateTrainingData {
   exercises: {
     exerciseId: string;
     sets: number;
-    reps?: number;
-    weight?: number;
-    restTime?: number;
+    repetitions?: number;
+    load?: number;
+    restSeconds?: number;
     orderIndex: number;
   }[];
 }

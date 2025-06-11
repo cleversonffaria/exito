@@ -13,7 +13,6 @@ interface ActivateAccountResponse {
 }
 
 class ActivationService {
-  // Verificar se código é válido
   async verifyActivationCode(
     email: string,
     code: string
@@ -48,14 +47,12 @@ class ActivationService {
     }
   }
 
-  // Ativar conta do aluno (criar conta de autenticação + definir senha)
   async activateAccount(
     email: string,
     code: string,
     password: string
   ): Promise<ActivateAccountResponse> {
     try {
-      // 1. Verificar se código é válido e não foi usado
       const { data: codeData, error: codeError } = await supabase
         .from("password_reset_codes")
         .select("*")
@@ -72,7 +69,6 @@ class ActivationService {
         };
       }
 
-      // 2. Buscar usuário na tabela users
       const { data: userData, error: userError } = await supabase
         .from("users")
         .select("*")
@@ -87,7 +83,6 @@ class ActivationService {
         };
       }
 
-      // 3. Criar conta de autenticação no Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -106,7 +101,6 @@ class ActivationService {
         };
       }
 
-      // 4. Atualizar o ID do usuário na tabela users com o ID do auth
       if (authData.user) {
         const { error: updateError } = await supabase
           .from("users")
@@ -118,13 +112,11 @@ class ActivationService {
         }
       }
 
-      // 5. Marcar código como usado
       await supabase
         .from("password_reset_codes")
         .update({ used: true })
         .eq("id", codeData.id);
 
-      // 6. Fazer login automático
       const { data: loginData, error: loginError } =
         await supabase.auth.signInWithPassword({
           email,
@@ -138,7 +130,6 @@ class ActivationService {
         };
       }
 
-      // 7. Buscar perfil atualizado do usuário
       const { data: userProfile } = await supabase
         .from("users")
         .select("*")
@@ -158,12 +149,10 @@ class ActivationService {
     }
   }
 
-  // Reenviar código de ativação
   async resendActivationCode(
     email: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      // Verificar se usuário existe e não está ativado
       const { data: user } = await supabase
         .from("users")
         .select("*")
@@ -178,18 +167,15 @@ class ActivationService {
         };
       }
 
-      // Gerar novo código
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
       const expiresAt = new Date();
       expiresAt.setHours(expiresAt.getHours() + 24);
 
-      // Invalidar códigos antigos
       await supabase
         .from("password_reset_codes")
         .update({ used: true })
         .eq("email", email);
 
-      // Criar novo código
       const { error } = await supabase.from("password_reset_codes").insert({
         email,
         code: newCode,
@@ -204,7 +190,6 @@ class ActivationService {
         };
       }
 
-      // Log do código (em produção, enviar por email)
       console.log(`📧 Novo código para ${email}: ${newCode}`);
 
       return { success: true };

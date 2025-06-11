@@ -1,83 +1,122 @@
-import { router } from "expo-router";
+import { useToast } from "@/hooks/useToast";
+import { trainingService } from "@/services/training.service";
+import { useAuth } from "@/store/useAuth";
+import { useTrainingExercises } from "@/store/useTrainingExercises";
+import { useTrainingForm } from "@/store/useTrainingForm";
+import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
-import { NStudentTrainingPage } from "./student-training.types";
 
 export const useStudentTraining = () => {
+  const { studentId } = useLocalSearchParams<{ studentId: string }>();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [trainingName, setTrainingName] = useState("");
+  const { exercises, clearExercises, removeExercise } = useTrainingExercises();
+  const { trainingName, selectedDays, setTrainingName, toggleDay, clearForm } =
+    useTrainingForm();
+  const toast = useToast();
 
-  const weekDays: NStudentTrainingPage.WeekDay[] = [
-    { id: 1, name: "Seg", isSelected: false },
-    { id: 2, name: "Ter", isSelected: true },
-    { id: 3, name: "Qua", isSelected: true },
-    { id: 4, name: "Qui", isSelected: false },
-    { id: 5, name: "Sex", isSelected: false },
-    { id: 6, name: "Sáb", isSelected: false },
-    { id: 7, name: "Dom", isSelected: false },
-  ];
+  const selectedExercises = exercises.map((exercise) => ({
+    id: exercise.id,
+    name: exercise.name,
+    series: `${exercise.series} x ${exercise.repetitions}`,
+    isSelected: true,
+  }));
 
-  const exercises: NStudentTrainingPage.Exercise[] = [
-    { id: "1", name: "Tríceps", series: "2 x 10", isSelected: true },
-    { id: "2", name: "Supino", series: "2 x 10", isSelected: true },
-    { id: "3", name: "Agachamento", series: "3 x 12", isSelected: false },
-    { id: "4", name: "Rosca Direta", series: "3 x 15", isSelected: false },
-  ];
+  const handleToggleDay = useCallback(
+    (dayId: number) => {
+      toggleDay(dayId);
+    },
+    [toggleDay]
+  );
 
-  const [selectedDays, setSelectedDays] =
-    useState<NStudentTrainingPage.WeekDay[]>(weekDays);
-  const [selectedExercises, setSelectedExercises] =
-    useState<NStudentTrainingPage.Exercise[]>(exercises);
-
-  const handleToggleDay = useCallback((dayId: number) => {
-    setSelectedDays((prev) =>
-      prev.map((day) =>
-        day.id === dayId ? { ...day, isSelected: !day.isSelected } : day
-      )
-    );
-  }, []);
-
-  const handleToggleExercise = useCallback((exerciseId: string) => {
-    setSelectedExercises((prev) =>
-      prev.map((exercise) =>
-        exercise.id === exerciseId
-          ? { ...exercise, isSelected: !exercise.isSelected }
-          : exercise
-      )
-    );
-  }, []);
+  const handleToggleExercise = useCallback((exerciseId: string) => {}, []);
 
   const handleAddExercise = useCallback(() => {
-    router.push("/(auth)/students/exercise-training");
-  }, []);
+    if (!studentId) return;
+    router.push(`/(auth)/students/exercise-training?studentId=${studentId}`);
+  }, [studentId]);
 
   const handleRemoveExercise = useCallback((exerciseId: string) => {
-    setSelectedExercises((prev) =>
-      prev.filter((exercise) => exercise.id !== exerciseId)
-    );
+    removeExercise(exerciseId);
   }, []);
 
-  const handleSaveTraining = useCallback(() => {
+  const handleSaveTraining = useCallback(async () => {
+    if (!studentId) {
+      toast.error("ID do aluno não encontrado");
+      return;
+    }
+
+    if (!trainingName.trim()) {
+      toast.error("Nome do treino é obrigatório");
+      return;
+    }
+
     const selectedDayIds = selectedDays
       .filter((day) => day.isSelected)
       .map((day) => day.id);
-    const selectedExerciseIds = selectedExercises
-      .filter((ex) => ex.isSelected)
-      .map((ex) => ex.id);
 
-    const trainingData: NStudentTrainingPage.TrainingForm = {
-      name: trainingName,
-      selectedDays: selectedDayIds,
-      selectedExercises: selectedExerciseIds,
-    };
+    if (selectedDayIds.length === 0) {
+      toast.error("Selecione pelo menos um dia da semana");
+      return;
+    }
 
-    console.log("Salvar treino:", trainingData);
+    if (exercises.length === 0) {
+      toast.error("Adicione pelo menos um exercício ao treino");
+      return;
+    }
+
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      if (!user?.id) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      const trainingData = {
+        name: trainingName,
+        teacherId: user.id,
+        exercises: exercises.map((exercise) => ({
+          exerciseId: exercise.exerciseId,
+          sets: exercise.series,
+          repetitions: exercise.repetitions,
+          load: exercise.load,
+          restSeconds: exercise.restTime,
+          orderIndex: exercise.orderIndex,
+        })),
+      };
+
+      const createResult = await trainingService.createTraining(trainingData);
+
+      if (!createResult.success || !createResult.training) {
+        throw new Error(createResult.error || "Erro ao criar treino");
+      }
+
+      const weekDaysNumbers = selectedDayIds;
+
+      const assignResult = await trainingService.assignTrainingToStudent(
+        studentId,
+        createResult.training.id,
+        weekDaysNumbers,
+        new Date().toISOString().split("T")[0]
+      );
+
+      if (!assignResult.success) {
+        throw new Error(
+          assignResult.error || "Erro ao atribuir treino ao aluno"
+        );
+      }
+
+      clearExercises();
+      clearForm();
+      toast.success("Treino salvo com sucesso!");
       router.back();
-    }, 1000);
-  }, [trainingName, selectedDays, selectedExercises]);
+    } catch (error) {
+      console.error("Erro ao salvar treino:", error);
+      toast.error("Falha ao salvar treino. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [studentId, trainingName, selectedDays, exercises, clearExercises]);
 
   const goBack = useCallback(() => {
     router.back();

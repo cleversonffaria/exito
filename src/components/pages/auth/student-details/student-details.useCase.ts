@@ -1,13 +1,16 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { useCallback, useState, useEffect } from "react";
 
 import { ROLE_MAP } from "@/constants/profile";
 import { useModal } from "@/store/useModal";
-import { formatWeekDays } from "@utils/dates.utils";
+import { formatWeekDays, normalizeWeekDays } from "@utils/week-days.utils";
 import { maskPhone } from "@utils/phone-mask.utils";
 import { studentService } from "@/services/student.service";
-import { toast } from "sonner-native";
+import { trainingService } from "@/services/training.service";
+import { useTrainingExercises } from "@/store/useTrainingExercises";
+import { useTrainingForm } from "@/store/useTrainingForm";
 import { NStudentDetailsPage } from "./student-details.types";
+import { useToast } from "@/hooks/useToast";
 
 export const useStudentDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +21,9 @@ export const useStudentDetails = () => {
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const modal = useModal();
+  const toast = useToast();
+  const { clearExercises } = useTrainingExercises();
+  const { clearForm } = useTrainingForm();
 
   const loadStudent = useCallback(async () => {
     if (!id) {
@@ -40,6 +46,42 @@ export const useStudentDetails = () => {
 
       const studentData = result.student;
 
+      const trainingsResult = await trainingService.getStudentTrainings(
+        studentData.id!
+      );
+      let formattedTrainings: NStudentDetailsPage.TrainingWithDays[] = [];
+
+      if (trainingsResult.success && trainingsResult.studentTrainings) {
+        formattedTrainings = trainingsResult.studentTrainings.map(
+          (studentTraining: any) => {
+            const weekDaysNumbers = normalizeWeekDays(
+              studentTraining.week_days
+            );
+
+            const training = studentTraining.trainings as any;
+            const exercises = training?.training_exercises || [];
+
+            return {
+              id: studentTraining.id,
+              student_id: studentData.id!,
+              training_id: studentTraining.training_id,
+              name: training?.name || "Treino sem nome",
+              exercises: exercises.map((te: any) => ({
+                id: te.id,
+                exercise: te.exercises,
+                sets: te.sets,
+                repetitions: te.repetitions,
+                load: te.load,
+                rest: te.rest_seconds,
+                notes: te.notes,
+              })),
+              week_days: weekDaysNumbers,
+              days: formatWeekDays(weekDaysNumbers),
+            };
+          }
+        );
+      }
+
       const formattedStudent: NStudentDetailsPage.StudentDetailsWithFormattedTrainings =
         {
           id: studentData.id!,
@@ -57,7 +99,7 @@ export const useStudentDetails = () => {
               year: "numeric",
             }),
           role: ROLE_MAP["student"],
-          trainings: [], // Por enquanto vazio, como solicitado
+          trainings: formattedTrainings,
         };
 
       setStudent(formattedStudent);
@@ -75,34 +117,59 @@ export const useStudentDetails = () => {
     loadStudent();
   }, [loadStudent]);
 
-  const handleAddTraining = useCallback(() => {
-    router.push("/(auth)/students/training");
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (id) {
+        loadStudent();
+      }
+    }, [id, loadStudent])
+  );
 
-  const handleRemoveTraining = useCallback((trainingId: string) => {
-    console.log("Remover treino:", trainingId);
-    modal.show({
-      title: "Remover treino",
-      description: "Tem certeza que deseja remover este treino?",
-      actions: [
-        {
-          title: "Excluir",
-          variant: "error",
-          className: "!w-[200px] mx-auto",
-          onPress: () => {
-            console.log("Treino removido");
+  const handleAddTraining = useCallback(() => {
+    if (!id) return;
+    clearExercises();
+    clearForm();
+    router.push(`/(auth)/students/training?studentId=${id}`);
+  }, [id, clearExercises, clearForm]);
+
+  const handleRemoveTraining = useCallback(
+    async (trainingId: string) => {
+      modal.show({
+        title: "Remover treino",
+        description: "Tem certeza que deseja remover este treino?",
+        actions: [
+          {
+            title: "Excluir",
+            variant: "error",
+            className: "!w-[200px] mx-auto",
+            onPress: async () => {
+              try {
+                const result = await trainingService.deactivateStudentTraining(
+                  trainingId
+                );
+                if (result.success) {
+                  toast.success("Treino removido com sucesso");
+                  loadStudent();
+                } else {
+                  toast.error("Erro ao remover treino", {
+                    description: result.error,
+                  });
+                }
+              } catch (error) {
+                toast.error("Erro ao remover treino");
+              }
+            },
           },
-        },
-        {
-          title: "Cancelar",
-          variant: "none",
-          onPress: () => {
-            console.log("Treino removido");
+          {
+            title: "Cancelar",
+            variant: "none",
+            onPress: () => {},
           },
-        },
-      ],
-    });
-  }, []);
+        ],
+      });
+    },
+    [modal, loadStudent]
+  );
 
   const goBack = useCallback(() => {
     router.back();
@@ -115,6 +182,7 @@ export const useStudentDetails = () => {
       handleAddTraining,
       handleRemoveTraining,
       goBack,
+      refreshStudent: loadStudent,
     };
   }
 
@@ -124,5 +192,6 @@ export const useStudentDetails = () => {
     handleAddTraining,
     handleRemoveTraining,
     goBack,
+    refreshStudent: loadStudent,
   };
 };

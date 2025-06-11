@@ -3,14 +3,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner-native";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { registerStudentSchema } from "./register-student.schema";
 import { NRegisterStudentPage } from "./register-student.types";
+import { useToast } from "@/hooks/useToast";
 
 export const useRegisterStudent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { isUploading, pickImage } = useFileUpload();
+  const toast = useToast();
 
   const form = useForm<NRegisterStudentPage.FormData>({
     resolver: zodResolver(registerStudentSchema),

@@ -77,18 +77,31 @@ export default function StudentDetailsPage() {
             </TouchableOpacity>
           </View>
 
+          {student.trainings.length === 0 && (
+            <TextAtom className="text-gym-gray-400">
+              Nenhum treino encontrado
+            </TextAtom>
+          )}
+
           {student.trainings.map((training) => (
             <View
               key={training.id}
               className="w-full bg-gym-black-400 rounded-xl p-6 mb-3 flex-row items-center justify-between"
             >
-              <View>
+              <View className="flex-1">
                 <TextAtom className="text-gym-gray-200 font-bold text-lg mb-1">
                   {training.name}
                 </TextAtom>
                 <TextAtom className="text-gym-gray-400">
                   {training.days}
                 </TextAtom>
+                {training.exercises.length > 0 && (
+                  <TextAtom className="text-gym-gray-400">
+                    {training.exercises
+                      .map((ex) => ex.exercise?.name || "Exercício")
+                      .join(" - ")}
+                  </TextAtom>
+                )}
               </View>
               <TouchableOpacity
                 className="p-1.5 bg-gym-primary-500 rounded-full"

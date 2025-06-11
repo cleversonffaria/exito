@@ -1,13 +1,14 @@
 import { router, useFocusEffect } from "expo-router";
 import { useState, useCallback } from "react";
 import { studentService } from "@/services/student.service";
-import { toast } from "sonner-native";
 import { NStudentsPage } from "./students.types";
+import { useToast } from "@/hooks/useToast";
 
 export const useStudents = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [students, setStudents] = useState<NStudentsPage.Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const toast = useToast();
 
   const loadStudents = useCallback(async () => {
     try {

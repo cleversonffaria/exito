@@ -13,6 +13,7 @@ export default function ExerciseSelectionPage() {
     setSearchQuery,
     filteredExercises,
     handleSelectExercise,
+    loading,
   } = useExerciseSelection();
 
   return (
@@ -30,34 +31,42 @@ export default function ExerciseSelectionPage() {
       </InputAtom.Root>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {filteredExercises.map((exercise: NExerciseTrainingPage.Option) => (
-          <TouchableOpacity
-            key={exercise.id}
-            className="flex-row items-center rounded-xl p-4 mb-3"
-            activeOpacity={0.8}
-            onPress={() => handleSelectExercise(exercise)}
-          >
-            <View className="w-12 h-12 bg-gym-black-500 rounded-lg mr-4 items-center justify-center overflow-hidden">
-              {exercise.image ? (
-                <Image
-                  source={{ uri: exercise.image }}
-                  className="w-full h-full"
-                  resizeMode="cover"
-                />
-              ) : (
-                <View className="w-full h-full bg-gym-black-400 animate-pulse" />
-              )}
-            </View>
-            <View className="flex-1">
-              <TextAtom className="text-gym-gray-200 font-semibold text-base mb-1">
-                {exercise.name}
-              </TextAtom>
-              <TextAtom className="text-gym-gray-400 text-sm">
-                {exercise.category}
-              </TextAtom>
-            </View>
-          </TouchableOpacity>
-        ))}
+        {loading ? (
+          <View className="flex-1 justify-center items-center py-8">
+            <TextAtom className="text-gym-gray-400">
+              Carregando exercícios...
+            </TextAtom>
+          </View>
+        ) : (
+          filteredExercises.map((exercise: NExerciseTrainingPage.Option) => (
+            <TouchableOpacity
+              key={exercise.id}
+              className="flex-row items-center rounded-xl p-4 mb-3"
+              activeOpacity={0.8}
+              onPress={() => handleSelectExercise(exercise)}
+            >
+              <View className="w-12 h-12 bg-gym-black-500 rounded-lg mr-4 items-center justify-center overflow-hidden">
+                {exercise.image ? (
+                  <Image
+                    source={{ uri: exercise.image }}
+                    className="w-full h-full"
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View className="w-full h-full bg-gym-black-400 animate-pulse" />
+                )}
+              </View>
+              <View className="flex-1">
+                <TextAtom className="text-gym-gray-200 font-semibold text-base mb-1">
+                  {exercise.name}
+                </TextAtom>
+                <TextAtom className="text-gym-gray-400 text-sm">
+                  {exercise.category}
+                </TextAtom>
+              </View>
+            </TouchableOpacity>
+          ))
+        )}
       </ScrollView>
     </View>
   );

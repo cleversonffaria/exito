@@ -3,14 +3,16 @@ import { useForm } from "react-hook-form";
 import { activationService } from "@/services/activation.service";
 import { router } from "expo-router";
 import { useActivationStore } from "@/store/useActivationStore";
-import { toast } from "sonner-native";
+
 import {
   CreatePasswordData,
   CreatePasswordResponse,
 } from "./create-password.types";
+import { useToast } from "@/hooks/useToast";
 
 export const useCreatePassword = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
   const { email, code, reset } = useActivationStore();
 
