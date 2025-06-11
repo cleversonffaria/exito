@@ -57,17 +57,25 @@ export const useTrainingDetails = () => {
     updateCurrentRepetition,
   ]);
 
+  const hasVideo = useMemo(() => {
+    return !!selectedTraining?.videoUrl;
+  }, [selectedTraining?.videoUrl]);
+
   const getVideoSource = () => {
     if (selectedTraining?.videoUrl) {
       return { uri: selectedTraining.videoUrl };
     }
-    return require("@assets/video/supino.mp4");
+    return null;
   };
 
   const exerciseInfoData = useMemo(() => {
     if (!selectedTraining) return [];
 
     return [
+      {
+        label: "Exercício",
+        value: selectedTraining.name,
+      },
       {
         label: "Séries",
         value: selectedTraining.series.toString(),
@@ -143,6 +151,7 @@ export const useTrainingDetails = () => {
 
   return {
     selectedTraining,
+    hasVideo,
     getVideoSource,
     exerciseInfoData,
     remainingRepetitions,

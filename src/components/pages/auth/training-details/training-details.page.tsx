@@ -9,6 +9,7 @@ import { cn } from "@/utils/cn";
 
 export default function TrainingDetailsPage() {
   const {
+    hasVideo,
     getVideoSource,
     selectedTraining,
     remainingRepetitions,
@@ -29,28 +30,30 @@ export default function TrainingDetailsPage() {
     <View className="flex-1">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-6 pt-6 pb-6">
-          <View
-            className="mb-8 rounded-2xl overflow-hidden bg-gym-black-600"
-            style={{ height: 256 }}
-          >
-            <Video
-              ref={videoRef}
-              source={getVideoSource()}
-              style={{ width: "100%", height: "100%" }}
-              controls={true}
-              resizeMode={isFullscreen ? "contain" : "cover"}
-              repeat={true}
-              muted={true}
-              playWhenInactive={false}
-              playInBackground={false}
-              fullscreenAutorotate={false}
-              fullscreenOrientation="portrait"
-              allowsExternalPlayback={false}
-              ignoreSilentSwitch="ignore"
-              onFullscreenPlayerWillPresent={handleFullscreenEnter}
-              onFullscreenPlayerWillDismiss={handleFullscreenExit}
-            />
-          </View>
+          {hasVideo && (
+            <View
+              className="mb-8 rounded-2xl overflow-hidden bg-gym-black-600"
+              style={{ height: 256 }}
+            >
+              <Video
+                ref={videoRef}
+                source={getVideoSource()!}
+                style={{ width: "100%", height: "100%" }}
+                controls={true}
+                resizeMode={isFullscreen ? "contain" : "cover"}
+                repeat={true}
+                muted={true}
+                playWhenInactive={false}
+                playInBackground={false}
+                fullscreenAutorotate={false}
+                fullscreenOrientation="portrait"
+                allowsExternalPlayback={false}
+                ignoreSilentSwitch="ignore"
+                onFullscreenPlayerWillPresent={handleFullscreenEnter}
+                onFullscreenPlayerWillDismiss={handleFullscreenExit}
+              />
+            </View>
+          )}
 
           <View className="space-y-6">
             {exerciseInfoData.map((info, index) => (

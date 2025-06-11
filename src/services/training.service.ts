@@ -252,7 +252,9 @@ class TrainingService {
             exerciseIds.length > 0
               ? await supabase
                   .from("exercises")
-                  .select("id, name, muscle_groups, equipment")
+                  .select(
+                    "id, name, muscle_groups, equipment, description, video_url"
+                  )
                   .in("id", exerciseIds)
               : { data: [] };
 

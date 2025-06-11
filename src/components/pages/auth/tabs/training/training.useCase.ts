@@ -200,6 +200,7 @@ export const useTraining = () => {
         muscleGroups: exercise.exercise.muscles_worked,
         description: exercise.exercise.description,
         observations: exercise.notes,
+        videoUrl: exercise.exercise.video_url,
         currentRepetition: exercise.completedSets || 0,
         selectedDate: selectedDate,
       };
