@@ -3,9 +3,9 @@ import { tv } from "tailwind-variants";
 export const inputVariants = tv({
   slots: {
     container:
-      "bg-gym-black-400 rounded-xl px-4 text-base border w-full flex-row items-center gap-3 flex-1",
+      "bg-gym-black-400 rounded-xl px-4 text-base border w-full flex-row items-center gap-3",
     label: "font-semibold",
-    input: "w-full h-full text-base",
+    input: "flex-1 text-base",
     errorText: "min-h-4",
   },
   variants: {
