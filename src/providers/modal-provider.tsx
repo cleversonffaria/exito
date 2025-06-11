@@ -23,13 +23,10 @@ export function ModalProvider() {
     currentConfig?.onDismiss?.();
   };
 
-  const handleActionPress = useCallback(
-    (onPress: () => void) => {
-      onPress();
-      hide();
-    },
-    [hide]
-  );
+  const handleActionPress = (onPress: () => void) => {
+    onPress();
+    hide();
+  };
 
   return (
     <Modalize
