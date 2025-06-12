@@ -38,13 +38,7 @@ export function InputError({
   useEffect(() => {
     if (hasErrorContent) {
       opacity.value = withTiming(1, { duration: 200 });
-      shakeX.value = withSequence(
-        withTiming(3, { duration: 50 }),
-        withTiming(-3, { duration: 50 }),
-        withTiming(2, { duration: 50 }),
-        withTiming(-2, { duration: 50 }),
-        withTiming(0, { duration: 50 })
-      );
+      shakeX.value = withSequence(withTiming(3, { duration: 50 }));
     } else {
       opacity.value = withTiming(0, { duration: 150 });
     }
