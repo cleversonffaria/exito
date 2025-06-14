@@ -1,50 +1,154 @@
-# Welcome to your Expo app 👋
+# Gym App - Sistema de Treinos
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Uma aplicação mobile completa para gerenciamento de treinos, desenvolvida com **React Native** e **Expo**. O app permite que professores criem treinos personalizados e alunos acompanhem seu progresso de forma intuitiva.
 
-## Get started
+## 📱 Download do App
 
-1. Install dependencies
+**🔗 [Baixar o App para Android](#)** - _https://expo.dev/accounts/cleversonfaria/projects/exito/builds/22c11ddb-07d2-4cb4-8139-656840bf30ed_
 
-   ```bash
-   npm install
-   ```
+## ✨ Funcionalidades
 
-2. Start the app
+### 👨‍🏫 Para Professores
 
-   ```bash
-    npx expo start
-   ```
+- ✅ Cadastro e gerenciamento de exercícios
+- ✅ Criação de treinos personalizados
+- ✅ Gestão de alunos
+- ✅ Upload de vídeos demonstrativos
 
-In the output, you'll find options to open the app in a
+### 👨‍🎓 Para Alunos
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- ✅ Visualização de treinos por dia da semana
+- ✅ Registro de séries completadas
+- ✅ Estatísticas semanais de progresso
+- ✅ Histórico de treinos
+- ✅ Vídeos explicativos dos exercícios
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🚀 Como Executar o Projeto
 
-## Get a fresh project
+### Pré-requisitos
 
-When you're ready, run:
+- **Node.js** (versão 18 ou superior)
+- **npm** ou **yarn**
+- **Expo CLI** instalado globalmente
+- **Android Studio** (para emulador Android) ou **Xcode** (para simulador iOS)
+
+### 1. Clone o Repositório
 
 ```bash
-npm run reset-project
+git clone https://github.com/cleversonffaria/exito.git
+cd exito
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Instale as Dependências
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Configure as Variáveis de Ambiente
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
-## Join the community
+```env
+EXPO_PUBLIC_SUPABASE_URL=sua_url_do_supabase
+EXPO_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
+```
 
-Join our community of developers creating universal apps.
+### 4. Inicie o Projeto
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+# Desenvolvimento com Expo Go
+npx expo start
+
+# Ou desenvolvimento com build personalizado
+npm run start
+```
+
+### 5. Executar em Dispositivos/Emuladores
+
+```bash
+# Android
+npm run android
+
+# iOS
+npm run ios
+
+# Web (desenvolvimento)
+npm run web
+```
+
+## 🛠️ Tecnologias Utilizadas
+
+- **React Native** - Framework mobile
+- **Expo** - Plataforma de desenvolvimento
+- **TypeScript** - Tipagem estática
+- **Zustand** - Gerenciamento de estado
+- **Supabase** - Backend as a Service
+- **NativeWind** - Estilização (Tailwind CSS)
+- **React Hook Form** - Formulários
+- **Expo Router** - Navegação
+
+## 📂 Estrutura do Projeto
+
+```
+src/
+├── app/                    # Rotas da aplicação (Expo Router)
+├── components/            # Componentes reutilizáveis
+│   ├── atoms/             # Componentes atômicos
+│   ├── organisms/         # Componentes atômicos
+│   ├── molecules/         # Componentes atômicos
+│   ├── pages/            # Componentes de páginas
+├── services/             # Serviços de API
+├── store/               # Gerenciamento de estado (Zustand)
+├── types/               # Definições de tipos TypeScript
+├── utils/               # Utilitários e helpers
+└── constants/           # Constantes da aplicação
+```
+
+## 🔧 Scripts Disponíveis
+
+```bash
+# Iniciar em modo desenvolvimento
+npm run start
+
+# Limpar cache e iniciar
+npm run start:clear
+
+# Build para Android
+npm run android
+
+# Build para iOS
+npm run ios
+
+# Executar testes
+npm run test
+
+# Lint do código
+npm run lint
+
+# Build de produção
+npm run build
+```
+
+## 🗄️ Banco de Dados
+
+O projeto utiliza **Supabase** como backend, com as seguintes tabelas principais:
+
+- `users` - Usuários (professores e alunos)
+- `exercises` - Catálogo de exercícios
+- `trainings` - Treinos criados pelos professores
+- `training_exercises` - Exercícios de cada treino
+- `student_trainings` - Associação aluno-treino
+- `training_logs` - Registro de execução dos treinos
+
+## 🤝 Contribuindo
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
+
+## 👨‍💻 Colaboradores
+
+**Alexandre Leite da Silva** • **Cléverson Fernandes de Faria** • **Eduarda Rocha Medeiros** • **Gabriel Stein Velten** • **Jhenifer Laryssa Faria Lourenço** • **Jhonatan Henrique de Souza Gama** • **Leonardo Ferreira Ozório** • **Pedro Paulo Monteiro Rocha** • **Saniel Queiroz Dos Santos**
