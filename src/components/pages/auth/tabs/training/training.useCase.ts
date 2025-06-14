@@ -35,13 +35,25 @@ export const useTraining = () => {
 
   const getDateForSelectedDay = useCallback((dayId: number) => {
     const today = new Date();
-    const currentDayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
+    const todayDayOfWeek = today.getDay();
+
+    const currentDayOfWeek = todayDayOfWeek === 0 ? 7 : todayDayOfWeek;
 
     const daysDifference = dayId - currentDayOfWeek;
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() + daysDifference);
+    const targetDate = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+    targetDate.setDate(targetDate.getDate() + daysDifference);
 
-    return targetDate.toISOString().split("T")[0];
+    const year = targetDate.getFullYear();
+    const month = String(targetDate.getMonth() + 1).padStart(2, "0");
+    const day = String(targetDate.getDate()).padStart(2, "0");
+
+    const result = `${year}-${month}-${day}`;
+
+    return result;
   }, []);
 
   const loadCompletedRepetitions = useCallback(async () => {
@@ -67,7 +79,7 @@ export const useTraining = () => {
               );
 
               const completedSets = exerciseLogs.length;
-              const isCompleted = completedSets >= exercise.repetitions;
+              const isCompleted = completedSets >= exercise.sets;
 
               return {
                 ...exercise,

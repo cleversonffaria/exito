@@ -1,9 +1,16 @@
 import { colors } from "@/constants/colors";
-import { Stack } from "expo-router";
+import { useAuth } from "@/store/useAuth";
+import { Redirect, Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createCustomHeader } from "../../utils/header-config.utils";
 
 export default function PublicLayout() {
+  const { isAuth } = useAuth();
+
+  if (isAuth) {
+    return <Redirect href="/(auth)/(tabs)/home" />;
+  }
+
   return (
     <SafeAreaView className="flex-1">
       <Stack

@@ -32,6 +32,16 @@ export const useAuth = create<AuthState>()(
       loading: false,
 
       signIn: async (email: string, password: string) => {
+        const { isAuth } = get();
+
+        if (isAuth) {
+          return {
+            success: false,
+            error:
+              "Você já está logado. Faça logout primeiro para trocar de conta.",
+          };
+        }
+
         set({ loading: true });
 
         const result = await authService.signIn(email, password);

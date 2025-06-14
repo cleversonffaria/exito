@@ -173,9 +173,15 @@ class TrainingLogService {
   }): Promise<TrainingLogResponse> {
     try {
       const completedAt = data.customDate
-        ? new Date(
-            data.customDate + "T" + new Date().toTimeString().split(" ")[0]
-          ).toISOString()
+        ? (() => {
+            const now = new Date();
+            const customDateTime = new Date(data.customDate);
+            customDateTime.setHours(now.getHours());
+            customDateTime.setMinutes(now.getMinutes());
+            customDateTime.setSeconds(now.getSeconds());
+            customDateTime.setMilliseconds(now.getMilliseconds());
+            return customDateTime.toISOString();
+          })()
         : new Date().toISOString();
 
       const logInsert: TrainingLogInsert = {

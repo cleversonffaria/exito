@@ -80,7 +80,7 @@ export default function HomePage() {
         <View className="bg-gym-black-400 rounded-2xl p-6 flex flex-row items-end justify-between">
           <View className="flex-col">
             <TextAtom className="text-white text-xl font-semibold mb-4">
-              Treinos
+              Séries
             </TextAtom>
 
             <View>

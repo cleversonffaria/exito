@@ -31,7 +31,11 @@ export const useHome = () => {
 
       const today = new Date();
       const currentDayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
-      const mondayDate = new Date(today);
+      const mondayDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
       mondayDate.setDate(today.getDate() - (currentDayOfWeek - 1));
 
       const weekStats: { [key: number]: number } = {};
@@ -39,7 +43,11 @@ export const useHome = () => {
       for (let dayIndex = 1; dayIndex <= 7; dayIndex++) {
         const targetDate = new Date(mondayDate);
         targetDate.setDate(mondayDate.getDate() + (dayIndex - 1));
-        const dateString = targetDate.toISOString().split("T")[0];
+
+        const year = targetDate.getFullYear();
+        const month = String(targetDate.getMonth() + 1).padStart(2, "0");
+        const day = String(targetDate.getDate()).padStart(2, "0");
+        const dateString = `${year}-${month}-${day}`;
 
         const dayTrainings = trainingResult.studentTrainings.filter(
           (st: any) => {

@@ -32,6 +32,7 @@ export const useTrainingDetails = () => {
     try {
       const targetDate =
         selectedTraining.selectedDate || new Date().toISOString().split("T")[0];
+
       const result = await trainingLogService.getLogsByTraining(
         selectedTraining.studentTrainingId,
         targetDate
@@ -99,7 +100,7 @@ export const useTrainingDetails = () => {
     if (!selectedTraining || isLoading) return 0;
     return Math.max(
       0,
-      selectedTraining.repetitions - selectedTraining.currentRepetition
+      selectedTraining.series - selectedTraining.currentRepetition
     );
   }, [selectedTraining, isLoading]);
 

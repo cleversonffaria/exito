@@ -107,7 +107,7 @@ export default function TrainingDetailsPage() {
               ? "Concluindo..."
               : remainingRepetitions === 0
               ? "Exercício Concluído"
-              : `Concluir Repetição (${remainingRepetitions})`}
+              : `Concluir Série (${remainingRepetitions})`}
           </ButtonAtom.Text>
         </ButtonAtom.Root>
       </View>

@@ -42,7 +42,7 @@ export function ExerciseItem({
         )}
 
         <View className="flex-row">
-          {Array.from({ length: exercise.repetitions }).map((_, index) => (
+          {Array.from({ length: exercise.sets }).map((_, index) => (
             <View
               key={index}
               className={cn("w-2 h-2 rounded-full mx-0.5", {

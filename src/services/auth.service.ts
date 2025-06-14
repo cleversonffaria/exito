@@ -11,6 +11,15 @@ type UserInsert = Database["public"]["Tables"]["users"]["Insert"];
 class AuthService {
   async signIn(email: string, password: string): Promise<AuthResponse> {
     try {
+      const existingSession = await this.getCurrentSession();
+      if (existingSession.success) {
+        return {
+          success: false,
+          error:
+            "Você já está logado. Faça logout primeiro para trocar de conta.",
+        };
+      }
+
       const { data: loginData, error: loginError } =
         await supabase.auth.signInWithPassword({
           email,

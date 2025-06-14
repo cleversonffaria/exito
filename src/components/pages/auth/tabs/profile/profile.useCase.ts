@@ -32,7 +32,7 @@ export const useProfile = () => {
         },
         {
           value: stats.completed.toString(),
-          label: "Repetições\nFinalizadas",
+          label: "Séries\nFinalizadas",
         },
       ];
 
