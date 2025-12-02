@@ -51,7 +51,9 @@ export const useHome = () => {
 
         const dayTrainings = trainingResult.studentTrainings.filter(
           (st: any) => {
-            const weekDays = st.week_days || [];
+            const weekDays = (st.week_days || []).map((day: string | number) => 
+              typeof day === 'string' ? parseInt(day, 10) : day
+            );
             return weekDays.includes(dayIndex);
           }
         );

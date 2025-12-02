@@ -57,7 +57,7 @@ class TrainingService {
           await supabase.from("trainings").delete().eq("id", training.id);
           return {
             success: false,
-            error: "Erro ao adicionar exercícios ao treino",
+            error: exercisesError.message || "Erro ao adicionar exercícios ao treino",
           };
         }
       }
@@ -176,12 +176,14 @@ class TrainingService {
     endDate?: string
   ): Promise<StudentTrainingResponse> {
     try {
+      const weekDaysAsStrings = weekDays.map((day) => day.toString());
+      
       const { data, error } = await supabase
         .from("student_trainings")
         .insert({
           student_id: studentId,
           training_id: trainingId,
-          week_days: weekDays,
+          week_days: weekDaysAsStrings,
           start_date: startDate,
           end_date: endDate,
           is_active: true,
@@ -238,7 +240,8 @@ class TrainingService {
 
       const enrichedTrainings = await Promise.all(
         (trainings || []).map(async (training) => {
-          const { data: trainingExercises } = await supabase
+         
+          const { data: trainingExercises, error: trainingExercisesError } = await supabase
             .from("training_exercises")
             .select(
               `
@@ -257,7 +260,8 @@ class TrainingService {
             .order("order_index", { ascending: true });
 
           const exerciseIds =
-            trainingExercises?.map((te) => te.exercise_id) || [];
+            trainingExercises?.map((te) => te.exercise_id).filter(Boolean) || [];
+                    
           const { data: exercises } =
             exerciseIds.length > 0
               ? await supabase
@@ -266,6 +270,7 @@ class TrainingService {
                     "id, name, muscle_groups, equipment, description, video_url"
                   )
                   .in("id", exerciseIds)
+                  .is("deleted_at", null)
               : { data: [] };
 
           const exercisesWithData =
@@ -274,7 +279,7 @@ class TrainingService {
               exercises:
                 exercises?.find((ex) => ex.id === te.exercise_id) || null,
             })) || [];
-
+ 
           return {
             ...training,
             training_exercises: exercisesWithData,

@@ -127,11 +127,14 @@ export const useTraining = () => {
         const formattedTrainings = result.studentTrainings.map((st: any) => {
           const training = st.trainings;
           const exercises = training?.training_exercises || [];
+          const weekDays = (st.week_days || []).map((day: string | number) => 
+            typeof day === 'string' ? parseInt(day, 10) : day
+          );
 
           return {
             id: st.id,
             name: training?.name || "Treino sem nome",
-            week_days: st.week_days || [],
+            week_days: weekDays,
             exercises: exercises.map((te: any) => ({
               id: te.id,
               exercise: {
@@ -169,9 +172,12 @@ export const useTraining = () => {
   }, [selectedDay]);
 
   const currentTrainings = useMemo(() => {
-    return trainings.filter((training: NTrainingPage.Training) =>
-      training.week_days.includes(selectedDay)
-    );
+    return trainings.filter((training: NTrainingPage.Training) => {
+      const weekDays = training.week_days.map((day) => 
+        typeof day === 'string' ? parseInt(day, 10) : day
+      );
+      return weekDays.includes(selectedDay);
+    });
   }, [selectedDay, trainings]);
 
   const handleDaySelect = useCallback(async (dayId: number) => {

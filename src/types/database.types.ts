@@ -139,9 +139,9 @@ export interface Database {
           training_id: string;
           exercise_id: string;
           sets: number;
-          reps: number | null;
-          weight: number | null;
-          rest_time: number | null;
+          repetitions: number | null;
+          load: number | null;
+          rest_seconds: number | null;
           order_index: number;
           deleted_at: string | null;
           created_at: string;
@@ -152,9 +152,9 @@ export interface Database {
           training_id: string;
           exercise_id: string;
           sets: number;
-          reps?: number | null;
-          weight?: number | null;
-          rest_time?: number | null;
+          repetitions?: number | null;
+          load?: number | null;
+          rest_seconds?: number | null;
           order_index: number;
           deleted_at?: string | null;
           created_at?: string;
@@ -165,9 +165,9 @@ export interface Database {
           training_id?: string;
           exercise_id?: string;
           sets?: number;
-          reps?: number | null;
-          weight?: number | null;
-          rest_time?: number | null;
+          repetitions?: number | null;
+          load?: number | null;
+          rest_seconds?: number | null;
           order_index?: number;
           deleted_at?: string | null;
           created_at?: string;
@@ -260,18 +260,19 @@ export interface Database {
           student_uuid: string;
         };
         Returns: {
-          training_id: number;
+          training_id: string;
           training_name: string;
-          week_days: number[];
-          exercise_id: number;
+          week_days: string[];
+          exercise_id: string;
           exercise_name: string;
           sets: number;
           repetitions: number;
           load: number | null;
           rest_seconds: number | null;
-          notes: string | null;
+          order_index: number;
           equipment: string;
           muscle_groups: string[];
+          difficulty: "beginner" | "intermediate" | "advanced";
         }[];
       };
       calculate_student_progress: {

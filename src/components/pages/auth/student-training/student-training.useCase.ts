@@ -85,9 +85,11 @@ export const useStudentTraining = () => {
         })),
       };
 
+ 
       const createResult = await trainingService.createTraining(trainingData);
 
       if (!createResult.success || !createResult.training) {
+        console.error("Erro ao criar treino:", createResult.error);
         throw new Error(createResult.error || "Erro ao criar treino");
       }
 
@@ -111,7 +113,9 @@ export const useStudentTraining = () => {
       toast.success("Treino salvo com sucesso!");
       router.back();
     } catch (error) {
-      toast.error("Falha ao salvar treino. Tente novamente.");
+      console.error("Erro ao salvar treino:", error);
+      const errorMessage = error instanceof Error ? error.message : "Falha ao salvar treino. Tente novamente.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

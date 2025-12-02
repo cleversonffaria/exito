@@ -76,7 +76,9 @@ class UserService {
 
       const todayTrainings =
         allTrainingsResponse.data?.filter((training) => {
-          const weekDays = training.week_days || [];
+          const weekDays = (training.week_days || []).map((day: string | number) => 
+            typeof day === 'string' ? parseInt(day, 10) : day
+          );
           return weekDays.includes(currentWeekDay);
         }) || [];
 
